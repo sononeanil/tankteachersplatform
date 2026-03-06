@@ -1,0 +1,30 @@
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+@import 'ag-grid-community/styles/ag-theme-quartz.css';
+
+
+
+table {
+    border-collapse: collapse;
+}
+
+thead th {
+    background-color: black;
+    color: white;
+}
+
+td th {
+    padding: 12px 20px;
+}
+
+table tbody tr {
+    border-bottom: solid 1px goldenrod;
+}
+
+.navbarContainer {
+    margin-bottom: 30px;
+}
+
+.navbarContainer li {
+    margin-bottom: 10px;
+}
