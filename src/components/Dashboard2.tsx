@@ -28,6 +28,7 @@ const Dashboard2 = () => {
         { lable: "Publish", icon: <MdWeb />, path: "publish" },
         { lable: "Edit Role", icon: <MdWeb />, path: "editRole" },
         { lable: "User Details", icon: <AiOutlineUser />, path: "userdetails" },
+        { lable: "SetUp Zoom Meeting", icon: <AiOutlineUser />, path: "createZoomMeeting" },
         { lable: "Zoom Meeting", icon: <AiOutlineUser />, path: "zoomMeeting" }
     ];
     const navigate = useNavigate();
