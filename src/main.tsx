@@ -33,6 +33,7 @@ import Role from './components/role/Role.tsx'
 import UserDetails from './components/admin/UserDetails.tsx'
 import ZoomMeeting from './components/zoom/ZoomMeeting.tsx'
 import CreateZoom from './components/zoom/CreateZoom.tsx'
+import StudentDashboard from './components/student/StudentDashboard.tsx'
 
 
 const router = createBrowserRouter([
@@ -80,7 +81,7 @@ const router = createBrowserRouter([
     },
     {
       path: "/db2/school",
-      element: <LandingPage2></LandingPage2>
+      element: <StudentDashboard></StudentDashboard>
     },
     {
       path: "/db2/editRole",
