@@ -107,7 +107,7 @@ export const mutationCreateLogin = async (newLogin: LoginType) => {
 
 export const mutationCreateStudent = async (newStudent: StudentType) => {
     try {
-        await apiErpSystem.post("/student", newStudent);
+        await apiErpSystem.post("/user/parent/enrollStudent", newStudent);
     }
     catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -122,7 +122,7 @@ export const mutationCreateStudent = async (newStudent: StudentType) => {
 
 export const getAllStudentForParent = async (id: string | number): Promise<StudentType[]> => {
     try {
-        const response = await apiErpSystem.get(`/student/parent/${id}`);
+        const response = await apiErpSystem.get(`/user/parent/${id}/students`);
         const data = response.status === 200 ? response.data.erpSystemResponse.studentList : []
         return data;
     } catch (error: unknown) {

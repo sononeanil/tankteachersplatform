@@ -1,7 +1,7 @@
 // hooks/useCreateZoom.ts
 import { useToast } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
-import { createZoomMeeting } from "../service/ApiZoom";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createZoomMeeting, getUpcomingMeetings } from "../service/ApiZoom";
 import type { CreateZoomMeetingType } from "../types/zoom";
 
 export function useCreateZoom() {
@@ -31,4 +31,14 @@ export function useCreateZoom() {
             });
         },
     });
+}
+
+
+export const useGetUpcomingZoomMeetings = () => {
+    return useQuery({
+        queryKey: ["zoom-meetings-upcoming"],
+        queryFn: getUpcomingMeetings,
+        staleTime: 3000 * 60, // 3 minute cache
+        retry: 2
+    })
 }
