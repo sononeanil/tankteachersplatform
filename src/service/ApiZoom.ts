@@ -48,6 +48,22 @@ export const createZoomMeeting = async (newZoom: CreateZoomMeetingType) => {
             throw new Error(error.response.data.
                 erpSystemResponse.message || "Unable to create zoom meeting");
         }
-        throw new Error("Network error");
+        throw new Error("Network error while creating zoom meeting");
+    }
+}
+
+export const getUpcomingMeetings = async () => {
+    try {
+        const response = await apiAdmin.get("/student/upcoming");
+        const data = response.status === 200 ? response.data.erpSystemResponse.upcomingMeetingList : [];
+        console.log("Upcoming meetings response ---->", data);
+        return data;
+    } catch (error: any) {
+        if (error.response) {
+            console.log("Error response data:", error, error.response.data);
+            throw new Error(error.response.data.
+                erpSystemResponse.message || "Unable to fetch upcoming meetings");
+        }
+        throw new Error("Network error while creating zoom meeting");
     }
 }
