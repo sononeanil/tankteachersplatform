@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { CreateZoomMeetingType } from "../types/zoom";
+import type { CreateZoomMeetingType, startZoomMeetingType } from "../types/zoom";
 
 const apiAdmin = axios.create({
     baseURL: "http://localhost:8080/erpsystem"
@@ -60,9 +60,27 @@ export const getUpcomingMeetings = async () => {
         return data;
     } catch (error: any) {
         if (error.response) {
+            console.log("Error response data 111111:", error, error.response.data);
+            throw new Error(error.response.data || "Unable to fetch upcoming meetings");
+        }
+        throw new Error("Network error while creating zoom meeting");
+    }
+}
+
+export const getUpcomingMeetingsForTeacherApi = async (teacherEmailId: string): Promise<startZoomMeetingType[]> => {
+    // alert("Teacher email ID: " + teacherEmailId);
+    try {
+        const response = await apiAdmin.get(`/teacher/upcomingMeetings?teacherEmailId=${teacherEmailId}`);
+        // console.log("Teacher response 11111:", response);
+        // console.log("Teacher response: 2222", JSON.stringify(response.data, null, 2));
+        const data = response.status === 200 ? response.data.erpSystemResponse.upcomingMeetingListForTeacher : [];
+        // alert("Upcoming meetings response ---->" + JSON.stringify(data));
+        console.log("Upcoming meetings response 3333---->", response.data.erpSystemResponse.upcomingMeetingListForTeacher);
+        return data;
+    } catch (error: any) {
+        if (error.response) {
             console.log("Error response data:", error, error.response.data);
-            throw new Error(error.response.data.
-                erpSystemResponse.message || "Unable to fetch upcoming meetings");
+            throw new Error(error.response.data || "Unable to fetch upcoming meetings");
         }
         throw new Error("Network error while creating zoom meeting");
     }

@@ -25,3 +25,16 @@ export const createZoomMeeting = z.object({
 });
 
 export type CreateZoomMeetingType = z.infer<typeof createZoomMeeting>;
+
+
+export type startZoomMeetingType = {
+    id: number
+    meetingId: string
+    meetingTopic: string
+    startTime: string
+    duration: string
+    password: string
+    organizerEmail: string
+    joinUrl: string
+    startUrl: string
+}
