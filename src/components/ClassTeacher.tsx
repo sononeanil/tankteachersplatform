@@ -29,6 +29,17 @@ const ClassTeacher = () => {
                 >
                     🎥 Create Zoom Meeting
                 </Button>
+
+                <Button
+                    as={NavLink}
+                    to="/db2/classTeacher/myUpcomingMeetings"
+                    variant="solid"
+                    colorScheme="pink"
+                    _activeLink={{ bg: "white", color: "pink.500", fontWeight: "bold" }}
+                >
+                    🎥 My upcoming Meetings
+                </Button>
+
             </Flex>
 
             <Outlet></Outlet>
