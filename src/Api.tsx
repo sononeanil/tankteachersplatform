@@ -16,8 +16,9 @@ export const getAllPost = async (): Promise<post[]> => {
 }
 
 const apiErpSystem = axios.create({
-    baseURL: "http://localhost:8080/erpsystem"
+    // baseURL: "http://localhost:8080/erpsystem"
     // baseURL: "https://tankstudentportalrestapi-production.up.railway.app/erpsystem"
+    baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/erpsystem"
 })
 
 apiErpSystem.interceptors.request.use(
