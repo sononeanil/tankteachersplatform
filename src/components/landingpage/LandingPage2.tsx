@@ -6,6 +6,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import LandingPageCorousel from "./LandingPageCorousel";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ViewCourse from "../teacher/ViewCourse";
 const LandingPage2 = () => {
 
     const landingPageData = [
@@ -20,6 +21,8 @@ const LandingPage2 = () => {
 
         <>
             <LandingPageCorousel></LandingPageCorousel>
+
+            <ViewCourse></ViewCourse>
 
             <SimpleGrid columns={4} gap={5} >
                 {landingPageData.map(data => (

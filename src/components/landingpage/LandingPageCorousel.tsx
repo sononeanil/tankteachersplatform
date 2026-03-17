@@ -7,15 +7,15 @@ const SimpleCarousel: React.FC = () => {
     dots: true,
     infinite: true,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 8000,
     slidesToShow: 1,
     slidesToScroll: 1,
   };
 
   const slides = [
-    "Welcome to Anil Sonone's Student Portal",
-    "Total Users: 1200",
-    "Every week new paper Added. Parental Control. Anaytics based suggestion",
+    "Welcome to TANK Teachers Platform - Empowering Educators, Inspiring Learners",
+    "You become a teacher and start earning by sharing your knowledge. We provide you with the tools and support to create and sell your courses online.",
+    "We will make your presence global and you can reach to students across the world. You became international tutor with us",
     "Get Individual login for Student and Parent. Scholer ships for great taent",
   ];
 
@@ -23,7 +23,7 @@ const SimpleCarousel: React.FC = () => {
     <Box maxW="full" mx="auto" p={1} mb={5}>
       <Slider {...settings}>
         {slides.map((msg, i) => (
-          <Box key={i} bg="linear-gradient(#80eff7ff, #f2c1c1ff)" p={10} borderRadius="md" textAlign="center">
+          <Box key={i} bg="linear-gradient(#80eff7ff, #f2c1c1ff)" p={5} borderRadius="md" textAlign="center">
             <Text fontSize="2xl" color="white" fontWeight="bold">
               {msg}
             </Text>

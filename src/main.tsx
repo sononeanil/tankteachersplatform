@@ -35,6 +35,7 @@ import ZoomMeeting from './components/zoom/ZoomMeeting.tsx'
 import CreateZoom from './components/zoom/CreateZoom.tsx'
 import StudentDashboard from './components/student/StudentDashboard.tsx'
 import UpcomingMeeting from './components/teacher/UpcomingMeeting.tsx'
+import PublishCourse from './components/teacher/PublishCourse.tsx'
 
 
 const router = createBrowserRouter([
@@ -120,6 +121,9 @@ const router = createBrowserRouter([
           element: <UpcomingMeeting></UpcomingMeeting>
         }
       ]
+    }, {
+      path: "/db2/publishCourse",
+      element: <PublishCourse></PublishCourse>
     },
     {
       path: "/db2/loginSignup",

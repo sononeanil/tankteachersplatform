@@ -21,6 +21,7 @@ const Dashboard2 = () => {
         { lable: "Families", icon: <AiOutlineTeam />, path: "chakraUi1" },
         { lable: "Class room", icon: <MdOutlineClass />, path: "classroom" },
         { lable: "Teacher", icon: <FaChalkboardTeacher />, path: "classTeacher" },
+        { lable: "Publish Course", icon: <FaChalkboardTeacher />, path: "publishCourse" },
         { lable: "School", icon: <FaSchool />, path: "school" },
         { lable: "Profile", icon: <AiOutlineUser />, path: "profile" },
         // { lable: "Landing Page", icon: <MdWeb />, path: "landingpage2" },
@@ -50,9 +51,9 @@ const Dashboard2 = () => {
                         <NavLink to={item.path} style={({ isActive }) => ({
                             display: "flex",
                             alignItems: "center", gap: "5px",
-                            color: isActive ? "#d50909ff" : "#031652ff",
+                            color: isActive ? "rgb(248, 7, 7)" : "#031652ff",
                             // fontWeight: isActive ? "bold" : "normal",
-                            textDecoration: "none",
+                            textDecoration: isActive ? "underline" : "none",
                         })}>{item.icon}{item.lable}
                         </NavLink>
                     </ListItem>))}
@@ -63,13 +64,10 @@ const Dashboard2 = () => {
                 <Flex as="nav" p={"10px"} alignItems="center"
                     bgGradient="linear(to-r, indigo, purple.500, pink.500)"
                     color={"white"}>
-                    <Heading>TANK Sudent Portal</Heading>
+                    <Heading>TANK Teachers Platform</Heading>
                     <Spacer />
                     <HStack >
-                        <Badge variant="solid" colorScheme="red">
-                            <HiStar />
-                            New
-                        </Badge>
+
                         <Box ml="20px" fontSize={"20px"} bg={"green.400"}> SP </Box>
                         <Text ml="20px" fontSize={"20px"}>{loggedInUser.email} </Text>
                         <Button ml="20px" colorScheme={"teal"} onClick={handleLogout}>
