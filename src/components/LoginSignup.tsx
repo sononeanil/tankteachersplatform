@@ -137,7 +137,7 @@ const LoginSignup = () => {
 
                                 <FormControl isInvalid={!!loginFormErrors.password}>
                                     <FormLabel>password </FormLabel>
-                                    <Input
+                                    <Input type="password"
 
                                         placeholder="Enter your password"
                                         {...loginFormRegister("password", { required: "Email is required" })}
@@ -303,7 +303,7 @@ const LoginSignup = () => {
 
                                 <FormControl isInvalid={!!errors.password}>
                                     <FormLabel>password </FormLabel>
-                                    <Input
+                                    <Input type="password"
 
                                         placeholder="Enter your password"
                                         {...register("password", { required: "Email is required" })}
@@ -318,7 +318,7 @@ const LoginSignup = () => {
                             <GridItem colSpan={2}>
                                 <FormControl>
                                     <FormLabel>Comfirm Password</FormLabel>
-                                    <Input placeholder="Re enter your password" />
+                                    <Input type="password" placeholder="Re enter your password" />
                                 </FormControl>
                             </GridItem>
                             <GridItem colSpan={2}>
