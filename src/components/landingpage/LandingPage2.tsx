@@ -2,7 +2,7 @@ import { Flex, HStack, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { AiOutlineHome, AiOutlineMail } from "react-icons/ai";
 import { MdPlayCircleOutline } from "react-icons/md";
 import { FaInfoCircle } from "react-icons/fa";
-import DataTable from "./DataTable";
+// import DataTable from "./DataTable";
 import LandingPageCorousel from "./LandingPageCorousel";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -55,7 +55,7 @@ const LandingPage2 = () => {
                     ))} </SimpleGrid>
             </Flex>
 
-            <DataTable ></DataTable>
+            {/* <DataTable ></DataTable> */}
 
         </>
     )
