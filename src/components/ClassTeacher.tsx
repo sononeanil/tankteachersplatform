@@ -1,5 +1,5 @@
 import { Button, Flex } from "@chakra-ui/react"
-import { NavLink, Outlet } from "react-router"
+import { NavLink, Outlet } from "react-router-dom"
 
 const ClassTeacher = () => {
     return (

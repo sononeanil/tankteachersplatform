@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { Link } from "react-router"
+import { Link } from "react-router-dom"
 import { getAllPost } from "../Api"
 
 const Tanstack = () => {

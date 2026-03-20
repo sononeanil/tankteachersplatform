@@ -2,7 +2,7 @@ import { Box, Image, Text, VStack } from "@chakra-ui/react"
 import { AiFillAlipaySquare, AiOutlineDashboard, AiOutlineTeam } from "react-icons/ai"
 import { MdAddTask } from "react-icons/md"
 import ChildStudyPlatform1 from "../images/ChildStudyPlatform3.png";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
 

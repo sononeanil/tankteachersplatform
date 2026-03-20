@@ -4,7 +4,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import { usePublishCourseList } from "../../tanstack/publishCoursesTanstack";
 import type { PublishCourseType } from "../../types/publishCourseTypes";
 import { AllCommunityModule, ModuleRegistry, type ColDef } from "ag-grid-community";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 
 const ListAllCourse = () => {

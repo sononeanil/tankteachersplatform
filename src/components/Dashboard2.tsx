@@ -1,9 +1,8 @@
-import { Box, Button, Flex, Grid, GridItem, Heading, HStack, List, ListItem, Spacer, Text, Badge } from "@chakra-ui/react"
+import { Box, Button, Flex, Grid, GridItem, Heading, HStack, List, ListItem, Spacer, Text } from "@chakra-ui/react"
 import { AiOutlineDashboard, AiOutlineTeam, AiOutlineUser } from "react-icons/ai"
 import { MdOutlineClass, MdWeb } from "react-icons/md"
 import { FaChalkboardTeacher, FaSchool } from "react-icons/fa"
-import { HiStar } from "react-icons/hi"
-import { NavLink, Outlet, useNavigate } from "react-router"
+import { NavLink, Outlet, useNavigate } from "react-router-dom"
 
 
 const Dashboard2 = () => {

@@ -12,7 +12,7 @@ import {
     Stack,
     Badge
 } from "@chakra-ui/react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const courses = [
     {
@@ -120,7 +120,7 @@ const ViewCourse = () => {
                             </Text>
                         </CardBody>
 
-                        <CardFooter justify="space-between" align="center">
+                        <CardFooter justify="space-between" >
                             <Text fontWeight="bold">{course.price}</Text>
 
                             <Button colorScheme="teal" size="sm">

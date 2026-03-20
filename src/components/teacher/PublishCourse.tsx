@@ -2,10 +2,8 @@ import { useForm } from "react-hook-form";
 import { courseSchema, type PublishCourseType } from "../../types/publishCourseTypes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-    Box,
     Button,
     Input,
-    Textarea,
     Select,
     FormControl,
     FormLabel,

@@ -1,5 +1,5 @@
 import { Container, Flex, HStack } from "@chakra-ui/react"
-import { Outlet, Link } from "react-router"
+import { Outlet, Link } from "react-router-dom"
 
 const HomePage2 = () => {
     return (

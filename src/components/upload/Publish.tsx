@@ -2,7 +2,7 @@ import { Box, Button, Input, Select, Text, useToast, VStack } from "@chakra-ui/r
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { uploadFile } from "../../Api"
-import { Link, Outlet, useNavigate } from "react-router";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 
 const Publish = () => {
 

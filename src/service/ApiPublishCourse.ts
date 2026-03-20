@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import type { PublishCourseType } from "../types/publishCourseTypes";
+import type { PublishCourseType, RegisterCourseType } from "../types/publishCourseTypes";
 
 const apiPublishCourse = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/erpsystem"
@@ -50,8 +50,10 @@ export const getPublishCourseList = async (): Promise<PublishCourseType[]> => {
 export const getCourseDetails = async (courseId: number): Promise<PublishCourseType> => {
     try {
         const response = await apiPublishCourse.get(`/login/publishCourse?courseId=${courseId}`);
-        const data: PublishCourseType = response.status === 200 ? response.data.erpSystemResponse.publishCourse : {};
-        console.log("11111111111111 -> Fetched course details:", data);
+        // console.log("11111111111111 -> Fetched course details:", response);
+        const data: PublishCourseType = response.status === 200 ?
+            response.data.erpSystemResponse.courseDetails : {};
+
         return data;
     } catch (error: any) {
         if (error.response) {
@@ -59,6 +61,21 @@ export const getCourseDetails = async (courseId: number): Promise<PublishCourseT
             throw new Error(
                 error.response.data.erpSystemResponse.message ||
                 "Unable get details. Please try again later."
+            );
+        }
+        throw new Error("Network error while fetching available courses. Please check your connection and try again.");
+    }
+};
+
+export const registerForCourse = async (newCourseRegister: RegisterCourseType) => {
+    try {
+        await apiPublishCourse.post("/login/publishCourse/register", newCourseRegister);
+    } catch (error: any) {
+        if (error.response) {
+            // console.log("Error response data:", error, error.response.data);
+            throw new Error(
+                error.response.data.erpSystemResponse.message ||
+                "Unable to Register for course. Please try again later."
             );
         }
         throw new Error("Network error while fetching available courses. Please check your connection and try again.");

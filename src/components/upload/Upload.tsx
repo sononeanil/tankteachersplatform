@@ -2,7 +2,7 @@ import { Box, Button, Input, Text, useToast, VStack } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { uploadFile } from "../../Api";
-import { Link, Outlet, useNavigate } from "react-router";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 
 const Upload = () => {
     const useFileUpload = () => {

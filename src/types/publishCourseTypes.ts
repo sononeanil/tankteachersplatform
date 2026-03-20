@@ -26,3 +26,13 @@ export const courseSchema = z.object({
 });
 
 export type PublishCourseType = z.infer<typeof courseSchema>;
+
+
+export const registerCourseSchema = z.object({
+    id: z.number().optional(),
+    courseId: z.number(),
+    organizerEmailId: z.string(),
+    studentEmailId: z.string()
+});
+
+export type RegisterCourseType = z.infer<typeof registerCourseSchema>;
