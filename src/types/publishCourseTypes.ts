@@ -21,6 +21,8 @@ export const courseSchema = z.object({
     fee: z.number().min(0, "Fee cannot be negative"),
 
     prerequisite: z.string().optional(),
+
+    organizerEmailId: z.string().optional(),
 });
 
 export type PublishCourseType = z.infer<typeof courseSchema>;

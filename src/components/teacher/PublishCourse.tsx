@@ -20,6 +20,9 @@ import { usePublishCourse } from "../../service/ApiPublishCourse";
 
 
 const PublishCourse = () => {
+    const userInfoString = localStorage.getItem("loggedInUser");
+    const loggedInUser = userInfoString ? JSON.parse(userInfoString) : null;
+
     const toast = useToast();
 
     const mutation = usePublishCourse();
@@ -27,6 +30,7 @@ const PublishCourse = () => {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isValid },
     } = useForm<PublishCourseType>({
         resolver: zodResolver(courseSchema),
@@ -39,9 +43,20 @@ const PublishCourse = () => {
         const finalData = {
             ...data,
             id: 0, // 👈 add id here
+            organizerEmailId: loggedInUser.email,
         };
-
-        mutation.mutate(finalData);
+        mutation.mutate(finalData, {
+            onSuccess: () => {
+                toast({
+                    title: "Course published successfully!",
+                    status: "success",
+                    duration: null,
+                    isClosable: true,
+                    position: "top",
+                });
+                reset();
+            }
+        });
     };
 
 
@@ -54,8 +69,6 @@ const PublishCourse = () => {
                 <form onSubmit={handleSubmit(publishCourse)} >
                     <SimpleGrid columns={2}
                         columnGap={3} rowGap={5} spacing={10} width={"full"}>
-
-
                         <GridItem colSpan={2}>
                             <FormControl isInvalid={!!errors.courseName}>
                                 <FormLabel>courseName </FormLabel>

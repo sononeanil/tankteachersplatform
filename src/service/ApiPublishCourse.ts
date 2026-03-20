@@ -27,3 +27,40 @@ export const usePublishCourse = () => {
         },
     });
 };
+
+export const getPublishCourseList = async (): Promise<PublishCourseType[]> => {
+    try {
+        const response = await apiPublishCourse.get("/login/publishCourse/all");
+        const data: PublishCourseType[] = response.status === 200 ? response.data.erpSystemResponse.publishCourseList : [];
+        // console.log("Fetched publish courses:", data);
+        return data;
+    } catch (error: any) {
+        if (error.response) {
+            // console.log("Error response data:", error, error.response.data);
+            throw new Error(
+                error.response.data.erpSystemResponse.message ||
+                "Unable get available courses. Please try again later."
+            );
+        }
+        throw new Error("Network error while fetching available courses. Please check your connection and try again.");
+    }
+};
+
+
+export const getCourseDetails = async (courseId: number): Promise<PublishCourseType> => {
+    try {
+        const response = await apiPublishCourse.get(`/login/publishCourse?courseId=${courseId}`);
+        const data: PublishCourseType = response.status === 200 ? response.data.erpSystemResponse.publishCourse : {};
+        console.log("11111111111111 -> Fetched course details:", data);
+        return data;
+    } catch (error: any) {
+        if (error.response) {
+            // console.log("Error response data:", error, error.response.data);
+            throw new Error(
+                error.response.data.erpSystemResponse.message ||
+                "Unable get details. Please try again later."
+            );
+        }
+        throw new Error("Network error while fetching available courses. Please check your connection and try again.");
+    }
+};

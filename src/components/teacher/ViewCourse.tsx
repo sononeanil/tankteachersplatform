@@ -12,6 +12,7 @@ import {
     Stack,
     Badge
 } from "@chakra-ui/react";
+import { Link } from "react-router";
 
 const courses = [
     {
@@ -71,15 +72,29 @@ const ViewCourse = () => {
             // bgGradient="linear(to-r, green.50, blue.50)"
             minH="100vh"
             p={6}
-        >
-            <Heading mb={6} textAlign="center">
-                Explore Courses
-            </Heading>
 
+        >
+            <Heading
+                mb={6}
+                textAlign="center"
+                bgGradient="linear(to-r, teal.400, green.500, purple.600)"
+                bgClip="text"
+                fontWeight="medium"
+            >
+
+                Explore Courses - completly free to create and sell your courses onlines
+            </Heading >
+            <Link to="/listAllCourse"
+                style={{
+                    color: "teal", fontWeight: "bold",
+                    textDecoration: "underline", marginBottom: "20px", display: "block"
+                }}>
+                List All Courses
+            </Link>
             <SimpleGrid columns={[1, 2, 3]} spacing={8}>
                 {courses.map((course) => (
                     <Card
-                        bg="rgba(40, 27, 231, 0.15)"
+                        bg="linear-gradient(#80eff7ff, #f2c1c1ff)"
                         backdropFilter="blur(10px)"
                         border="1px solid rgba(255, 255, 255, 0.3)"
                         borderRadius="2xl"
@@ -115,6 +130,13 @@ const ViewCourse = () => {
                     </Card>
                 ))}
             </SimpleGrid>
+            <Link to="/listAllCourse"
+                style={{
+                    color: "teal", fontWeight: "bold",
+                    textDecoration: "underline", marginTop: "20px", display: "block"
+                }}>
+                List All Courses
+            </Link>
         </Box>
     );
 };

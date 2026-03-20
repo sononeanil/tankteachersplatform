@@ -23,7 +23,8 @@ const SimpleCarousel: React.FC = () => {
     <Box maxW="full" mx="auto" p={1} mb={5}>
       <Slider {...settings}>
         {slides.map((msg, i) => (
-          <Box key={i} bg="linear-gradient(#80eff7ff, #f2c1c1ff)" p={5} borderRadius="md" textAlign="center">
+          <Box key={i} bgGradient="linear(to-r, #80eff7, #a1c4fd, #f2c1c1)"
+            p={5} borderRadius="md" textAlign="center">
             <Text fontSize="2xl" color="white" fontWeight="bold">
               {msg}
             </Text>

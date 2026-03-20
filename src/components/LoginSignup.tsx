@@ -4,15 +4,22 @@ import { useForm, type SubmitHandler } from "react-hook-form"
 import { loginSchema, userSchema, type LoginType, type UserType } from "../types/userType"
 import { mutationCreateLogin, mutationCreateUser } from "../Api"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Link, useNavigate } from "react-router"
+import { useNavigate } from "react-router"
+import { useSearchParams } from "react-router-dom"
 
 
 const LoginSignup = () => {
     const navigate = useNavigate();
+    // const [searchParams] = useSearchParams();
+
     const { mutateAsync: mutationAsynchLogin } = useMutation({
         mutationFn: mutationCreateLogin,
         onSuccess: () => {
-
+            // const courseId = searchParams.get("courseId");
+            // if (courseId) {
+            //     navigate(`/db2/registerCourse?courseId=${courseId}`);
+            //     return;
+            // }
             navigate("/db2");
 
         },
@@ -120,7 +127,7 @@ const LoginSignup = () => {
                             <GridItem colSpan={2}>
 
                                 <FormControl isInvalid={!!loginFormErrors.userId}>
-                                    <FormLabel>userId </FormLabel>
+                                    <FormLabel>Your Registerd email id </FormLabel>
                                     <Input
 
                                         placeholder="Enter your userId"

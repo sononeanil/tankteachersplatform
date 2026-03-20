@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router'
+// import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import PageNotFound from './components/PageNotFound.tsx'
 import HomePage from './components/HomePage.tsx'
 import Tanstack from './components/Tanstack.tsx'
@@ -36,6 +37,8 @@ import CreateZoom from './components/zoom/CreateZoom.tsx'
 import StudentDashboard from './components/student/StudentDashboard.tsx'
 import UpcomingMeeting from './components/teacher/UpcomingMeeting.tsx'
 import PublishCourse from './components/teacher/PublishCourse.tsx'
+import ListAllCourse from './components/teacher/ListAllCourse.tsx'
+import RegisterCourse from './components/teacher/RegisterCourse.tsx'
 
 
 const router = createBrowserRouter([
@@ -49,7 +52,11 @@ const router = createBrowserRouter([
     {
       path: "/login",
       element: <LoginSignup></LoginSignup>
-    }]
+    }, {
+      path: "/listAllCourse",
+      element: <ListAllCourse></ListAllCourse>
+    }
+    ]
   },
   {
     path: "/db2",
@@ -104,6 +111,9 @@ const router = createBrowserRouter([
     {
       path: "/db2/classroom/classromDetails/:id",
       element: <ClassRoomDetails></ClassRoomDetails>
+    }, {
+      path: "/db2/registerCourse",
+      element: <RegisterCourse></RegisterCourse>
     },
     {
       path: "/db2/classTeacher",

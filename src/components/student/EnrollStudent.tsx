@@ -147,7 +147,7 @@ const EnrollStudent = () => {
                         <GridItem colSpan={1}>
                             <FormControl isInvalid={!!errors.password}>
                                 <FormLabel>student Password </FormLabel>
-                                <Input placeholder="Enter student password" {...register("password")} />
+                                <Input type="password" placeholder="Enter student password" {...register("password")} />
                                 <FormErrorMessage>
                                     {errors.password && errors.password.message}
                                 </FormErrorMessage>
