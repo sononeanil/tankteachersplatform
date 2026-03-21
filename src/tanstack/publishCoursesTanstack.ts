@@ -1,6 +1,6 @@
 // hooks/usePublishCourseList.ts
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getCourseDetails, getPublishCourseList, registerForCourse } from "../service/ApiPublishCourse";
+import { getCourseDetails, getPublishCourseList, getPublishCourseListTop6, registerForCourse } from "../service/ApiPublishCourse";
 import { useToast } from "@chakra-ui/react";
 
 export const usePublishCourseList = () => {
@@ -45,5 +45,13 @@ export const useRegisterCourse = () => {
                 position: "top-right",
             });
         }
+    });
+};
+
+export const usePublishCourseListTop6 = () => {
+    return useQuery({
+        queryKey: ["publishCoursesTop6"],   // 🔑 unique cache key
+        queryFn: getPublishCourseListTop6,
+        // API function
     });
 };
