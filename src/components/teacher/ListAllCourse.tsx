@@ -25,6 +25,7 @@ const ListAllCourse = () => {
             )
         },
         { headerName: "ID", field: "id", hide: true },
+        { headerName: "Fee", field: "fee" },
         { headerName: "Course Name", field: "courseName", sortable: true, filter: true },
         { headerName: "Topic", field: "specificTopic", filter: true },
         { headerName: "Teachers Email", field: "organizerEmailId", filter: true },
@@ -32,7 +33,6 @@ const ListAllCourse = () => {
         { headerName: "Days", field: "numberOfDays" },
         { headerName: "Hours", field: "numberOfHourse" },
         { headerName: "Mode", field: "modeOfDelivery", filter: true },
-        { headerName: "Fee", field: "fee" },
         { headerName: "Prerequisite", field: "prerequisite" },
 
     ];

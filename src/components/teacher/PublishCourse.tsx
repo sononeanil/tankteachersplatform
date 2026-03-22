@@ -60,14 +60,16 @@ const PublishCourse = () => {
 
     return (
         <>
-            <Container maxW={"container.lg"}
-                padding={10} boxShadow={"2xl"}
-                borderRadius={10}>
+            <Container
+                maxW="container.lg"
+                p={{ base: 4, md: 10 }}
+                boxShadow="2xl"
+                borderRadius="10px"
+            >
                 <Heading mb={6}>Publish Course 🚀</Heading>
                 <form onSubmit={handleSubmit(publishCourse)} >
-                    <SimpleGrid columns={2}
-                        columnGap={3} rowGap={5} spacing={10} width={"full"}>
-                        <GridItem colSpan={2}>
+                    <SimpleGrid columns={{ base: 1, md: 2 }} columnGap={3} rowGap={5} spacing={10} width={"full"}>
+                        <GridItem colSpan={{ base: 1, md: 2 }}>
                             <FormControl isInvalid={!!errors.courseName}>
                                 <FormLabel>courseName </FormLabel>
                                 <Input placeholder="Enter your courseName" {...register("courseName")} />
@@ -112,7 +114,7 @@ const PublishCourse = () => {
                                 </FormErrorMessage>
                             </FormControl>
                         </GridItem>
-                        <GridItem colSpan={2}>
+                        <GridItem colSpan={{ base: 1, md: 2 }}>
                             <FormControl isInvalid={!!errors.description}>
                                 <FormLabel>description </FormLabel>
                                 <Input placeholder="Enter your description" {...register("description")} />
@@ -121,7 +123,7 @@ const PublishCourse = () => {
                                 </FormErrorMessage>
                             </FormControl>
                         </GridItem>
-                        <GridItem colSpan={2}>
+                        <GridItem colSpan={{ base: 1, md: 2 }}>
                             <FormControl isInvalid={!!errors.targatedAudience}>
                                 <FormLabel>targatedAudience </FormLabel>
                                 <Input placeholder="Enter your targatedAudience" {...register("targatedAudience")} />
@@ -162,7 +164,7 @@ const PublishCourse = () => {
                             </FormControl>
                         </GridItem>
 
-                        <GridItem colSpan={2}>
+                        <GridItem colSpan={{ base: 1, md: 2 }}>
                             <FormControl>
                                 <Button type="submit" colorScheme="blue"
                                     isDisabled={!isValid}
