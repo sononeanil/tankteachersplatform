@@ -1,5 +1,5 @@
 import { SimpleGrid, GridItem, HStack, Button } from "@chakra-ui/react"
-import { NavLink, Outlet } from "react-router"
+import { NavLink, Outlet } from "react-router-dom"
 
 const StudentDetails = () => {
     return (

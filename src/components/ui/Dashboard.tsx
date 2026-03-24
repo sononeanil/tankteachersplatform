@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react"
-import { Link } from "react-router"
+import { Link } from "react-router-dom"
 import Layout from "../Layout"
 
 const Dashboard = () => {

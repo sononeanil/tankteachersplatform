@@ -1,10 +1,11 @@
-import { Button, Flex } from "@chakra-ui/react"
-import { NavLink, Outlet } from "react-router"
+import { Button, Flex } from "@chakra-ui/react";
+import { NavLink, Outlet } from "react-router-dom";
 
 const ClassTeacher = () => {
     return (
         <>
             <Flex
+                direction={{ base: "column", md: "row" }}
                 bgGradient="linear(to-r, teal.400, blue.500)"
                 p={4}
                 borderRadius="md"
@@ -13,9 +14,8 @@ const ClassTeacher = () => {
                 <Button
                     as={NavLink}
                     to="/db2/classTeacher/publish"
-                    variant="solid"
+                    w={{ base: "100%", md: "auto" }}
                     colorScheme="yellow"
-                    _activeLink={{ bg: "white", color: "teal.500", fontWeight: "bold" }}
                 >
                     📢 Publish
                 </Button>
@@ -23,9 +23,8 @@ const ClassTeacher = () => {
                 <Button
                     as={NavLink}
                     to="/db2/classTeacher/createZoomMeeting"
-                    variant="solid"
+                    w={{ base: "100%", md: "auto" }}
                     colorScheme="pink"
-                    _activeLink={{ bg: "white", color: "pink.500", fontWeight: "bold" }}
                 >
                     🎥 Create Zoom Meeting
                 </Button>
@@ -33,18 +32,16 @@ const ClassTeacher = () => {
                 <Button
                     as={NavLink}
                     to="/db2/classTeacher/myUpcomingMeetings"
-                    variant="solid"
+                    w={{ base: "100%", md: "auto" }}
                     colorScheme="pink"
-                    _activeLink={{ bg: "white", color: "pink.500", fontWeight: "bold" }}
                 >
                     🎥 My upcoming Meetings
                 </Button>
-
             </Flex>
 
-            <Outlet></Outlet>
+            <Outlet />
         </>
-    )
-}
+    );
+};
 
-export default ClassTeacher
+export default ClassTeacher;

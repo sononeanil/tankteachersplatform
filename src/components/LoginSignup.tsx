@@ -4,15 +4,22 @@ import { useForm, type SubmitHandler } from "react-hook-form"
 import { loginSchema, userSchema, type LoginType, type UserType } from "../types/userType"
 import { mutationCreateLogin, mutationCreateUser } from "../Api"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Link, useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 
 
 const LoginSignup = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
     const { mutateAsync: mutationAsynchLogin } = useMutation({
         mutationFn: mutationCreateLogin,
         onSuccess: () => {
-
+            const courseId = searchParams.get("courseId");
+            if (courseId) {
+                navigate(`/db2/registerCourse?courseId=${courseId}`);
+                return;
+            }
             navigate("/db2");
 
         },
@@ -93,10 +100,16 @@ const LoginSignup = () => {
 
     return (
 
-        <Container maxW={"container.lg"}
-            padding={10} boxShadow={"2xl"}
-            borderRadius={10}>
-            <Flex>
+        <Container
+            maxW="container.lg"
+            p={{ base: 4, md: 10 }}
+            boxShadow="2xl"
+            borderRadius={10}
+        >
+            <Flex
+                direction={{ base: "column", md: "row" }}
+                gap={{ base: 6, md: 10 }}
+            >
                 <VStack spacing={10}
                     width={"full"}
                     h={"full"}
@@ -106,21 +119,21 @@ const LoginSignup = () => {
                     borderColor="green.300"
                     borderRadius={10}
                     boxShadow="2xl"
-                    mr={10}
+                    mr={{ base: 0, md: 10 }}
                     bgGradient="linear(to-r, red.100, green.100)">
                     {/* Add your landing page content here */}
-                    <VStack>
+                    <VStack w={{ base: "full" }}>
                         <Heading size={"md"}>Login - Existing User</Heading>
                         <Text>If you are already registered user , please login here</Text>
                     </VStack>
 
                     <form onSubmit={loginFormHandleSubmit(createLogin)} >
-                        <SimpleGrid columns={2}
+                        <SimpleGrid columns={{ base: 1, md: 2 }}
                             columnGap={3} rowGap={5} spacing={10} width={"full"}>
                             <GridItem colSpan={2}>
 
                                 <FormControl isInvalid={!!loginFormErrors.userId}>
-                                    <FormLabel>userId </FormLabel>
+                                    <FormLabel>Your Registerd email id </FormLabel>
                                     <Input
 
                                         placeholder="Enter your userId"

@@ -1,26 +1,62 @@
-import { Container, Flex, HStack, Link } from "@chakra-ui/react"
-import { Outlet } from "react-router"
+import { Container, Flex, HStack, VStack, Box } from "@chakra-ui/react";
+import { Outlet, Link } from "react-router-dom";
 
 const HomePage2 = () => {
     return (
-        <Container maxW={"container.xl"}
-            padding={10} boxShadow={"2xl"}
-            borderRadius={10} margin={10}>
+        <Container
+            maxW="container.xl"
+            p={{ base: 3, md: 5 }}
+            boxShadow="2xl"
+            borderRadius={10}
+            m={{ base: 2, md: 5 }}
+        >
+            <Flex direction="column">
 
-            <Flex direction={"column"}>
+                {/* NAVBAR */}
+                <Box p={3}>
 
-                <HStack spacing={6} p={5} justify={"end"}>
-                    <Link href="/" color="teal.500" fontWeight="bold" textDecoration="underline">Dashboard</Link>
-                    <Link href="/inventory" color="teal.500" fontWeight="bold" textDecoration="underline">Inventory</Link>
-                    <Link href="/Login" color="teal.500" fontWeight="bold" textDecoration="underline">complete Portfolio</Link>
-                    <Link href="/login" bg="blue.500" color="white" px={4} py={2} rounded="md" _hover={{ bg: "green.600" }}>
-                        Login To System
-                    </Link>
-                </HStack>
-                <Outlet></Outlet>
+                    {/* MOBILE VERSION 📱 */}
+                    <VStack
+                        display={{ base: "flex", md: "none" }}
+                        spacing={3}
+                        align="stretch"
+                    >
+                        <Link style={linkStyle} to="/">Home</Link>
+                        <Link style={linkStyle} to="/inventory">Inventory</Link>
+                        <Link style={linkStyle} to="/listAllCourse">Courses</Link>
+                        <Link to="/login">
+                            Login / SignUp
+                        </Link>
+                    </VStack>
+
+                    {/* DESKTOP VERSION 💻 */}
+                    <HStack
+                        display={{ base: "none", md: "flex" }}
+                        spacing={6}
+                        justify="flex-end"
+                    >
+                        <Link style={linkStyle} to="/">Home</Link>
+                        <Link style={linkStyle} to="/inventory">Inventory</Link>
+                        <Link style={linkStyle} to="/listAllCourse">Courses</Link>
+                        <Link to="/login">
+                            Login / SignUp
+                        </Link>
+                    </HStack>
+
+                </Box>
+
+                <Outlet />
             </Flex>
         </Container>
-    )
-}
+    );
+};
 
-export default HomePage2
+const linkStyle = {
+    color: "teal",
+    fontWeight: "bold",
+    textDecoration: "underline",
+};
+
+
+
+export default HomePage2;
