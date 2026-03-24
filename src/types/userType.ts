@@ -1,4 +1,5 @@
-import z from "zod";
+import { z } from "zod";
+
 
 export const loginSchema = z.object({
     id: z.number().optional(),
@@ -10,15 +11,19 @@ export type LoginType = z.infer<typeof loginSchema>;
 
 export const userSchema = z.object({
     id: z.number().optional(),
-    firstName: z.string().min(3),
-    lastName: z.string().min(3),
-    address: z.string().min(3).optional(),
-    city: z.string().min(3).optional(),
-    country: z.string().min(5).optional(),
-    newsLetter: z.string().optional(),
-    email: z.email().min(5).optional(),
+    // firstName: z.string().min(3),
+    // lastName: z.string().min(3),
+    // address: z.string().min(3).optional(),
+    // city: z.string().min(3).optional(),
+    // country: z.string().min(5).optional(),
+    // newsLetter: z.string().optional(),
+    email: z.email().min(5),
     password: z.string().min(3),
-    type: z.string().min(3).optional()
+    phoneNumber: z.string().min(10),
+    alternateEmailId:
+        z.email("Invalid email")
+            .optional()
+            .or(z.literal(""))
 })
 
 export type UserType = z.infer<typeof userSchema>;
@@ -33,7 +38,7 @@ export const studentSchema = z.object({
     firstName: z.string().min(3, "firstName Mandatory attribute with more than 3 characters"),
     lastName: z.string().min(3),
     nickName: z.string().min(3).optional().or(z.literal("")),
-    email: z.string().email().optional().or(z.literal("")),
+    email: z.email().optional().or(z.literal("")),
     age: z.coerce.number().min(1, "Age is mandatory and has to be greater than zero"),
     classEntrolled: z.string().min(3).optional().or(z.literal("")),
     middleName: z.string().min(3).optional().or(z.literal("")),

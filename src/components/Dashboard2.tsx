@@ -21,7 +21,7 @@ const Dashboard2 = () => {
 
     const navItems = [
         { lable: "Dashboard", icon: <AiOutlineDashboard />, path: "landingPage" },
-        { lable: "Families", icon: <AiOutlineTeam />, path: "chakraUi1" },
+        { lable: "Register Course", icon: <AiOutlineTeam />, path: "listAllCourse" },
         { lable: "Class room", icon: <MdOutlineClass />, path: "classroom" },
         { lable: "Teacher", icon: <FaChalkboardTeacher />, path: "classTeacher" },
         { lable: "Publish Course", icon: <FaChalkboardTeacher />, path: "publishCourse" },

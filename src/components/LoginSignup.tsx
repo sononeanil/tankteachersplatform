@@ -1,4 +1,4 @@
-import { Text, Container, Flex, VStack, GridItem, FormControl, FormLabel, Input, Button, SimpleGrid, Select, Checkbox, Heading, FormErrorMessage, useToast } from "@chakra-ui/react"
+import { Text, Container, Flex, VStack, GridItem, FormControl, FormLabel, Input, Button, SimpleGrid, Heading, FormErrorMessage, useToast } from "@chakra-ui/react"
 import { useMutation } from "@tanstack/react-query"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { loginSchema, userSchema, type LoginType, type UserType } from "../types/userType"
@@ -76,15 +76,17 @@ const LoginSignup = () => {
     const createUser: SubmitHandler<UserType> = (data: UserType) => {
         const newUser: UserType = {
             id: 0,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            address: data.address,
-            city: data.city,
-            country: data.country,
-            newsLetter: data.newsLetter,
+            // firstName: data.firstName,
+            // lastName: data.lastName,
+            // address: data.address,
+            // city: data.city,
+            // country: data.country,
+            // newsLetter: data.newsLetter,
             email: data.email,
             password: data.password,
-            type: data.type,
+            // type: data.type,
+            phoneNumber: data.phoneNumber,
+            alternateEmailId: data.alternateEmailId,
             //Entity: data.//Entity,
         }
         mutateAsync(newUser)
@@ -193,107 +195,9 @@ const LoginSignup = () => {
                         <Text>If you are new , please register your self</Text>
                     </VStack>
 
-
                     <form onSubmit={handleSubmit(createUser)} >
                         <SimpleGrid columns={2}
                             columnGap={3} rowGap={5} spacing={10} width={"full"}>
-                            <GridItem colSpan={1}>
-
-                                <FormControl isInvalid={!!errors.firstName}>
-                                    <FormLabel>firstName </FormLabel>
-                                    <Input
-
-                                        placeholder="Enter your firstName"
-                                        {...register("firstName", { required: "Email is required" })}
-                                    />
-                                    <FormErrorMessage>
-                                        {errors.firstName && errors.firstName.message}
-                                    </FormErrorMessage>
-                                </FormControl>
-                            </GridItem>
-
-
-
-
-                            <GridItem colSpan={1}>
-
-                                <FormControl isInvalid={!!errors.lastName}>
-                                    <FormLabel>lastName </FormLabel>
-                                    <Input
-
-                                        placeholder="Enter your lastName"
-                                        {...register("lastName", { required: "Email is required" })}
-                                    />
-                                    <FormErrorMessage>
-                                        {errors.lastName && errors.lastName.message}
-                                    </FormErrorMessage>
-                                </FormControl>
-                            </GridItem>
-
-
-
-
-                            <GridItem colSpan={1}>
-
-                                <FormControl isInvalid={!!errors.address}>
-                                    <FormLabel>address </FormLabel>
-                                    <Input
-
-                                        placeholder="Enter your address"
-                                        {...register("address", { required: "Email is required" })}
-                                    />
-                                    <FormErrorMessage>
-                                        {errors.address && errors.address.message}
-                                    </FormErrorMessage>
-                                </FormControl>
-                            </GridItem>
-
-
-
-
-                            <GridItem colSpan={1}>
-
-                                <FormControl isInvalid={!!errors.city}>
-                                    <FormLabel>city </FormLabel>
-                                    <Input
-
-                                        placeholder="Enter your city"
-                                        {...register("city", { required: "Email is required" })}
-                                    />
-                                    <FormErrorMessage>
-                                        {errors.city && errors.city.message}
-                                    </FormErrorMessage>
-                                </FormControl>
-                            </GridItem>
-                            <GridItem colSpan={2}>
-                                <FormControl>
-                                    <FormLabel>Country</FormLabel>
-                                    <Select placeholder="Select Country">
-                                        <option>India</option>
-                                        <option>Canada</option>
-                                        <option>United Kingdom</option>
-                                        <option>Australia</option>
-
-                                    </Select>
-                                </FormControl>
-                            </GridItem>
-
-                            <GridItem colSpan={2}>
-                                <FormControl>
-                                    <Checkbox>Subscribe to Newsletter</Checkbox>
-                                </FormControl>
-                            </GridItem>
-                            <GridItem colSpan={2}>
-                                <FormControl>
-                                    <FormLabel>Please Select Type</FormLabel>
-                                    <Select placeholder="Select Category">
-                                        <option>Individula Parent</option>
-                                        <option>School</option>
-                                        <option>Trainer</option>
-                                        <option>Scociety</option>
-                                    </Select>
-                                </FormControl>
-                            </GridItem>
 
                             <GridItem colSpan={2}>
                                 <FormControl isInvalid={!!errors.email}>
@@ -309,13 +213,37 @@ const LoginSignup = () => {
                                 </FormControl>
                             </GridItem>
 
+                            <GridItem colSpan={2}>
+                                <FormControl isInvalid={!!errors.alternateEmailId}>
+                                    <FormLabel>Alternate Email </FormLabel>
+                                    <Input
 
+                                        placeholder="Enter your alternate email"
+                                        {...register("alternateEmailId", { required: "Alternate email is required" })}
+                                    />
+                                    <FormErrorMessage>
+                                        {errors.alternateEmailId && errors.alternateEmailId.message}
+                                    </FormErrorMessage>
+                                </FormControl>
+                            </GridItem>
+                            <GridItem colSpan={2}>
+                                <FormControl isInvalid={!!errors.phoneNumber}>
+                                    <FormLabel>Phone Number </FormLabel>
+                                    <Input
 
+                                        placeholder="Enter your phone number"
+                                        {...register("phoneNumber", { required: "Phone number is required" })}
+                                    />
+                                    <FormErrorMessage>
+                                        {errors.phoneNumber && errors.phoneNumber.message}
+                                    </FormErrorMessage>
+                                </FormControl>
+                            </GridItem>
 
                             <GridItem colSpan={2}>
 
                                 <FormControl isInvalid={!!errors.password}>
-                                    <FormLabel>password </FormLabel>
+                                    <FormLabel>Password </FormLabel>
                                     <Input type="password"
 
                                         placeholder="Enter your password"
@@ -327,13 +255,6 @@ const LoginSignup = () => {
                                 </FormControl>
                             </GridItem>
 
-
-                            <GridItem colSpan={2}>
-                                <FormControl>
-                                    <FormLabel>Comfirm Password</FormLabel>
-                                    <Input type="password" placeholder="Re enter your password" />
-                                </FormControl>
-                            </GridItem>
                             <GridItem colSpan={2}>
                                 <FormControl>
                                     <Button type="submit" colorScheme="blue" width={"full"}>Submit</Button>

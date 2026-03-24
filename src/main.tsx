@@ -114,6 +114,9 @@ const router = createBrowserRouter([
     }, {
       path: "/db2/registerCourse",
       element: <RegisterCourse></RegisterCourse>
+    }, {
+      path: "/db2/listAllCourse",
+      element: <ListAllCourse></ListAllCourse>
     },
     {
       path: "/db2/classTeacher",
@@ -244,7 +247,6 @@ const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-
     <Provider>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router}></RouterProvider>

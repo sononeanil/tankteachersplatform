@@ -25,7 +25,8 @@ const RegisterCourse = () => {
             id: 0,
             courseId: Number(courseIdParam) || 0,
             organizerEmailId: data?.organizerEmailId || "",
-            studentEmailId: loggedInUser.email
+            studentEmailId: loggedInUser.email,
+            courseName: data?.courseName || "",
         });
     }
 

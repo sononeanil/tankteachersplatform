@@ -32,7 +32,8 @@ export const registerCourseSchema = z.object({
     id: z.number().optional(),
     courseId: z.number(),
     organizerEmailId: z.string(),
-    studentEmailId: z.string()
+    studentEmailId: z.string(),
+    courseName: z.string(),
 });
 
 export type RegisterCourseType = z.infer<typeof registerCourseSchema>;
