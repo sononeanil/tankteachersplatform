@@ -79,6 +79,7 @@ const Dashboard2 = () => {
                         display={{ base: "block", md: "none" }}
                         onClick={onToggle}
                         mr={2}
+                        aria-label="Open menu"
                     />
 
                     <Heading fontSize={{ base: "md", md: "lg" }}>

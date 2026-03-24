@@ -15,12 +15,14 @@ import {
     GridItem,
 } from "@chakra-ui/react";
 import { usePublishCourse } from "../../service/ApiPublishCourse";
+// import { useState } from "react";
 
 
 const PublishCourse = () => {
     const userInfoString = localStorage.getItem("loggedInUser");
     const loggedInUser = userInfoString ? JSON.parse(userInfoString) : null;
-
+    // const [qrExists, setQrExists] = useState<boolean | null>(null);
+    // const [qrFile, setQrFile] = useState<File | null>(null);
     const toast = useToast();
 
     const mutation = usePublishCourse();

@@ -98,3 +98,20 @@ export const registerForCourse = async (newCourseRegister: RegisterCourseType) =
         throw new Error("Network error while fetching available courses. Please check your connection and try again.");
     }
 };
+
+
+export const getQrCode = async (teacherEmailId: string) => {
+    try {
+        const response = await apiPublishCourse.get(`/login/publishCourse/qr?teacherEmailId=${teacherEmailId}`);
+        return response.data;
+    } catch (error: any) {
+        if (error.response) {
+            // console.log("Error response data:", error, error.response.data);
+            throw new Error(
+                error.response.data.erpSystemResponse.message ||
+                "Unable to Register for course. Please try again later."
+            );
+        }
+        throw new Error("Network error while fetching available courses. Please check your connection and try again.");
+    }
+};
