@@ -42,12 +42,12 @@ const UserDetails = () => {
     };
 
     const [columnDefs] = useState([
-        { headerName: "ID", field: "id", checkboxSelection: true },
+        // { headerName: "ID", field: "id", checkboxSelection: true },
         { headerName: "Role", field: "role" },
         { headerName: "Email", field: "email" },
         { headerName: "First Name", field: "firstName" },
         { headerName: "Last Name", field: "lastName" },
-
+        { headerName: "Alternate Email", field: "alternateEmailId" },
         { headerName: "City", field: "city" }
 
     ]);
