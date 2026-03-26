@@ -37,7 +37,7 @@ const Dashboard2 = () => {
     ];
     const navigate = useNavigate();
     const handleLogout = () => {
-        localStorage.removeItem("jwtToken");
+        localStorage.clear();
         navigate("/");
     }
     const { isOpen, onToggle } = useDisclosure();
