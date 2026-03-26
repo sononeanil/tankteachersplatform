@@ -21,7 +21,7 @@ const theme = extendTheme({
                 outline: {
                     field: {
                         border: "2px solid",
-                        borderColor: "gray.400",
+                        borderColor: "blue.400",
                         borderRadius: "md",
                         px: 4,
                         py: 2,
@@ -91,6 +91,44 @@ const theme = extendTheme({
             },
             defaultProps: {
                 variant: "solid",
+            },
+        },
+        Select: {
+            variants: {
+                outline: {
+                    field: {
+                        border: "2px solid",
+                        borderColor: "gray.400",
+                        borderRadius: "md",
+                        bg: "white",
+                        boxShadow: "sm",
+
+                        _hover: {
+                            borderColor: "blue.400",
+                            boxShadow: "md",
+                        },
+
+                        _focus: {
+                            borderColor: "blue.500",
+                            boxShadow: "0 0 0 1px #3182ce, 0 4px 10px rgba(0,0,0,0.1)",
+                        },
+
+                        _dark: {
+                            bg: "gray.800",
+                            borderColor: "gray.600",
+                        },
+
+                        transition: "all 0.2s ease-in-out",
+                    },
+
+                    // 👇 optional: style dropdown icon
+                    icon: {
+                        color: "gray.500",
+                    },
+                },
+            },
+            defaultProps: {
+                variant: "outline",
             },
         },
     },
