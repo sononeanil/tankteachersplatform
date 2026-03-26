@@ -21,7 +21,6 @@ const LoginSignup = () => {
                 return;
             }
             navigate("/db2");
-
         },
         onError: (err: any) => {
             toast({
@@ -108,6 +107,7 @@ const LoginSignup = () => {
             boxShadow="2xl"
             borderRadius={10}
         >
+
             <Flex
                 direction={{ base: "column", md: "row" }}
                 gap={{ base: 6, md: 10 }}

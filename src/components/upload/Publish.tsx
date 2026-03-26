@@ -1,9 +1,21 @@
-import { Box, Button, Input, Select, Text, useToast, VStack } from "@chakra-ui/react";
+import {
+    Box,
+    Button,
+    Input,
+    Select,
+    Text,
+    useToast,
+    VStack,
+    FormControl,
+    FormLabel,
+    Heading,
+    Divider,
+    HStack,
+} from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
+import { uploadFile } from "../../Api";
 import { useState } from "react";
-import { uploadFile } from "../../Api"
-import { Link, Outlet, useNavigate } from "react-router-dom";
-
+import { Outlet, useNavigate } from "react-router-dom";
 const Publish = () => {
 
 
@@ -77,67 +89,129 @@ const Publish = () => {
 
     return (
         <>
-            <Box mt={10} p={6} maxW="500px" mx="auto" borderWidth="1px" borderRadius="lg" shadow="md">
-                <Select onChange={(e) => setBoard(e.target.value)} name="board" id="board" placeholder="Select Board">
-                    <option value="cbse">CBSE</option>
-                    <option value="icse">ICSE</option>
-                    <option value="ssc">SSC</option>
-                </Select>
-                <Select onChange={(e) => setStudentClass(e.target.value)}
-                    name="class" id="class" placeholder="Select Class">
-                    <option value="juniorKg">Junior KG</option>
-                    <option value="seniorKg">Senior KG</option>
-                    <option value="first">1st class</option>
-                    <option value="second">2nd class</option>
-                    <option value="third">3rd class</option>
-                </Select>
-                <Select
-                    onChange={(e) => setSubject(e.target.value)}
-                    name="subject" id="subject" placeholder="Select Subject">
-                    <option value="hindi">Hindi</option>
-                    <option value="english">English</option>
-                    <option value="marathi">Marathi</option>
-                </Select>
+            <Box
+                mt={10}
+                p={8}
+                maxW="500px"
+                mx="auto"
+                borderRadius="xl"
+                boxShadow="lg"
+                bg="white"
+            >
+                <VStack spacing={6} align="stretch">
 
-                <Select
-                    onChange={(e) => setTerm(e.target.value)}
-                    name="term" id="term" placeholder="Select term">
-                    <option value="term1">Term 1</option>
-                    <option value="term2">Term 2</option>
-                </Select>
+                    {/* 🔥 Title */}
+                    <Heading size="md">Upload Study Material</Heading>
+                    <Text fontSize="sm" color="gray.500">
+                        Select details and upload file for students
+                    </Text>
 
-                <Select
-                    onChange={(e) => setChapter(e.target.value)}
-                    name="chapter" id="chapter" placeholder="Select Chapter">
-                    <option value="chapter1">Chapter 1</option>
-                    <option value="chapter2">Chapter 2</option>
-                    <option value="chapter3">Chapter 3</option>
-                </Select>
-                <Select
-                    onChange={(e) => setType(e.target.value)}
-                    name="type" id="type" placeholder="Select type">
-                    <option value="practiceWorksheet">Practice Worksheet</option>
-                    <option value="modelPaper">modelPaper</option>
-                    <option value="assignment">Assignment</option>
-                </Select>
+                    <Divider />
 
-                <VStack spacing={4} align="stretch">
+                    {/* 📚 Academic Info */}
+                    <FormControl>
+                        <FormLabel>Board</FormLabel>
+                        <Select placeholder="Select Board" onChange={(e) => setBoard(e.target.value)}>
+                            <option value="cbse">CBSE</option>
+                            <option value="icse">ICSE</option>
+                            <option value="ssc">SSC</option>
+                        </Select>
+                    </FormControl>
 
-                    <Input type="file" onChange={handleFileChange} />
-                    <Button colorScheme="teal" onClick={handleUpload} isLoading={mutation.isPending}>
-                        Upload
+                    <FormControl>
+                        <FormLabel>Class</FormLabel>
+                        <Select placeholder="Select Class" onChange={(e) => setStudentClass(e.target.value)}>
+                            <option value="juniorKg">Junior KG</option>
+                            <option value="seniorKg">Senior KG</option>
+                            <option value="first">1st class</option>
+                            <option value="second">2nd class</option>
+                        </Select>
+                    </FormControl>
+
+                    <FormControl>
+                        <FormLabel>Subject</FormLabel>
+                        <Select placeholder="Select Subject" onChange={(e) => setSubject(e.target.value)}>
+                            <option value="hindi">Hindi</option>
+                            <option value="english">English</option>
+                            <option value="marathi">Marathi</option>
+                        </Select>
+                    </FormControl>
+
+                    {/* 🔹 Row Layout */}
+                    <HStack spacing={4}>
+                        <FormControl>
+                            <FormLabel>Term</FormLabel>
+                            <Select placeholder="Term" onChange={(e) => setTerm(e.target.value)}>
+                                <option value="term1">Term 1</option>
+                                <option value="term2">Term 2</option>
+                            </Select>
+                        </FormControl>
+
+                        <FormControl>
+                            <FormLabel>Chapter</FormLabel>
+                            <Select placeholder="Chapter" onChange={(e) => setChapter(e.target.value)}>
+                                <option value="chapter1">Chapter 1</option>
+                                <option value="chapter2">Chapter 2</option>
+                            </Select>
+                        </FormControl>
+                    </HStack>
+
+                    <FormControl>
+                        <FormLabel>Content Type</FormLabel>
+                        <Select placeholder="Select Type" onChange={(e) => setType(e.target.value)}>
+                            <option value="practiceWorksheet">Practice Worksheet</option>
+                            <option value="modelPaper">Model Paper</option>
+                            <option value="assignment">Assignment</option>
+                        </Select>
+                    </FormControl>
+
+                    <Divider />
+
+                    {/* 📁 File Upload */}
+                    <FormControl>
+                        <FormLabel>Upload File</FormLabel>
+                        <Input type="file" onChange={handleFileChange} />
+                    </FormControl>
+
+                    {/* 🚀 Button */}
+                    <Button
+                        size="lg"
+                        colorScheme="blue"
+                        onClick={handleUpload}
+                        isLoading={mutation.isPending}
+                    >
+                        Upload File
                     </Button>
-                    {mutation.isError && <Text color="red.500">Error: {mutation.error.message}</Text>}
-                    {mutation.isSuccess && <Text color="green.500">Success!</Text>}
+
+                    {/* 🧾 Status */}
+                    {mutation.isError && (
+                        <Text color="red.500" fontSize="sm">
+                            Error: {mutation.error.message}
+                        </Text>
+                    )}
+
+                    {mutation.isSuccess && (
+                        <Text color="green.500" fontSize="sm">
+                            Upload successful!
+                        </Text>
+                    )}
+
+                    {/* 🔗 Link */}
+                    <Text
+                        as="span"
+                        color="blue.500"
+                        cursor="pointer"
+                        onClick={() => nevigate("/db2/upload/uploadedFileList")}
+                    >
+                        View Uploaded Files →
+                    </Text>
+
                 </VStack>
-                <Link to={"/db2/upload/uploadedFileList"}>uploadedFileList</Link>
             </Box>
 
-            <Outlet>
-
-            </Outlet>
+            <Outlet />
         </>
-    )
+    );
 
 }
 
