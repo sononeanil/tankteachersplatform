@@ -30,6 +30,10 @@ import { useNavigate } from "react-router-dom";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const ListAllCourse = () => {
+
+    const userInfoString = localStorage.getItem("loggedInUser");
+    const loggedInUserEmailId = userInfoString ? JSON.parse(userInfoString).email : null;
+
     const navigate = useNavigate();
     const { data, isLoading, isError, error } = usePublishCourseList();
 
@@ -38,6 +42,15 @@ const ListAllCourse = () => {
     const [searchText, setSearchText] = useState("");
     const [searchField, setSearchField] = useState("courseName");
     const [openId, setOpenId] = useState<number | null>(null);
+
+    const handleRegister = (courseId: number) => {
+        // alert(loggedInUserEmailId ? `Registering for course ID: ${courseId}` : "Please log in to register");
+        if (loggedInUserEmailId) {
+            navigate(`/db2/registerCourse?courseId=${courseId}`);
+        } else {
+            navigate(`/login?courseId=${courseId}`);
+        }
+    };
 
     // ✅ Desktop ColumnDefs
     const columnDefs: ColDef<PublishCourseType>[] = [
@@ -48,7 +61,7 @@ const ListAllCourse = () => {
                     size="sm"
                     colorScheme="blue"
                     onClick={() =>
-                        navigate(`/login?courseId=${params.data?.id}`)
+                        handleRegister(params.data?.id!)
                     }
                 >
                     Go
@@ -153,11 +166,7 @@ const ListAllCourse = () => {
                                         mt={3}
                                         colorScheme="blue"
                                         w="100%"
-                                        onClick={() =>
-                                            navigate(
-                                                `/login?courseId=${course.id}`
-                                            )
-                                        }
+                                        onClick={() => handleRegister(course.id!)}
                                     >
                                         Register
                                     </Button>

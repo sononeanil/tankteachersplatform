@@ -52,8 +52,6 @@ const UserDetails = () => {
 
     ]);
 
-
-
     ModuleRegistry.registerModules([AllCommunityModule]);
 
     return (

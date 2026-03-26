@@ -1,5 +1,5 @@
 
-import { Box, Button, Checkbox, CheckboxGroup, FormControl, FormLabel, GridItem, HStack, Input, SimpleGrid, Stack, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Checkbox, CheckboxGroup, FormControl, FormLabel, GridItem, Input, SimpleGrid, Stack, Text, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 
 import { getUserRole, updateUserRoles } from "../../Api";
@@ -89,12 +89,13 @@ const Role = () => {
 
     return (
         <>
-            <HStack>
+            <Stack direction={{ base: "column", md: "row" }} spacing={4}>
 
-                <Box border="1px" borderColor="gray.200" p={4} borderRadius="md">
+                <Box border="1px" borderColor="gray.200" p={{ base: 4, md: 6 }} borderRadius="md" width={{ base: "100%", md: "50%" }}>
                     <form onSubmit={(e) => { handleSubmit(e); }} >
-                        <SimpleGrid columns={2}
-                            columnGap={3} rowGap={5} spacing={10} width={"full"}>
+                        {/* <SimpleGrid columns={2} */}
+                        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}
+                            columnGap={3} rowGap={5} width={"full"}>
 
                             <GridItem colSpan={1}>
                                 <FormControl>
@@ -187,7 +188,7 @@ const Role = () => {
 
 
                 </Box>
-            </HStack >
+            </Stack>
 
 
 
