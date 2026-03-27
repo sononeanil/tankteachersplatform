@@ -10,6 +10,7 @@ import {
     DrawerBody, DrawerHeader
 } from "@chakra-ui/react";
 import { getLoggedinUserEmailId } from "../service/ApiClient"
+import { getMenuByRoles } from "../types/SideMenuData"
 const Dashboard2 = () => {
 
     // Get user info from localStorage
@@ -17,22 +18,8 @@ const Dashboard2 = () => {
 
 
 
-    const navItems = [
-        { lable: "Dashboard", icon: <AiOutlineDashboard />, path: "landingPage" },
-        { lable: "List All Courses", icon: <AiOutlineTeam />, path: "listAllCourse" },
-        { lable: "Class room", icon: <MdOutlineClass />, path: "classroom" },
-        { lable: "Teacher", icon: <FaChalkboardTeacher />, path: "classTeacher" },
-        { lable: "Publish Course", icon: <FaChalkboardTeacher />, path: "publishCourse" },
-        { lable: "School", icon: <FaSchool />, path: "school" },
-        { lable: "Profile", icon: <AiOutlineUser />, path: "profile" },
-        // { lable: "Landing Page", icon: <MdWeb />, path: "landingpage2" },
-        { lable: "Upload Assignment", icon: <MdWeb />, path: "upload" },
-        { lable: "Publish", icon: <MdWeb />, path: "publish" },
-        { lable: "Edit Role", icon: <MdWeb />, path: "editRole" },
-        { lable: "User Details", icon: <AiOutlineUser />, path: "userdetails" },
-        { lable: "SetUp Zoom Meeting", icon: <AiOutlineUser />, path: "createZoomMeeting" },
-        { lable: "Zoom Meeting", icon: <AiOutlineUser />, path: "zoomMeeting" }
-    ];
+
+    const navItems = getMenuByRoles();
     const navigate = useNavigate();
     const handleLogout = () => {
         sessionStorage.removeItem("jwtToken");
@@ -58,7 +45,7 @@ const Dashboard2 = () => {
                             color: isActive ? "rgb(248, 7, 7)" : "#031652ff",
                             // fontWeight: isActive ? "bold" : "normal",
                             textDecoration: isActive ? "underline" : "none",
-                        })}>{item.icon}{item.lable}
+                        })}>{item.icon}{item.label}
                         </NavLink>
                     </ListItem>))}
 

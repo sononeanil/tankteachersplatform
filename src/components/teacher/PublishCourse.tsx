@@ -15,12 +15,12 @@ import {
     GridItem,
 } from "@chakra-ui/react";
 import { usePublishCourse } from "../../service/ApiPublishCourse";
+import { getLoggedinUserEmailId } from "../../service/ApiClient";
 // import { useState } from "react";
 
 
 const PublishCourse = () => {
-    const userInfoString = localStorage.getItem("loggedInUser");
-    const loggedInUser = userInfoString ? JSON.parse(userInfoString) : null;
+
     // const [qrExists, setQrExists] = useState<boolean | null>(null);
     // const [qrFile, setQrFile] = useState<File | null>(null);
     const toast = useToast();
@@ -43,7 +43,7 @@ const PublishCourse = () => {
         const finalData = {
             ...data,
             id: 0, // 👈 add id here
-            organizerEmailId: loggedInUser.email,
+            organizerEmailId: getLoggedinUserEmailId() || "", // 👈 add organizerEmailId here
         };
         mutation.mutate(finalData, {
             onSuccess: () => {

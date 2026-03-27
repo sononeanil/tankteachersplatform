@@ -91,3 +91,9 @@ export type JwtPayload = {
     roles: string[];
     exp: number; // 👈 important
 };
+
+export type MenuItemType = {
+    label: string;
+    icon: React.ElementType;
+    path: string;
+};
