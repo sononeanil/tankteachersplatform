@@ -1,4 +1,4 @@
-import { Badge, Box, Card, CardBody, CardHeader, Divider, GridItem, Heading, SimpleGrid, Stack } from "@chakra-ui/react"
+import { Badge, Box, Card, CardBody, Divider, Heading, SimpleGrid, Stack } from "@chakra-ui/react"
 import { FaUserCircle } from "react-icons/fa";
 import { Text } from "@chakra-ui/react";
 import { getUserFromToken } from "../../service/ApiClient";
@@ -27,7 +27,7 @@ const PersonalDetails = () => {
                         <Divider />
 
                         <SimpleGrid columns={2} spacing={4}>
-                            <Text><strong>First Name:</strong> </Text>
+                            <Text><strong>First Name:</strong> {role} </Text>
                             <Text><strong>Last Name:</strong> </Text>
                             <Text><strong>User Login Id:</strong> {email}</Text>
                             <Text><strong>User Number:</strong> 123456</Text>
