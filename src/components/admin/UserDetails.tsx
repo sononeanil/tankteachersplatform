@@ -45,10 +45,11 @@ const UserDetails = () => {
         // { headerName: "ID", field: "id", checkboxSelection: true },
         { headerName: "Role", field: "role" },
         { headerName: "Email", field: "email" },
+        { headerName: "Phone Number", field: "phoneNumber" },
+        { headerName: "Alternate Email", field: "alternateEmailId" },
+        { headerName: "City", field: "city" },
         { headerName: "First Name", field: "firstName" },
         { headerName: "Last Name", field: "lastName" },
-        { headerName: "Alternate Email", field: "alternateEmailId" },
-        { headerName: "City", field: "city" }
 
     ]);
 
