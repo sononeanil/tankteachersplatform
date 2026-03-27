@@ -9,30 +9,34 @@ import {
 
 import { useGetUpcomingZoomMeetingsForTeacher } from "../../tanstack/zoomTanstack"
 import { getLoggedinUserEmailId } from "../../service/ApiClient"
-
-const loggedInUser = getLoggedinUserEmailId();
+import { useEffect, useState } from "react";
 
 const UpcomingMeeting = () => {
 
+    const [teachersEmail, setTeachersEmail] = useState("");
+
+    useEffect(() => {
+        const email = getLoggedinUserEmailId();
+        if (email) {
+            setTeachersEmail(email);
+        }
+    }, []);
+
     const { data, isLoading, error } =
-        useGetUpcomingZoomMeetingsForTeacher(loggedInUser ?? "")
+        useGetUpcomingZoomMeetingsForTeacher(teachersEmail);
 
     if (isLoading) return <Spinner />
 
     if (error) return <Text>Error loading meetings</Text>
 
     return (
-
         <Box p={6}>
-
             <Heading size="md" mb={5}>
                 Upcoming Meetings
             </Heading>
 
             <Stack spacing={4}>
-
                 {data?.map((meeting) => (
-
                     <Box
                         key={meeting.id}
                         borderWidth="1px"
@@ -40,7 +44,6 @@ const UpcomingMeeting = () => {
                         p={4}
                         shadow="md"
                     >
-
                         <Text fontSize="lg" fontWeight="bold">
                             {meeting.meetingTopic}
                         </Text>
@@ -60,15 +63,11 @@ const UpcomingMeeting = () => {
                         >
                             Start Meeting
                         </Button>
-
                     </Box>
-
                 ))}
-
             </Stack>
-
         </Box>
     )
 }
 
-export default UpcomingMeeting
+export default UpcomingMeeting;

@@ -25,15 +25,15 @@ import {
 import { usePublishCourseList } from "../../tanstack/publishCoursesTanstack";
 import type { PublishCourseType } from "../../types/publishCourseTypes";
 import { useNavigate } from "react-router-dom";
+// import { get } from "react-hook-form";
+import { getLoggedinUserEmailId } from "../../service/ApiClient";
 
 // ✅ Register once
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const ListAllCourse = () => {
 
-    const userInfoString = localStorage.getItem("loggedInUser");
-    const loggedInUserEmailId = userInfoString ? JSON.parse(userInfoString).email : null;
-
+    const loggedInUserEmailId = getLoggedinUserEmailId();
     const navigate = useNavigate();
     const { data, isLoading, isError, error } = usePublishCourseList();
 

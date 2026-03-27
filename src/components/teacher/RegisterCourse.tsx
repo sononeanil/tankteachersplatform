@@ -10,12 +10,11 @@ import {
     Button,
     Flex
 } from "@chakra-ui/react";
+import { getLoggedinUserEmailId } from "../../service/ApiClient";
 
 const RegisterCourse = () => {
     const [searchParams] = useSearchParams();
     const courseIdParam = searchParams.get("courseId");
-    const userInfoString = localStorage.getItem("loggedInUser");
-    const loggedInUser = userInfoString ? JSON.parse(userInfoString) : null;
     const courseId = Number(courseIdParam);
     const { data, isLoading, isError, error } = useGetCourseDetails(courseId);
     const registerForCourseMutation = useRegisterCourse();
@@ -25,7 +24,7 @@ const RegisterCourse = () => {
             id: 0,
             courseId: Number(courseIdParam) || 0,
             organizerEmailId: data?.organizerEmailId || "",
-            studentEmailId: loggedInUser.email,
+            studentEmailId: getLoggedinUserEmailId() || "",
             courseName: data?.courseName || "",
         });
     }
