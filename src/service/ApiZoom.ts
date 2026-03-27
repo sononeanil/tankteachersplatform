@@ -1,28 +1,11 @@
-import axios from "axios";
 import type { CreateZoomMeetingType, startZoomMeetingType } from "../types/zoom";
+import apiClient from "./ApiClient";
 
-const apiAdmin = axios.create({
-    // baseURL: "http://localhost:8080/erpsystem"
-    // baseURL: "https://tankstudentportalrestapi-production.up.railway.app/erpsystem"
-    baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/erpsystem"
-})
 
-apiAdmin.interceptors.request.use(
-    (config) => {
-        const jwtToken = localStorage.getItem("jwtToken");
-        if (jwtToken) {
-            config.headers.Authorization = `Bearer ${jwtToken}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
 
 export const getZoomMeetingSignature = async (role: number) => {
     try {
-        const response = await apiAdmin.get(`/zoom/signature?role=${role}`);
+        const response = await apiClient.get(`/zoom/signature?role=${role}`);
 
         const data = response.status === 200 ? response.data.erpSystemResponse : []
         // console.log("Signature response ---->" + data.signature + " meetingNumber: " + data.meetingNumber + "," + data.password);
@@ -40,7 +23,7 @@ export const getZoomMeetingSignature = async (role: number) => {
 
 export const createZoomMeeting = async (newZoom: CreateZoomMeetingType) => {
     try {
-        const response = await apiAdmin.post("/zoom/setup", newZoom);
+        const response = await apiClient.post("/zoom/setup", newZoom);
         const data = response.status === 200 ? response.data.erpSystemResponse : null;
         return data;
     } catch (error: any) {
@@ -55,7 +38,7 @@ export const createZoomMeeting = async (newZoom: CreateZoomMeetingType) => {
 
 export const getUpcomingMeetings = async () => {
     try {
-        const response = await apiAdmin.get("/student/upcoming");
+        const response = await apiClient.get("/student/upcoming");
         const data = response.status === 200 ? response.data.erpSystemResponse.upcomingMeetingList : [];
         console.log("Upcoming meetings response ---->", data);
         return data;
@@ -71,7 +54,7 @@ export const getUpcomingMeetings = async () => {
 export const getUpcomingMeetingsForTeacherApi = async (teacherEmailId: string): Promise<startZoomMeetingType[]> => {
     // alert("Teacher email ID: " + teacherEmailId);
     try {
-        const response = await apiAdmin.get(`/teacher/upcomingMeetings?teacherEmailId=${teacherEmailId}`);
+        const response = await apiClient.get(`/teacher/upcomingMeetings?teacherEmailId=${teacherEmailId}`);
         // console.log("Teacher response 11111:", response);
         // console.log("Teacher response: 2222", JSON.stringify(response.data, null, 2));
         const data = response.status === 200 ? response.data.erpSystemResponse.upcomingMeetingListForTeacher : [];

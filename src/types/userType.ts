@@ -22,7 +22,6 @@ export const userSchema = z.object({
     phoneNumber: z.string().min(10),
     alternateEmailId:
         z.email("Invalid email")
-            .optional()
             .or(z.literal(""))
 })
 
@@ -86,3 +85,9 @@ export const updateUserRoleSchema = z.object({
 })
 
 export type UpdateUserRoleType = z.infer<typeof updateUserRoleSchema>;
+
+export type JwtPayload = {
+    sub: string;
+    roles: string[];
+    exp: number; // 👈 important
+};

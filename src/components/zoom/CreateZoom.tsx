@@ -16,9 +16,9 @@ import { useCreateZoom } from "../../tanstack/zoomTanstack";
 import { createZoomMeeting } from "../../types/zoom"
 import type { CreateZoomMeetingType } from "../../types/zoom"
 import { useForm, type SubmitHandler } from "react-hook-form"
+import { getLoggedinUserEmailId } from "../../service/ApiClient";
 const CreateZoom = () => {
-    const userInfoString = localStorage.getItem("loggedInUser");
-    const loggedInUser = userInfoString ? JSON.parse(userInfoString) : null;
+    const userEmailId = getLoggedinUserEmailId();
 
     const toast = useToast();
 
@@ -44,7 +44,7 @@ const CreateZoom = () => {
 
         const payload = {
             ...data,
-            organizerEmail: loggedInUser.email,
+            organizerEmail: userEmailId ?? undefined,
             startTime: formattedTime
         };
 

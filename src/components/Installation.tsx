@@ -18,15 +18,18 @@ import {
 
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { getUserFromToken } from "../service/ApiClient";
+
 
 
 const PersonalDetails = () => {
-    // Load user info from localStorage
-    const userInfoString = localStorage.getItem("loggedInUser");
-    const parsedUser = userInfoString ? JSON.parse(userInfoString) : {};
+    const decodedUser = getUserFromToken();
 
-    // Local state for user info
-    const [user, setUser] = useState(parsedUser);
+    const [user, setUser] = useState({
+        email: decodedUser?.sub || "",
+        role: decodedUser?.roles?.[0] || ""
+    });
+
     const [isEditing, setIsEditing] = useState(false);
 
     // Handle input changes
@@ -47,9 +50,9 @@ const PersonalDetails = () => {
             <Card mb={10} maxW="lg" mx="auto" boxShadow="xl" borderRadius="lg" bg="white">
                 <CardHeader textAlign="center">
                     <Stack spacing={2} align="center">
-                        <Avatar size="xl" name={`${user.firstName} ${user.lastName}`} bg="teal.500" />
+                        {/* <Avatar size="xl" name={`${user.firstName} ${user.lastName}`} bg="teal.500" /> */}
                         <Heading size="md" color="teal.600">
-                            {user.firstName} {user.lastName}
+                            {/* {user.firstName} {user.lastName} */}
                         </Heading>
                         <Badge colorScheme="purple" variant="solid">
                             {user.role || "Student"}
@@ -64,23 +67,9 @@ const PersonalDetails = () => {
 
                 <CardBody>
                     <SimpleGrid columns={2} spacing={6}>
-                        <Box>
-                            <Text fontWeight="bold" color="gray.600">First Name:</Text>
-                            {isEditing ? (
-                                <Input value={user.firstName || ""} onChange={(e) => handleChange("firstName", e.target.value)} />
-                            ) : (
-                                <Text>{user.firstName}</Text>
-                            )}
-                        </Box>
 
-                        <Box>
-                            <Text fontWeight="bold" color="gray.600">Last Name:</Text>
-                            {isEditing ? (
-                                <Input value={user.lastName || ""} onChange={(e) => handleChange("lastName", e.target.value)} />
-                            ) : (
-                                <Text>{user.lastName}</Text>
-                            )}
-                        </Box>
+
+
 
                         <Box>
                             <Text fontWeight="bold" color="gray.600">User Login Id:</Text>
@@ -91,23 +80,9 @@ const PersonalDetails = () => {
                             )}
                         </Box>
 
-                        <Box>
-                            <Text fontWeight="bold" color="gray.600">City:</Text>
-                            {isEditing ? (
-                                <Input value={user.city || ""} onChange={(e) => handleChange("city", e.target.value)} />
-                            ) : (
-                                <Text>{user.city}</Text>
-                            )}
-                        </Box>
 
-                        <Box>
-                            <Text fontWeight="bold" color="gray.600">Country:</Text>
-                            {isEditing ? (
-                                <Input value={user.country || ""} onChange={(e) => handleChange("country", e.target.value)} />
-                            ) : (
-                                <Text>{user.country}</Text>
-                            )}
-                        </Box>
+
+
                     </SimpleGrid>
 
                     <Stack direction="row" spacing={4} mt={6} justify="center">

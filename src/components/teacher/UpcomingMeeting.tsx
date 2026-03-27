@@ -8,14 +8,14 @@ import {
 } from "@chakra-ui/react"
 
 import { useGetUpcomingZoomMeetingsForTeacher } from "../../tanstack/zoomTanstack"
+import { getLoggedinUserEmailId } from "../../service/ApiClient"
 
-const userInfoString = localStorage.getItem("loggedInUser")
-const loggedInUser = userInfoString ? JSON.parse(userInfoString) : null
+const loggedInUser = getLoggedinUserEmailId();
 
 const UpcomingMeeting = () => {
 
     const { data, isLoading, error } =
-        useGetUpcomingZoomMeetingsForTeacher(loggedInUser.email)
+        useGetUpcomingZoomMeetingsForTeacher(loggedInUser ?? "")
 
     if (isLoading) return <Spinner />
 

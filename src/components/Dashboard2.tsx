@@ -9,13 +9,11 @@ import {
     Drawer, DrawerOverlay, DrawerContent,
     DrawerBody, DrawerHeader
 } from "@chakra-ui/react";
+import { getLoggedinUserEmailId } from "../service/ApiClient"
 const Dashboard2 = () => {
 
     // Get user info from localStorage
-    const userInfoString = localStorage.getItem("loggedInUser");
-    // console.log(JSON.parse(userInfoString));
-    // const loggedInUser = ""
-    const loggedInUser = userInfoString ? JSON.parse(userInfoString) : null;
+    const loggedInUser = getLoggedinUserEmailId();
 
 
 
@@ -37,7 +35,8 @@ const Dashboard2 = () => {
     ];
     const navigate = useNavigate();
     const handleLogout = () => {
-        localStorage.clear();
+        sessionStorage.removeItem("jwtToken");
+        sessionStorage.clear();
         navigate("/");
     }
     const { isOpen, onToggle } = useDisclosure();
@@ -83,7 +82,7 @@ const Dashboard2 = () => {
                     />
 
                     <Heading fontSize={{ base: "md", md: "lg" }}>
-                        TANK Platform
+                        TANK Teachers Platform
                     </Heading>
 
                     <Spacer />
@@ -91,7 +90,7 @@ const Dashboard2 = () => {
                     <HStack spacing={3}>
                         <Box fontSize="20px" bg="green.400">SP</Box>
                         <Text display={{ base: "none", md: "block" }}>
-                            {loggedInUser?.email}
+                            {loggedInUser || "User"}
                         </Text>
                         <Button size="sm" onClick={handleLogout}>
                             Logout

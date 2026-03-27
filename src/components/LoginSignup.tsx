@@ -201,7 +201,7 @@ const LoginSignup = () => {
 
                             <GridItem colSpan={2}>
                                 <FormControl isInvalid={!!errors.email}>
-                                    <FormLabel>email </FormLabel>
+                                    <FormLabel>User Id in email format ONLY </FormLabel>
                                     <Input
 
                                         placeholder="Enter your email"
@@ -215,10 +215,10 @@ const LoginSignup = () => {
 
                             <GridItem colSpan={2}>
                                 <FormControl isInvalid={!!errors.alternateEmailId}>
-                                    <FormLabel>Alternate Email </FormLabel>
+                                    <FormLabel>Email for all communications </FormLabel>
                                     <Input
 
-                                        placeholder="Enter your alternate email"
+                                        placeholder="All communication, will use this email id"
                                         {...register("alternateEmailId", { required: "Alternate email is required" })}
                                     />
                                     <FormErrorMessage>

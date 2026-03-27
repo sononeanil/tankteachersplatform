@@ -1,29 +1,13 @@
-import axios from "axios";
+
 import type { UserType } from "../types/userType";
+import apiClient from "./ApiClient";
 
 
-const apiAdmin = axios.create({
-    // baseURL: "http://localhost:8080/erpsystem"
-    // baseURL: "https://tankstudentportalrestapi-production.up.railway.app/erpsystem"
-    baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/erpsystem"
-})
 
-apiAdmin.interceptors.request.use(
-    (config) => {
-        const jwtToken = localStorage.getItem("jwtToken");
-        if (jwtToken) {
-            config.headers.Authorization = `Bearer ${jwtToken}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
 
 export const getUserList = async (): Promise<UserType[]> => {
     try {
-        const response = await apiAdmin.get("/admin/user");
+        const response = await apiClient.get("/admin/user");
         const data = response.status === 200 ? response.data.erpSystemResponse.userList : []
 
         //const data: post[] = response.status === 200 ? response.data.posts : []
@@ -41,7 +25,7 @@ export const getUserList = async (): Promise<UserType[]> => {
 
 export const deleteUser = async (id: number | string) => {
     try {
-        await apiAdmin.delete(`/admin/user?userId=${id}`);
+        await apiClient.delete(`/admin/user?userId=${id}`);
 
     } catch (error: any) {
         if (error.response) {
