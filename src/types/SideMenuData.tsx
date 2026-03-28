@@ -15,10 +15,10 @@ const teacherMenu: MenuItemType[] = [
 
     { label: "Teacher", icon: FaChalkboardTeacher, path: "classTeacher" },
 
-    { label: "Upload Assignment", icon: AiOutlineDashboard, path: "/classTeacher/publish" },
+    { label: "Upload Assignment", icon: AiOutlineDashboard, path: "/db2/publish" },
     { label: "Publish Course", icon: AiOutlineDashboard, path: "/db2/publishCourse" },
-    { label: "SetUp Meeting", icon: AiOutlineDashboard, path: "/classTeacher/createZoomMeeting" },
-    { label: "My upcoming Meeting", icon: AiOutlineDashboard, path: "classTeacher/myUpcomingMeetings" }
+    { label: "SetUp Meeting", icon: AiOutlineDashboard, path: "/db2/createZoomMeeting" },
+    { label: "My upcoming Meeting", icon: AiOutlineDashboard, path: "/db2/myUpcomingMeetings" }
 ]
 
 const adminMenu: MenuItemType[] = [

@@ -119,6 +119,14 @@ const router = createBrowserRouter([
       element: <ListAllCourse></ListAllCourse>
     },
     {
+      path: "/db2/publish",
+      element: <Publish></Publish>
+    },
+    {
+      path: "/db2/myUpcomingMeetings",
+      element: <UpcomingMeeting></UpcomingMeeting>
+    },
+    {
       path: "/db2/classTeacher",
       element: <ClassTeacher></ClassTeacher>,
       children: [
