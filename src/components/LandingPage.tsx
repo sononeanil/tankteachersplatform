@@ -62,9 +62,14 @@ const LandingPage = () => {
                 py={5}
                 gap={10}>
 
-                <Grid templateColumns="repeat(4, 1fr)"
-                    templateRows="repeat(2, 1fr)"
-                    gap={6}>
+                <Grid
+                    templateColumns={{
+                        base: "1fr",
+                        md: "1fr",
+                        lg: "1fr 3fr"
+                    }}
+                    gap={6}
+                >
 
 
                     <GridItem >
@@ -76,12 +81,16 @@ const LandingPage = () => {
                             borderRadius="md"
                             variant="elevated"
                             maxW={"sm"}
+                            _hover={{
+                                transform: "scale(1.02)",
+                                transition: "0.2s"
+                            }}
                         >
                             <CardHeader>
                                 <Heading size="md">Trend Overview</Heading>
                             </CardHeader>
                             <CardBody>
-                                <ResponsiveContainer width={80} height={80}>
+                                <ResponsiveContainer width="100%" height={120}>
                                     <LineChart data={dataLineChart1}>
                                         <Line
                                             type="monotone"
@@ -97,7 +106,7 @@ const LandingPage = () => {
                         </Card>
 
                     </GridItem>
-                    <GridItem rowStart={2}>
+                    <GridItem>
 
                         <Card
                             size="md"
@@ -105,13 +114,17 @@ const LandingPage = () => {
                             boxShadow="2xl"
                             borderRadius="md"
                             variant="elevated"
-                            maxW={"sm"}
+                            _hover={{
+                                transform: "scale(1.02)",
+                                transition: "0.2s"
+                            }}
+
                         >
                             <CardHeader>
                                 <Heading size="md">Trend Overview</Heading>
                             </CardHeader>
                             <CardBody>
-                                <ResponsiveContainer width={80} height={80}>
+                                <ResponsiveContainer width="100%" height={120}>
                                     <LineChart data={dataLineChart1}>
                                         <Line
                                             type="monotone"
@@ -127,13 +140,20 @@ const LandingPage = () => {
                         </Card>
                     </GridItem>
 
-                    <GridItem colSpan={3} rowSpan={2}>
+                    <GridItem
+                        colSpan={{ base: 1, md: 2, lg: 3 }}
+                        rowSpan={{ base: 1, md: 1, lg: 2 }}
+                    >
                         <Card
                             size="lg"
                             overflow={"hidden"}
                             boxShadow="2xl"
                             borderRadius="md"
-                            variant={"elevated"}>
+                            variant={"elevated"}
+                            _hover={{
+                                transform: "scale(1.02)",
+                                transition: "0.2s"
+                            }}>
                             <CardHeader>
                                 <Heading size="md">Monthly Performance</Heading>
                             </CardHeader>
@@ -158,8 +178,14 @@ const LandingPage = () => {
                 </Grid>
 
 
-                <Grid templateColumns="repeat(4, 1fr)"
-                    gap={6}>
+                <Grid
+                    templateColumns={{
+                        base: "1fr",
+                        md: "repeat(2, 1fr)",
+                        lg: "repeat(4, 1fr)"
+                    }}
+                    gap={6}
+                >
                     <GridItem >
                         <Card
                             size="lg"
@@ -167,6 +193,10 @@ const LandingPage = () => {
                             boxShadow="2xl"
                             borderRadius="md"
                             variant="elevated"
+                            _hover={{
+                                transform: "scale(1.02)",
+                                transition: "0.2s"
+                            }}
                         >
                             <CardHeader>
                                 <Heading size="md">Sales Distribution</Heading>
@@ -205,6 +235,10 @@ const LandingPage = () => {
                             boxShadow="2xl"
                             borderRadius="md"
                             variant="elevated"
+                            _hover={{
+                                transform: "scale(1.02)",
+                                transition: "0.2s"
+                            }}
                         >
                             <CardHeader>
                                 <Heading size="md">Monthly Sales</Heading>
@@ -224,8 +258,13 @@ const LandingPage = () => {
                     </GridItem>
                 </Grid>
 
-                <Grid templateColumns="repeat(2, 1fr)"
-                    gap={6}>
+                <Grid
+                    templateColumns={{
+                        base: "1fr",
+                        md: "repeat(2, 1fr)"
+                    }}
+                    gap={{ base: 4, md: 6 }}
+                >
                     <GridItem>
                         <Card
                             size="lg"
@@ -233,9 +272,13 @@ const LandingPage = () => {
                             boxShadow="2xl"
                             borderRadius="md"
                             variant="elevated"
+                            _hover={{
+                                transform: "scale(1.02)",
+                                transition: "0.2s"
+                            }}
                         >
                             <CardHeader>
-                                <Heading size="md">Top Categories</Heading>
+                                <Heading size={{ base: "sm", md: "md" }}>Top Categories</Heading>
                             </CardHeader>
                             <CardBody>
                                 <ResponsiveContainer width="100%" height={250}>
@@ -260,9 +303,13 @@ const LandingPage = () => {
                             boxShadow="2xl"
                             borderRadius="md"
                             variant="elevated"
+                            _hover={{
+                                transform: "scale(1.02)",
+                                transition: "0.2s"
+                            }}
                         >
                             <CardHeader>
-                                <Heading size="md">Top Categories</Heading>
+                                <Heading size={{ base: "sm", md: "md" }}>Top Categories</Heading>
                             </CardHeader>
                             <CardBody>
                                 <ResponsiveContainer width="100%" height={250}>
@@ -282,7 +329,7 @@ const LandingPage = () => {
                     </GridItem>
                 </Grid>
 
-            </Stack>
+            </Stack >
 
             <Box>
 

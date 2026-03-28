@@ -13,15 +13,15 @@ import {
     HStack,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { uploadFile } from "../../Api";
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { uploadChapter } from "../../service/ApiUpload";
 const Publish = () => {
 
 
     const useFileUpload = () => {
         return useMutation({
-            mutationFn: (formData: FormData) => uploadFile(formData),
+            mutationFn: (formData: FormData) => uploadChapter(formData),
         });
     };
 
@@ -72,7 +72,7 @@ const Publish = () => {
 
 
                 );
-                nevigate("/db2/upload/uploadedFileList");
+                // nevigate("/db2/upload/uploadedFileList");
             },
             onError: (error) => {
                 toast({

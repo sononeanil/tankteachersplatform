@@ -35,7 +35,6 @@ const HomePage2 = () => {
                         justify="flex-end"
                     >
                         <Link style={linkStyle} to="/">Home</Link>
-                        <Link style={linkStyle} to="/inventory">Inventory</Link>
                         <Link style={linkStyle} to="/listAllCourse">Courses</Link>
                         <Link to="/login">
                             Login / SignUp
