@@ -16,7 +16,7 @@ const Dashboard2 = () => {
     const loggedInUser = getLoggedinUserEmailId();
     const navItems = getMenuByRoles();
     const navigate = useNavigate();
-    const { isOpen, onToggle } = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleLogout = () => {
         sessionStorage.clear();
@@ -34,11 +34,11 @@ const Dashboard2 = () => {
                 p="20px"
             >
                 <List spacing={3} fontSize="18px">
-                    {navItems.map((item, index) => {
+                    {navItems.map((item) => {
                         const Icon = item.icon;
 
                         return (
-                            <ListItem key={index}>
+                            <ListItem key={item.path}>
                                 <NavLink
                                     to={item.path}
                                     style={({ isActive }) => ({
@@ -72,7 +72,7 @@ const Dashboard2 = () => {
                     <IconButton
                         icon={<HamburgerIcon />}
                         display={{ base: "block", md: "none" }}
-                        onClick={onToggle}
+                        onClick={onOpen}   // ✅ FIXED
                         mr={2}
                         aria-label="Open menu"
                     />
@@ -97,20 +97,20 @@ const Dashboard2 = () => {
                 </Flex>
 
                 {/* Mobile Drawer */}
-                <Drawer isOpen={isOpen} placement="left" onClose={onToggle}>
+                <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
                     <DrawerOverlay />
                     <DrawerContent>
                         <DrawerHeader>Menu</DrawerHeader>
                         <DrawerBody>
                             <List spacing={3}>
-                                {navItems.map((item, index) => {
+                                {navItems.map((item) => {
                                     const Icon = item.icon;
 
                                     return (
-                                        <ListItem key={index}>
+                                        <ListItem key={item.path}>
                                             <NavLink
                                                 to={item.path}
-                                                onClick={onToggle}
+                                                onClick={onClose}
                                                 style={{
                                                     display: "flex",
                                                     alignItems: "center",

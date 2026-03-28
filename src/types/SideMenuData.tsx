@@ -15,9 +15,9 @@ const teacherMenu: MenuItemType[] = [
 
     { label: "Teacher", icon: FaChalkboardTeacher, path: "classTeacher" },
 
-    { label: "Upload Assignment", icon: AiOutlineDashboard, path: "classTeacher/publish" },
+    { label: "Upload Assignment", icon: AiOutlineDashboard, path: "/classTeacher/publish" },
     { label: "Publish Course", icon: AiOutlineDashboard, path: "/db2/publishCourse" },
-    { label: "SetUp Meeting", icon: AiOutlineDashboard, path: "classTeacher/createZoomMeeting" },
+    { label: "SetUp Meeting", icon: AiOutlineDashboard, path: "/classTeacher/createZoomMeeting" },
     { label: "My upcoming Meeting", icon: AiOutlineDashboard, path: "classTeacher/myUpcomingMeetings" }
 ]
 
