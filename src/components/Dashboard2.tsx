@@ -24,14 +24,20 @@ const Dashboard2 = () => {
     };
 
     return (
-        <Grid templateColumns={{ base: "1fr", md: "250px 1fr" }}>
-
+        <Grid
+            templateColumns={{ base: "1fr", md: "250px 1fr" }}
+            minH="100vh"   // ✅ important
+        >
             {/* Sidebar */}
             <GridItem
                 as="aside"
                 display={{ base: "none", md: "block" }}
                 bgGradient="linear(to-b, red.100, blue.300, green.500)"
                 p="20px"
+                position="sticky"   // optional but nice
+                top="0"
+                height="100vh"      // ✅ lock height
+                overflowY="auto"    // ✅ scroll if content grows
             >
                 <List spacing={3} fontSize="18px">
                     {navItems.map((item) => {
