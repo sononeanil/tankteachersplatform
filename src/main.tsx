@@ -82,6 +82,12 @@ const router = createBrowserRouter([
       path: "/db2/publish",
       element: <Publish></Publish>
     }, {
+      path: "/db2/generateNotesImage",
+      element: <Publish></Publish>
+    }, {
+      path: "/db2/generateNotesPDF",
+      element: <Publish></Publish>
+    }, {
       path: "/db2/zoomMeeting",
       element: <ZoomMeeting></ZoomMeeting>
     }, {

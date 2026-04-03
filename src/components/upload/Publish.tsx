@@ -16,10 +16,10 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { getNotesApi, uploadChapter } from "../../service/ApiUpload";
+import { uploadChapter, uploadPDFChapter } from "../../service/ApiUpload";
+import { useNotes } from "../../tanstack/uploadTanstack";
 
 const Publish = () => {
-
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [studentClass, setStudentClass] = useState("");
     const [board, setBoard] = useState("");
@@ -31,18 +31,41 @@ const Publish = () => {
     const toast = useToast();
     const navigate = useNavigate();
 
-    // ✅ Upload Mutation
     const uploadMutation = useMutation({
-        mutationFn: (formData: FormData) => uploadChapter(formData),
+        mutationFn: ({ formData, isPDF }: { formData: FormData; isPDF: boolean }) =>
+            isPDF ? uploadPDFChapter(formData) : uploadChapter(formData),
     });
 
-    // ✅ Get Notes Mutation
-    const getNotesMutation = useMutation({
-        mutationFn: getNotesApi,
-    });
+    // ✅ Hook (API logic separated)
+    const { getNotes, isLoadingNotes } = useNotes();
 
+    // ✅ File select
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedFile(event.target.files?.[0] || null);
+    };
+
+    // ✅ Get Notes
+    const handleGetNotes = () => {
+        getNotes(
+            (data: any) => {
+                console.log("Notes:", data);
+                toast({
+                    title: "Notes fetched",
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            },
+            (error: any) => {
+                toast({
+                    title: "Error fetching notes",
+                    description: error?.message,
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
+        );
     };
 
     const handleUpload = () => {
@@ -58,55 +81,39 @@ const Publish = () => {
         }
 
         const destinationDirectory = `${board}/${studentClass}/${subject}/${term}/${chapter}/${type}`;
+
         const formData = new FormData();
         formData.append("file", selectedFile);
         formData.append("destinationDirectory", destinationDirectory);
 
-        uploadMutation.mutate(formData, {
-            onSuccess: (data: any) => {
-                toast({
-                    title: "Upload Successful",
-                    description: data?.erpSystemResponse?.message || "File uploaded",
-                    status: "success",
-                    duration: 3000,
-                    isClosable: true,
-                });
-            },
-            onError: (error: any) => {
-                toast({
-                    title: "Upload Failed",
-                    description: error?.message || "Something went wrong",
-                    status: "error",
-                    duration: 4000,
-                    isClosable: true,
-                });
-            },
-        });
-    };
+        const isPDF =
+            selectedFile.type === "application/pdf" ||
+            selectedFile.name.toLowerCase().endsWith(".pdf");
 
-    // ✅ Get Notes Handler
-    const getNotes = () => {
-        getNotesMutation.mutate(undefined, {
-            onSuccess: (data: any) => {
-                console.log("Notes:", data);
-                toast({
-                    title: "Notes fetched",
-                    description: "Check console for data",
-                    status: "success",
-                    duration: 3000,
-                    isClosable: true,
-                });
-            },
-            onError: (error: any) => {
-                toast({
-                    title: "Error fetching notes",
-                    description: error?.message,
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                });
+        uploadMutation.mutate(
+            { formData, isPDF },
+            {
+                onSuccess: (data: any) => {
+                    toast({
+                        title: "Upload Successful",
+                        description:
+                            data?.erpSystemResponse?.message || "File uploaded",
+                        status: "success",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                },
+                onError: (error: any) => {
+                    toast({
+                        title: "Upload Failed",
+                        description: error?.message || "Something went wrong",
+                        status: "error",
+                        duration: 4000,
+                        isClosable: true,
+                    });
+                },
             }
-        });
+        );
     };
 
     return (
@@ -121,17 +128,14 @@ const Publish = () => {
                 bg="white"
             >
                 <VStack spacing={6} align="stretch">
-
                     <Heading size="md">Upload Study Material</Heading>
 
-                    {/* ✅ Get Notes Button */}
+                    {/* ✅ Get Notes */}
                     <IconButton
-                        onClick={getNotes}
+                        onClick={handleGetNotes}
                         aria-label="Get Notes"
-                        isLoading={getNotesMutation.isPending}
-                    >
-                        Get Notes
-                    </IconButton>
+                        isLoading={isLoadingNotes}
+                    />
 
                     <Text fontSize="sm" color="gray.500">
                         Select details and upload file for students
@@ -231,11 +235,12 @@ const Publish = () => {
                     <Text
                         color="blue.500"
                         cursor="pointer"
-                        onClick={() => navigate("/db2/upload/uploadedFileList")}
+                        onClick={() =>
+                            navigate("/db2/upload/uploadedFileList")
+                        }
                     >
                         View Uploaded Files →
                     </Text>
-
                 </VStack>
             </Box>
 

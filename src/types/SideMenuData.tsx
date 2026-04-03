@@ -9,6 +9,8 @@ const commonMenu: MenuItemType[] = [
     { label: "List All Courses", icon: AiOutlineTeam, path: "listAllCourse" },
     { label: "Ongoing Classes", icon: FaSchool, path: "school" },
     { label: "Upload Documents", icon: AiOutlineUser, path: "/db2/publish" },
+    { label: "Notes - Images", icon: AiOutlineUser, path: "/db2/generateNotesImage" },
+    { label: "Notes - PDF", icon: AiOutlineUser, path: "/db2/generateNotesPDF" },
     { label: "Enrol Your Ward", icon: AiOutlineUser, path: "profile" },
 ];
 
