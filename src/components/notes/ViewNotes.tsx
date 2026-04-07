@@ -1,23 +1,17 @@
 import {
     Box,
     Button,
-    Input,
     Select,
     Text,
-    useToast,
     VStack,
     FormControl,
     FormLabel,
     Heading,
     Divider,
     HStack,
-    IconButton,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
-import { uploadChapter, uploadPDFChapter } from "../../service/ApiUpload";
-import { useNotes } from "../../tanstack/uploadTanstack";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useChapterList, useChapterNotes } from "../../tanstack/notesTanstack";
 const ViewNotes = () => {
     const [studentClass, setStudentClass] = useState("");
@@ -31,7 +25,6 @@ const ViewNotes = () => {
     }, [subject]);
 
 
-    const toast = useToast();
 
     const isFormValid =
         board && studentClass && subject && chapter;
@@ -46,7 +39,7 @@ const ViewNotes = () => {
         !!shouldFetchChapters
     );
     const combinedKey = `${board}/${studentClass}/${subject}`;
-    const { data, isLoading, error, refetch } = useChapterNotes(
+    const { data, isLoading, refetch } = useChapterNotes(
         { key: combinedKey, chapter: chapter },
         false
     );
@@ -172,9 +165,6 @@ const ViewNotes = () => {
                 </Box>
 
             </HStack>
-
-
-
         </>
     )
 }

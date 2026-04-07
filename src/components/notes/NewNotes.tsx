@@ -11,11 +11,9 @@ import {
     Heading,
     Divider,
     HStack,
-    IconButton,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
 import { uploadChapter, uploadPDFChapter } from "../../service/ApiUpload";
 import { useNotes } from "../../tanstack/uploadTanstack";
 import { getLoggedinUserEmailId } from "../../service/ApiClient";
@@ -24,13 +22,10 @@ const NewNotes = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [studentClass, setStudentClass] = useState("");
     const [board, setBoard] = useState("");
-    const [term, setTerm] = useState("");
-    const [type, setType] = useState("");
     const [subject, setSubject] = useState("");
     const [chapter, setChapter] = useState("");
 
     const toast = useToast();
-    const navigate = useNavigate();
 
     const uploadMutation = useMutation({
         mutationFn: ({ formData, isPDF }: { formData: FormData; isPDF: boolean }) =>
@@ -38,7 +33,7 @@ const NewNotes = () => {
     });
 
     // ✅ Hook (API logic separated)
-    const { getNotes, isLoadingNotes } = useNotes();
+    const { isLoadingNotes } = useNotes();
 
     // ✅ File select
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

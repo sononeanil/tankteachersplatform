@@ -1,4 +1,4 @@
-import { Container, Flex, HStack, VStack, Box, Button } from "@chakra-ui/react";
+import { Container, Flex, HStack, Box, Button } from "@chakra-ui/react";
 import { Outlet, Link } from "react-router-dom";
 
 const HomePage2 = () => {
