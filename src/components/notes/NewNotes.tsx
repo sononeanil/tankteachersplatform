@@ -18,8 +18,9 @@ import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { uploadChapter, uploadPDFChapter } from "../../service/ApiUpload";
 import { useNotes } from "../../tanstack/uploadTanstack";
+import { getLoggedinUserEmailId } from "../../service/ApiClient";
+const NewNotes = () => {
 
-const Publish = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [studentClass, setStudentClass] = useState("");
     const [board, setBoard] = useState("");
@@ -44,30 +45,6 @@ const Publish = () => {
         setSelectedFile(event.target.files?.[0] || null);
     };
 
-    // ✅ Get Notes
-    const handleGetNotes = () => {
-        getNotes(
-            (data: any) => {
-                console.log("Notes:", data);
-                toast({
-                    title: "Notes fetched",
-                    status: "success",
-                    duration: 3000,
-                    isClosable: true,
-                });
-            },
-            (error: any) => {
-                toast({
-                    title: "Error fetching notes",
-                    description: error?.message,
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                });
-            }
-        );
-    };
-
     const handleUpload = () => {
         if (!selectedFile) {
             toast({
@@ -80,14 +57,13 @@ const Publish = () => {
             return;
         }
 
-        const destinationDirectory = `${board}/${studentClass}/${subject}/${term}/${chapter}/${type}`;
+        const destinationDirectory = `${board}/${studentClass}/${subject}`;
 
         const formData = new FormData();
         formData.append("file", selectedFile);
-        formData.append("destinationDirectory", destinationDirectory);
-        formData.append("subject", "MySubject");
-        formData.append("chapterName", "My Chapter");
-        formData.append("createdBy", "anilsonone@gmail.com");
+        formData.append("subject", destinationDirectory);
+        formData.append("chapterName", chapter);
+        formData.append("createdBy", getLoggedinUserEmailId() || "unknown");
 
         const isPDF =
             selectedFile.type === "application/pdf" ||
@@ -119,6 +95,7 @@ const Publish = () => {
         );
     };
 
+
     return (
         <>
             <Box
@@ -131,20 +108,13 @@ const Publish = () => {
                 bg="white"
             >
                 <VStack spacing={6} align="stretch">
-                    <Heading size="md">Upload Study Material</Heading>
-
-                    {/* ✅ Get Notes */}
-                    <IconButton
-                        onClick={handleGetNotes}
-                        aria-label="Get Notes"
-                        isLoading={isLoadingNotes}
-                    />
+                    <Heading size="md">Upload PDF to generate Study Material</Heading>
 
                     <Text fontSize="sm" color="gray.500">
-                        Select details and upload file for students
+                        Selecting all details are mandatory
                     </Text>
 
-                    <Divider />
+                    <Divider borderColor="gray.900" />
 
                     <FormControl>
                         <FormLabel>Board</FormLabel>
@@ -160,10 +130,11 @@ const Publish = () => {
                         <FormLabel>Class</FormLabel>
                         <Select onChange={(e) => setStudentClass(e.target.value)}>
                             <option value="">Select Class</option>
-                            <option value="juniorKg">Junior KG</option>
-                            <option value="seniorKg">Senior KG</option>
-                            <option value="first">1st class</option>
-                            <option value="second">2nd class</option>
+                            <option value="ClassVIII">Class VIII</option>
+                            <option value="ClassIX">Class IX</option>
+                            <option value="ClassX">Class X</option>
+                            <option value="ClassXI">Class XI</option>
+                            <option value="ClassXII">Class XII</option>
                         </Select>
                     </FormControl>
 
@@ -171,56 +142,36 @@ const Publish = () => {
                         <FormLabel>Subject</FormLabel>
                         <Select onChange={(e) => setSubject(e.target.value)}>
                             <option value="">Select Subject</option>
-                            <option value="hindi">Hindi</option>
+                            <option value="Science">Science</option>
                             <option value="english">English</option>
-                            <option value="marathi">Marathi</option>
                         </Select>
                     </FormControl>
 
                     <HStack spacing={4}>
-                        <FormControl>
-                            <FormLabel>Term</FormLabel>
-                            <Select onChange={(e) => setTerm(e.target.value)}>
-                                <option value="">Select Term</option>
-                                <option value="term1">Term 1</option>
-                                <option value="term2">Term 2</option>
-                            </Select>
-                        </FormControl>
 
                         <FormControl>
-                            <FormLabel>Chapter</FormLabel>
-                            <Select onChange={(e) => setChapter(e.target.value)}>
-                                <option value="">Select Chapter</option>
-                                <option value="chapter1">Chapter 1</option>
-                                <option value="chapter2">Chapter 2</option>
-                            </Select>
+                            <FormLabel>Chapter Number</FormLabel>
+                            <Input placeholder="Enter Chapter Number"
+                                value={chapter}
+                                onChange={(e) => setChapter(e.target.value)} />
                         </FormControl>
                     </HStack>
 
-                    <FormControl>
-                        <FormLabel>Content Type</FormLabel>
-                        <Select onChange={(e) => setType(e.target.value)}>
-                            <option value="">Select Type</option>
-                            <option value="practiceWorksheet">Practice Worksheet</option>
-                            <option value="modelPaper">Model Paper</option>
-                            <option value="assignment">Assignment</option>
-                        </Select>
-                    </FormControl>
-
-                    <Divider />
+                    <Divider borderColor="blue.400" />
 
                     <FormControl>
-                        <FormLabel>Upload File</FormLabel>
+                        <FormLabel>Upload ONLY pdf File</FormLabel>
                         <Input type="file" onChange={handleFileChange} />
                     </FormControl>
 
+                    {/* ✅ Get Notes */}
                     <Button
-                        size="lg"
-                        colorScheme="blue"
+
                         onClick={handleUpload}
-                        isLoading={uploadMutation.isPending}
+                        isLoading={isLoadingNotes}
+                        colorScheme="blue"
                     >
-                        Upload File
+                        Get Notes
                     </Button>
 
                     {uploadMutation.isError && (
@@ -235,21 +186,10 @@ const Publish = () => {
                         </Text>
                     )}
 
-                    <Text
-                        color="blue.500"
-                        cursor="pointer"
-                        onClick={() =>
-                            navigate("/db2/upload/uploadedFileList")
-                        }
-                    >
-                        View Uploaded Files →
-                    </Text>
                 </VStack>
             </Box>
-
-            <Outlet />
         </>
-    );
-};
+    )
+}
 
-export default Publish;
+export default NewNotes

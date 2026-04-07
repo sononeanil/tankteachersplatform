@@ -1,4 +1,4 @@
-import { Container, Flex, HStack, VStack, Box } from "@chakra-ui/react";
+import { Container, Flex, HStack, VStack, Box, Button } from "@chakra-ui/react";
 import { Outlet, Link } from "react-router-dom";
 
 const HomePage2 = () => {
@@ -16,17 +16,23 @@ const HomePage2 = () => {
                 <Box p={3}>
 
                     {/* MOBILE VERSION 📱 */}
-                    <VStack
+                    <HStack
                         display={{ base: "flex", md: "none" }}
                         spacing={3}
-                        align="stretch"
+                        wrap="wrap"
                     >
                         <Link style={linkStyle} to="/">Home</Link>
                         <Link style={linkStyle} to="/listAllCourse">Courses</Link>
-                        <Link to="/login">
-                            Login / SignUp
-                        </Link>
-                    </VStack>
+
+                        <Button
+                            as={Link}
+                            to="/login"
+                            colorScheme="blue"
+                            borderRadius="lg"
+                        >
+                            Login / Sign Up
+                        </Button>
+                    </HStack>
 
                     {/* DESKTOP VERSION 💻 */}
                     <HStack
@@ -36,9 +42,16 @@ const HomePage2 = () => {
                     >
                         <Link style={linkStyle} to="/">Home</Link>
                         <Link style={linkStyle} to="/listAllCourse">Courses</Link>
-                        <Link to="/login">
-                            Login / SignUp
-                        </Link>
+                        <Button
+                            as={Link}
+                            to="/login"
+                            colorScheme="blue"
+                            variant="solid"
+                            size="md"
+                            borderRadius="lg"
+                        >
+                            Login / Sign Up
+                        </Button>
                     </HStack>
 
                 </Box>

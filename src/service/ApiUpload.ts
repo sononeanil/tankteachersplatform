@@ -54,7 +54,7 @@ export const getNotesPDFApi = async () => {
 
 export const uploadPDFChapter = async (formData: FormData) => {
     try {
-        const response = await aiClient.post("/notes/pdf", formData, {
+        const response = await aiClient.post("/genai/pdf", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
         console.log("AI Response:", response.data);

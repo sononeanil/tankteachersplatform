@@ -36,7 +36,7 @@ export const getMenuByRoles = (): MenuItemType[] => {
 
     // const user = getUserFromToken();
     const roles = getUserFromToken()?.roles || [];
-    console.log("User roles:", roles);
+    // console.log("User roles:", roles);
     let menu: MenuItemType[] = [...commonMenu];
 
     if (roles.includes("ROLE_TEACHER")) {
