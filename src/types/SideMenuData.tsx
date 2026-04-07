@@ -9,7 +9,7 @@ const commonMenu: MenuItemType[] = [
     { label: "List All Courses", icon: AiOutlineTeam, path: "listAllCourse" },
     { label: "Ongoing Classes", icon: FaSchool, path: "school" },
     { label: "Upload Documents", icon: AiOutlineUser, path: "/db2/publish" },
-    { label: "Notes - Images", icon: AiOutlineUser, path: "/db2/generateNotesImage" },
+
     { label: "Notes - PDF", icon: AiOutlineUser, path: "/db2/generateNotesPDF" },
     { label: "Enrol Your Ward", icon: AiOutlineUser, path: "profile" },
 ];
@@ -28,6 +28,7 @@ const adminMenu: MenuItemType[] = [
     { label: "User Details", icon: AiOutlineUser, path: "userdetails" },
     { label: "Edit Role", icon: MdWeb, path: "editRole" },
     { label: "Class room", icon: MdOutlineClass, path: "classroom" },
+    { label: "Notes - Images", icon: AiOutlineUser, path: "/db2/generateNotesImage" },
 ];
 
 
