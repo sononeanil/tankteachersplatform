@@ -64,25 +64,32 @@ const ViewNotes = () => {
     return (
         <>
 
-            <HStack align="start" spacing={6} w="100%">
+            <HStack
+                align="start"
+                spacing={6}
+                w="100%"
+                flexDirection={["column", "column", "row"]} // 🔥 key change
+            >
 
                 {/* LEFT PANEL */}
                 <Box
-                    w="350px"
-                    mt={10}
-                    p={8}
+                    w={["100%", "100%", "350px"]} // 🔥 responsive width
+                    mt={4}
+                    p={[4, 6, 8]} // 🔥 responsive padding
                     borderRadius="xl"
                     boxShadow="lg"
                     bg="white"
                 >
                     <VStack spacing={6} align="stretch">
-                        <Heading size="md">Select your Notes</Heading>
+                        <Heading size="md" textAlign={["center", "left"]}>
+                            Select your Notes
+                        </Heading>
 
                         <Divider borderColor="gray.900" />
 
                         <FormControl>
                             <FormLabel>Board</FormLabel>
-                            <Select onChange={(e) => setBoard(e.target.value)}>
+                            <Select size="lg" onChange={(e) => setBoard(e.target.value)}>
                                 <option value="">Select Board</option>
                                 <option value="cbse">CBSE</option>
                                 <option value="icse">ICSE</option>
@@ -92,7 +99,7 @@ const ViewNotes = () => {
 
                         <FormControl>
                             <FormLabel>Class</FormLabel>
-                            <Select onChange={(e) => setStudentClass(e.target.value)}>
+                            <Select size="lg" onChange={(e) => setStudentClass(e.target.value)}>
                                 <option value="">Select Class</option>
                                 <option value="ClassVIII">Class VIII</option>
                                 <option value="ClassIX">Class IX</option>
@@ -104,34 +111,36 @@ const ViewNotes = () => {
 
                         <FormControl>
                             <FormLabel>Subject</FormLabel>
-                            <Select onChange={(e) => setSubject(e.target.value)}>
+                            <Select size="lg" onChange={(e) => setSubject(e.target.value)}>
                                 <option value="">Select Subject</option>
                                 <option value="Science">Science</option>
                                 <option value="english">English</option>
                             </Select>
                         </FormControl>
 
-                        <HStack spacing={4}>
+                        {/* 🔥 Remove unnecessary HStack */}
+                        <FormControl>
+                            <FormLabel>Chapter</FormLabel>
+                            <Select size="lg" onChange={(e) => setChapter(e.target.value)}>
+                                <option value="">Select Chapter</option>
 
-                            <FormControl>
-                                <FormLabel>Chapter</FormLabel>
-                                <Select onChange={(e) => setChapter(e.target.value)}>
-                                    {isChapterLoading ? "Loading..." : "Select Chapter"}
-                                    <option value="">Select Subject</option>
-
-                                    {chapterList?.map((chapter: string) => (
+                                {isChapterLoading ? (
+                                    <option>Loading...</option>
+                                ) : (
+                                    chapterList?.map((chapter: string) => (
                                         <option key={chapter} value={chapter}>
                                             {"Chapter " + chapter}
                                         </option>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </HStack>
+                                    ))
+                                )}
+                            </Select>
+                        </FormControl>
 
                         <Divider borderColor="blue.400" />
 
                         <Button
                             size="lg"
+                            w="100%" // 🔥 full width button
                             colorScheme="blue"
                             onClick={() => refetch()}
                             isLoading={isLoading}
@@ -139,32 +148,29 @@ const ViewNotes = () => {
                         >
                             View Notes
                         </Button>
-
-
                     </VStack>
                 </Box>
 
                 {/* RIGHT PANEL */}
                 <Box
                     flex="1"
-                    mt={10}
-                    p={4}
-                    minH="500px"
+                    mt={4}
+                    p={[2, 3, 4]} // 🔥 responsive padding
+                    minH={["300px", "400px", "500px"]}
                     borderRadius="xl"
                     bg="gray.50"
                 >
-                    {/* 👇 THIS IS THE KEY */}
                     <Outlet />
 
-                    {/* 👇 fallback when no notes */}
                     {!data && !isLoading && (
-                        <Text color="gray.500">
+                        <Text color="gray.500" textAlign="center" mt={10}>
                             📚 Select a chapter and click "View Notes"
                         </Text>
                     )}
                 </Box>
 
             </HStack>
+
         </>
     )
 }
