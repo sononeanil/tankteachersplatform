@@ -1,15 +1,35 @@
-import { HStack, VStack } from "@chakra-ui/react"
+import { Button, HStack, VStack } from "@chakra-ui/react"
 import { NavLink, Outlet } from "react-router-dom"
 
 const GenerateNotes = () => {
     return (
         <>
-            <VStack>
-                <HStack>
-                    <NavLink to="/db2/generateNotesPDF/newNotes">Generate Your own Notes from PDF</NavLink>
-                    <NavLink to="/db2/generateNotesPDF/viewNotes">View Existing Notes</NavLink>
+            <VStack w="100%">
+                <HStack spacing={4} w="100%" justify="center" flexWrap="wrap">
+
+                    <Button
+                        as={NavLink}
+                        to="/db2/generateNotesPDF/newNotes"
+                        colorScheme="blue"
+                        variant="outline"
+                        w={["100%", "auto"]}
+                    >
+                        Generate Notes from PDF
+                    </Button>
+
+                    <Button
+                        as={NavLink}
+                        to="/db2/generateNotesPDF/viewNotes"
+                        colorScheme="blue"
+                        variant="outline"
+                        w={["100%", "auto"]}
+                    >
+                        View Existing Notes
+                    </Button>
+
                 </HStack>
-                <Outlet></Outlet>
+
+                <Outlet />
             </VStack>
         </>
     )
