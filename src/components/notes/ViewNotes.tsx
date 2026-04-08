@@ -30,6 +30,7 @@ const ViewNotes = () => {
         board && studentClass && subject && chapter;
     const chapterListKey = `${board}/${studentClass}/${subject}`;
     const shouldFetchChapters = board && studentClass && subject;
+    const [viewMode, setViewMode] = useState("Notes");
 
     const {
         data: chapterList,
@@ -45,20 +46,25 @@ const ViewNotes = () => {
     );
 
     useEffect(() => {
-        console.log("Chapter Notes Data: 1111111111", data);
+
         if (data?.notes) {
-            navigate("chapterNotes", {
+            // console.log("Chapter Notes Data: 1111111111", data, "222222", data.notes, "33333", data.mindMap, "444444"); // 🔥 LOGGIN   G
+            // Map the select value to the route path
+            const targetPath = viewMode === "Notes" ? "chapterNotes" : "mindMap";
+            navigate(targetPath, {
                 state: {
                     subject,
                     chapterName: chapter,
-                    notes: data.notes,     // ✅ FIXED
+                    notes: data.notes,
+                    mindMap: data.mindMap,    // ✅ FIXED
                     summary: data.summary,
                     questions: data.notes.questions,
+                    viewMode: viewMode, // ✅ Pass viewMode to the next page
                 },
                 replace: true // 👈 avoids history stacking
             });
         }
-    }, [data, navigate]);
+    }, [data, navigate, viewMode, subject, chapter]);
 
 
     return (
@@ -135,18 +141,24 @@ const ViewNotes = () => {
                                 )}
                             </Select>
                         </FormControl>
-
+                        <FormControl>
+                            <FormLabel>View Type</FormLabel>
+                            <Select size="lg" value={viewMode} onChange={(e) => setViewMode(e.target.value)}>
+                                <option value="Notes">📚 Notes</option>
+                                <option value="MindMap">🧠 Mind Map</option>
+                            </Select>
+                        </FormControl>
                         <Divider borderColor="blue.400" />
 
                         <Button
                             size="lg"
-                            w="100%" // 🔥 full width button
+                            w="100%"
                             colorScheme="blue"
                             onClick={() => refetch()}
                             isLoading={isLoading}
                             isDisabled={!isFormValid}
                         >
-                            View Notes
+                            View {viewMode}
                         </Button>
                     </VStack>
                 </Box>

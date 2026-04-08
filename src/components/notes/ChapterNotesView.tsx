@@ -15,6 +15,7 @@ import {
     AlertIcon,
 } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
+import MindMap from "./MindMap";
 
 type Note = {
     note: string;
@@ -33,6 +34,8 @@ type ChapterData = {
     notes: Note[];
     summary: string;
     questions: Question[];
+    mindMap: string;   // Add this
+    viewMode: string;
 };
 
 const ChapterNotesView = () => {
@@ -51,6 +54,10 @@ const ChapterNotesView = () => {
                 </Alert>
             </Container>
         );
+    }
+
+    if (state.viewMode === "MindMap") {
+        return <MindMap chartCode={state.mindMap} />;
     }
 
     return (

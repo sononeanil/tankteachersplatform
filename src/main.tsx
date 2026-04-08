@@ -43,6 +43,7 @@ import GenerateNotes from './components/notes/GenerateNotes.tsx'
 import NewNotes from './components/notes/NewNotes.tsx'
 import ViewNotes from './components/notes/ViewNotes.tsx'
 import ChapterNotesView from './components/notes/ChapterNotesView.tsx'
+import MindMap from './components/notes/MindMap.tsx'
 
 
 const router = createBrowserRouter([
@@ -103,6 +104,10 @@ const router = createBrowserRouter([
             {
               path: "chapterNotes", // ✅ REQUIRED
               element: <ChapterNotesView />
+            },
+            {
+              path: "mindMap", // ✅ REQUIRED
+              element: <MindMap />
             }
           ]
         }
