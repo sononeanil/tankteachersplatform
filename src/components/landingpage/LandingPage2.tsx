@@ -6,6 +6,7 @@ import LandingPageCorousel from "./LandingPageCorousel";
 import ViewCourse from "../teacher/ViewCourse";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Filter from "./Filter";
 
 const LandingPage2 = () => {
     const landingPageData = [
@@ -51,7 +52,7 @@ const LandingPage2 = () => {
         <Box px={{ base: 3, md: 6 }}>
 
             <LandingPageCorousel />
-
+            <Filter />
             <ViewCourse />
 
             {/* GRID 1 */}

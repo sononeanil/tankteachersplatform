@@ -15,7 +15,7 @@ const SimpleCarousel: React.FC = () => {
   const slides = [
     "Welcome to TANK Teachers Platform - Empowering Educators, Inspiring Learners",
     "You become a teacher and start earning by sharing your knowledge. We provide you with the tools and support to create and sell your courses online.",
-    "We will make your presence global and you can reach to students across the world. You became international tutor with us",
+    "We will enable you to be an international teacher and reach students worldwide.",
     "Get Individual login for Student and Parent. Scholer ships for great taent",
   ];
 

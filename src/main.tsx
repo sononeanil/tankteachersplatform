@@ -44,6 +44,8 @@ import NewNotes from './components/notes/NewNotes.tsx'
 import ViewNotes from './components/notes/ViewNotes.tsx'
 import ChapterNotesView from './components/notes/ChapterNotesView.tsx'
 import MindMap from './components/notes/MindMap.tsx'
+import FilterDetails from './components/landingpage/FilterDetails.tsx'
+import Filter from './components/landingpage/Filter.tsx'
 
 
 const router = createBrowserRouter([
@@ -52,14 +54,19 @@ const router = createBrowserRouter([
     element: <HomePage2></HomePage2>,
     children: [{
       index: true,
-      element: <LandingPage2></LandingPage2>
+      element: <LandingPage2></LandingPage2>,
+
     },
+
     {
       path: "/login",
       element: <LoginSignup></LoginSignup>
     }, {
       path: "/listAllCourse",
       element: <ListAllCourse></ListAllCourse>
+    }, {
+      path: "/filterDetails/:type/*",
+      element: <FilterDetails></FilterDetails>
     }
     ]
   },

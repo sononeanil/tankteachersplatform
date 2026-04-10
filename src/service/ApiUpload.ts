@@ -57,7 +57,7 @@ export const uploadPDFChapter = async (formData: FormData) => {
         const response = await aiClient.post("/genai/pdf", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
-        console.log("AI Response:", response.data);
+        // console.log("AI Response:", response.data);
         return response.data;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -71,3 +71,4 @@ export const uploadPDFChapter = async (formData: FormData) => {
         throw new Error("Network error " + error);
     }
 };
+
