@@ -33,10 +33,6 @@ export const delteCustomer = async (customerId: number): Promise<void> => {
     await apiClient.delete(`/${customerId}`)
 }
 
-
-
-
-
 export const mutationCreateUser = async (newUser: UserType) => {
 
     // console.log(response.status);

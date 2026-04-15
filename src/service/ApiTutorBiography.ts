@@ -1,13 +1,12 @@
 import axios from "axios";
-import aiClient from "./AiClient";
 import type { TutorBiographyType } from "../types/tutorBiographyTypes";
 import apiClient from "./ApiClient";
 
 export const mutationCreateTutorBiography = async (newTutorBiography: TutorBiographyType) => {
 
     try {
-        const response = await apiClient.post("/", newTutorBiography);
-        //console.log(response.status);
+        const response = await apiClient.post("/tutor/enrolTutor", newTutorBiography);
+        console.log(response.status);
     }
     catch (error: unknown) {
         if (axios.isAxiosError(error)) {

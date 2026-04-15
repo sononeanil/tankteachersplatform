@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Button, Container, FormControl, FormErrorMessage, FormHelperText, FormLabel, GridItem, Input, Select, SimpleGrid, Text, Textarea } from "@chakra-ui/react"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { useCreateTutorBiography } from "../../tanstack/tutorBigraphyTanstack"
+import { convertToList } from "../../common/commonFunctions"
 
 const CreateBio = () => {
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } }
@@ -13,7 +14,41 @@ const CreateBio = () => {
     const { mutateAsync, isPending } = useCreateTutorBiography();
     const createTutorBiographyHandler: SubmitHandler<TutorBiographyType> = async (data) => {
         try {
-            await mutateAsync(data);
+            const payload = {
+                ...data,
+                fees: {
+                    daily: data.dailyFees ? Number(data.dailyFees) : null,
+                    weekly: data.weeklyFees ? Number(data.weeklyFees) : null,
+                    monthly: data.monthlyFees ? Number(data.monthlyFees) : null,
+                    quarterly: data.quarterlyFees ? Number(data.quarterlyFees) : null,
+                    yearly: data.yearlyFees ? Number(data.yearlyFees) : null
+                },
+
+                coreExpertise: convertToList(data.coreExpertise),
+                subjectList: convertToList(data.subjectList),
+                standardList: convertToList(data.standardList),
+                boardList: convertToList(data.boardList),
+                languages: convertToList(data.languages),
+                preferableTimings: convertToList(data.preferableTimings),
+                weeklyAvailability: convertToList(data.weeklyAvailability),
+                credentials: convertToList(data.credentials),
+                qualifications: convertToList(data.qualifications)
+            };
+
+
+
+            // optional: remove raw fields if backend doesn't expect them
+            delete payload.dailyFees;
+            delete payload.weeklyFees;
+            delete payload.monthlyFees;
+            delete payload.quarterlyFees;
+            delete payload.yearlyFees;
+
+
+
+
+            await mutateAsync(payload);
+
             reset();
         } catch (error) {
             console.error(error);
@@ -137,11 +172,47 @@ const CreateBio = () => {
                             </FormControl>
                         </GridItem>
                         <GridItem colSpan={1}>
-                            <FormControl isInvalid={!!errors.fees}>
-                                <FormLabel>fees </FormLabel>
-                                <Input placeholder="Enter your fees" {...register("fees")} />
+                            <FormControl isInvalid={!!errors.dailyFees}>
+                                <FormLabel>Daily Fees </FormLabel>
+                                <Input type="number" placeholder="Enter your Daily Fees" {...register("dailyFees")} />
                                 <FormErrorMessage>
-                                    {errors.fees && errors.fees.message}
+                                    {errors.dailyFees && errors.dailyFees.message}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </GridItem>
+                        <GridItem colSpan={1}>
+                            <FormControl isInvalid={!!errors.weeklyFees}>
+                                <FormLabel>Weekly Fees </FormLabel>
+                                <Input type="number" placeholder="Enter your Weekly Fees" {...register("weeklyFees")} />
+                                <FormErrorMessage>
+                                    {errors.weeklyFees && errors.weeklyFees.message}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </GridItem>
+                        <GridItem colSpan={1}>
+                            <FormControl isInvalid={!!errors.monthlyFees}>
+                                <FormLabel>Monthly Fees </FormLabel>
+                                <Input type="number" placeholder="Enter your Monthly Fees" {...register("monthlyFees")} />
+                                <FormErrorMessage>
+                                    {errors.monthlyFees && errors.monthlyFees.message}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </GridItem>
+                        <GridItem colSpan={1}>
+                            <FormControl isInvalid={!!errors.quarterlyFees}>
+                                <FormLabel>Quarterly Fees </FormLabel>
+                                <Input type="number" placeholder="Enter your Quarterly Fees" {...register("quarterlyFees")} />
+                                <FormErrorMessage>
+                                    {errors.quarterlyFees && errors.quarterlyFees.message}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </GridItem>
+                        <GridItem colSpan={1}>
+                            <FormControl isInvalid={!!errors.yearlyFees}>
+                                <FormLabel>Yearly Fees </FormLabel>
+                                <Input type="number" placeholder="Enter your Yearly Fees" {...register("yearlyFees")} />
+                                <FormErrorMessage>
+                                    {errors.yearlyFees && errors.yearlyFees.message}
                                 </FormErrorMessage>
                             </FormControl>
                         </GridItem>
