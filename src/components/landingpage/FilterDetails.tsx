@@ -7,10 +7,10 @@ import {
     Flex,
     Button
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
     getChapterList,
-    getChapterListFilter,
+
     getChapterNotes
 } from "../../service/ApiNotes";
 import ReactFlow, { Background, Controls } from "reactflow";
@@ -55,7 +55,6 @@ const FilterDetails = () => {
         enabled: false,
         staleTime: Infinity, // 💥 cache forever (no refetch)
     });
-    const isDataLoaded = !!contentData;
     if (isLoading) return <Text>Loading chapters...</Text>;
     if (isError) return <Text>Error loading chapters</Text>;
 

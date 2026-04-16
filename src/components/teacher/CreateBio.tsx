@@ -6,7 +6,7 @@ import { useCreateTutorBiography } from "../../tanstack/tutorBigraphyTanstack"
 import { convertToList } from "../../common/commonFunctions"
 
 const CreateBio = () => {
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting } }
+    const { register, handleSubmit, reset, formState: { errors } }
         = useForm<TutorBiographyType>({
             resolver: zodResolver(tutorBiographySchema),
             defaultValues: defaultValuesTutorBiography
@@ -35,17 +35,12 @@ const CreateBio = () => {
                 qualifications: convertToList(data.qualifications)
             };
 
-
-
             // optional: remove raw fields if backend doesn't expect them
             delete payload.dailyFees;
             delete payload.weeklyFees;
             delete payload.monthlyFees;
             delete payload.quarterlyFees;
             delete payload.yearlyFees;
-
-
-
 
             await mutateAsync(payload);
 

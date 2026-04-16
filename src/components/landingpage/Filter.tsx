@@ -1,8 +1,8 @@
-import { Box, Button, Container, Flex, Text } from "@chakra-ui/react"
-import { useQuery } from "@tanstack/react-query";
+import { Box, Button, Flex, Text } from "@chakra-ui/react"
+
 import { useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom"
-import { getChapterList } from "../../service/ApiNotes";
+import { useNavigate } from "react-router-dom"
+
 
 const Filter = () => {
     const filters = [

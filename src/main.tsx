@@ -45,7 +45,6 @@ import ViewNotes from './components/notes/ViewNotes.tsx'
 import ChapterNotesView from './components/notes/ChapterNotesView.tsx'
 import MindMap from './components/notes/MindMap.tsx'
 import FilterDetails from './components/landingpage/FilterDetails.tsx'
-import Filter from './components/landingpage/Filter.tsx'
 import CreateBio from './components/teacher/CreateBio.tsx'
 
 

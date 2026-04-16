@@ -1,8 +1,8 @@
 import axios from "axios";
-import type { TutorBiographyType } from "../types/tutorBiographyTypes";
+import type { TutorBiographyPayload } from "../types/tutorBiographyTypes";
 import apiClient from "./ApiClient";
 
-export const mutationCreateTutorBiography = async (newTutorBiography: TutorBiographyType) => {
+export const mutationCreateTutorBiography = async (newTutorBiography: TutorBiographyPayload) => {
 
     try {
         const response = await apiClient.post("/tutor/enrolTutor", newTutorBiography);

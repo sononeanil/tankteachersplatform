@@ -131,3 +131,38 @@ export const defaultValuesTutorBiography: TutorBiographyType = {
     emailId: "",
     password: "",
 };
+
+export type TutorBiographyPayload = Omit<
+    TutorBiographyType,
+    | "dailyFees"
+    | "weeklyFees"
+    | "monthlyFees"
+    | "quarterlyFees"
+    | "yearlyFees"
+    | "coreExpertise"
+    | "subjectList"
+    | "standardList"
+    | "boardList"
+    | "languages"
+    | "preferableTimings"
+    | "weeklyAvailability"
+    | "credentials"
+    | "qualifications"
+> & {
+    fees: {
+        daily: number | null;
+        weekly: number | null;
+        monthly: number | null;
+        quarterly: number | null;
+        yearly: number | null;
+    };
+    coreExpertise?: string[];
+    subjectList?: string[];
+    standardList?: string[];
+    boardList?: string[];
+    languages?: string[];
+    preferableTimings?: string[];
+    weeklyAvailability?: string[];
+    credentials?: string[];
+    qualifications?: string[];
+};
