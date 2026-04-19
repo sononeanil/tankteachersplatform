@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { IoSparkles } from 'react-icons/io5'; // Install react-icons if not available
 import { SearchIcon } from '@chakra-ui/icons';
+import { searchTutors } from '../../service/ApiTutorBiography';
 
 const SearchTutor = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -30,11 +31,10 @@ const SearchTutor = () => {
 
     const handleSearch = async () => {
         if (!searchQuery) return;
+
         setLoading(true);
         try {
-            // Replace with your actual FastAPI URL
-            const response = await fetch(`http://localhost:8000/learningplatform/tutorbiography/searchTutors?query=${searchQuery}`);
-            const data = await response.json();
+            const data = await searchTutors(searchQuery);
             setResults(data.data || []);
         } catch (error) {
             console.error("AI Search Error:", error);
