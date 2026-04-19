@@ -22,7 +22,7 @@ export const mutationCreateTutorBiography = async (newTutorBiography: TutorBiogr
 
 export const searchTutors = async (searchQuery: string) => {
     try {
-        const response = await aiClient.post(
+        const response = await aiClient.get(
             `/learningplatform/tutorbiography/searchTutors?query=${searchQuery}`
         );
 
