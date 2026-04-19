@@ -87,7 +87,6 @@ export const tutorBiographySchema = z.object({
         .min(10, "Phone number must be at least 10 digits"),
 
     emailId: z
-
         .email("Enter a valid email address"),
 
     // Security

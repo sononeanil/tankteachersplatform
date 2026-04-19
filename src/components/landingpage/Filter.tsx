@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 const Filter = () => {
     const filters = [
         "VIII", "IX", "X", "XI", "XII",
-        "Tutor", "Course Publisher", "Engineering Graduate"
+        "Tutor", "Parent", "Course Publisher", "Engineering Graduate"
     ];
 
     const classFilters = ["VIII", "IX", "X", "XI", "XII"];
@@ -23,7 +23,9 @@ const Filter = () => {
     const navigate = useNavigate();
     // 🔥 Build final key
     const tutorOptions = ["Create Bio", "Update your Profile"];
+    const parentOptions = ["Search for Tutors for your child", "Update your Profile"];
     const isTutorSelected = selectedFilter === "Tutor";
+    const isParentSelected = selectedFilter === "Parent";
     return (
         <Box
             bg="blue.100"
@@ -151,7 +153,39 @@ const Filter = () => {
                 </Flex>
             )}
 
+            {isParentSelected && (
+                <Flex w="full" gap={3} wrap="wrap" mt={4}>
+                    {parentOptions.map((item) => (
+                        <Button
+                            key={item}
+                            onClick={() => {
+                                navigate(`/parent/searchTutor`);
+                            }}
+                            bg="white"
+                            color="blue.600"
+                            borderRadius="full"
+                            px={6}
+                            boxShadow="sm"
 
+                            _hover={{
+                                bg: "blue.100",
+                                color: "blue.700",
+                                boxShadow: "lg",
+                                transform: "translateY(-2px)"
+                            }}
+
+                            _active={{
+                                boxShadow: "sm",
+                                transform: "scale(0.97)"
+                            }}
+
+                            transition="all 0.2s ease"
+                        >
+                            {item}
+                        </Button>
+                    ))}
+                </Flex>
+            )}
         </Box>
     );
 };

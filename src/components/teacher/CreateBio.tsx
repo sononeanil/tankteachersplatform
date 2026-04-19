@@ -169,7 +169,7 @@ const CreateBio = () => {
                         <GridItem colSpan={1}>
                             <FormControl isInvalid={!!errors.dailyFees}>
                                 <FormLabel>Daily Fees </FormLabel>
-                                <Input type="number" placeholder="Enter your Daily Fees" {...register("dailyFees")} />
+                                <Input type="number" placeholder="Enter your Daily Fees" {...register("dailyFees", { valueAsNumber: true })} />
                                 <FormErrorMessage>
                                     {errors.dailyFees && errors.dailyFees.message}
                                 </FormErrorMessage>
@@ -178,7 +178,7 @@ const CreateBio = () => {
                         <GridItem colSpan={1}>
                             <FormControl isInvalid={!!errors.weeklyFees}>
                                 <FormLabel>Weekly Fees </FormLabel>
-                                <Input type="number" placeholder="Enter your Weekly Fees" {...register("weeklyFees")} />
+                                <Input type="number" placeholder="Enter your Weekly Fees" {...register("weeklyFees", { valueAsNumber: true })} />
                                 <FormErrorMessage>
                                     {errors.weeklyFees && errors.weeklyFees.message}
                                 </FormErrorMessage>
@@ -187,7 +187,7 @@ const CreateBio = () => {
                         <GridItem colSpan={1}>
                             <FormControl isInvalid={!!errors.monthlyFees}>
                                 <FormLabel>Monthly Fees </FormLabel>
-                                <Input type="number" placeholder="Enter your Monthly Fees" {...register("monthlyFees")} />
+                                <Input type="number" placeholder="Enter your Monthly Fees" {...register("monthlyFees", { valueAsNumber: true })} />
                                 <FormErrorMessage>
                                     {errors.monthlyFees && errors.monthlyFees.message}
                                 </FormErrorMessage>
@@ -196,7 +196,7 @@ const CreateBio = () => {
                         <GridItem colSpan={1}>
                             <FormControl isInvalid={!!errors.quarterlyFees}>
                                 <FormLabel>Quarterly Fees </FormLabel>
-                                <Input type="number" placeholder="Enter your Quarterly Fees" {...register("quarterlyFees")} />
+                                <Input type="number" placeholder="Enter your Quarterly Fees" {...register("quarterlyFees", { valueAsNumber: true })} />
                                 <FormErrorMessage>
                                     {errors.quarterlyFees && errors.quarterlyFees.message}
                                 </FormErrorMessage>
@@ -205,7 +205,7 @@ const CreateBio = () => {
                         <GridItem colSpan={1}>
                             <FormControl isInvalid={!!errors.yearlyFees}>
                                 <FormLabel>Yearly Fees </FormLabel>
-                                <Input type="number" placeholder="Enter your Yearly Fees" {...register("yearlyFees")} />
+                                <Input type="number" placeholder="Enter your Yearly Fees" {...register("yearlyFees", { valueAsNumber: true })} />
                                 <FormErrorMessage>
                                     {errors.yearlyFees && errors.yearlyFees.message}
                                 </FormErrorMessage>
