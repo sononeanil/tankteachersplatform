@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
     Box,
     Input,
@@ -19,6 +18,7 @@ import {
 import { IoSparkles } from 'react-icons/io5'; // Install react-icons if not available
 import { SearchIcon } from '@chakra-ui/icons';
 import { searchTutors } from '../../service/ApiTutorBiography';
+import { useState } from 'react';
 
 const SearchTutor = () => {
     const [searchQuery, setSearchQuery] = useState('');

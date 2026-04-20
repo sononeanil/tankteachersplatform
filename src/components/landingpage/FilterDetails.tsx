@@ -7,7 +7,7 @@ import {
     Flex,
     Button
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
     getChapterList,
 
@@ -15,9 +15,17 @@ import {
 } from "../../service/ApiNotes";
 import ReactFlow, { Background, Controls } from "reactflow";
 import "reactflow/dist/style.css";
-
+import html2pdf from "html2pdf.js";
+import { toPng } from "html-to-image";
+import {
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem
+} from "@chakra-ui/react";
 
 const FilterDetails = () => {
+    const contentRef = useRef<HTMLDivElement>(null);
     const { type } = useParams();
     const decodedType = type ? decodeURIComponent(type) : null;
 
@@ -57,6 +65,51 @@ const FilterDetails = () => {
     });
     if (isLoading) return <Text>Loading chapters...</Text>;
     if (isError) return <Text>Error loading chapters</Text>;
+
+    const opt = {
+        margin: 0.5,
+        filename: `${selectedChapter}-${contentType}.pdf`,
+        image: { type: "jpeg" as const, quality: 0.98 },
+        html2canvas: {
+            scale: 2,
+            useCORS: true
+        },
+        jsPDF: {
+            unit: "in" as const,
+            format: "a4" as const,
+            orientation: "portrait" as const
+        }
+    };
+
+    const handleDownloadPDF = () => {
+        if (!contentRef.current) return;
+
+        html2pdf().set(opt).from(contentRef.current).save();
+    };
+
+
+
+    const handleDownloadHTML = async () => {
+        if (!contentRef.current) return;
+
+        const dataUrl = await toPng(contentRef.current);
+
+        const htmlContent = `
+    <html>
+    <body style="text-align:center">
+        <h2>${selectedChapter} - ${contentType}</h2>
+        <img src="${dataUrl}" />
+    </body>
+    </html>
+    `;
+
+        const blob = new Blob([htmlContent], { type: "text/html" });
+
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `${selectedChapter}-${contentType}.html`;
+        link.click();
+    };
 
     const parseMindMap = (text: string) => {
         const lines = text.split("\n").filter(Boolean);
@@ -198,7 +251,7 @@ const FilterDetails = () => {
 
 
             {/* 🎯 Content Type Buttons */}
-            <Flex gap={3} mb={4}>
+            <Flex gap={3} mb={4} align="center" wrap="wrap">
                 <Select
                     placeholder="Select Chapter"
                     value={selectedChapter}
@@ -219,26 +272,40 @@ const FilterDetails = () => {
                 >
                     {isCached ? "Loaded ✅" : "Fetch Details"}
                 </Button>
-                {["Notes", "Mind Map", "Question", "Mind Map2", "Flow Chart"].map((item) => (
+                {["Notes", "Mind Map", "Question", "Mind Map2", "Flow Chart", "Download to PDF"].map((item) => (
                     <Button
                         key={item}
                         onClick={() => setContentType(item)}
-                        bg={contentType === item ? "blue.400" : "white"}
-                        color={contentType === item ? "white" : "blue.600"}
+                        colorScheme={contentType === item ? "blue" : "gray"}
+                        variant={contentType === item ? "solid" : "outline"}
+                        borderColor={contentType === item ? "blue.600" : "gray.500"}
                         borderRadius="full"
                         isDisabled={!selectedChapter}
+                        boxShadow="xl"
                     >
                         {item}
                     </Button>
                 ))}
+
+                <Menu>
+                    <MenuButton as={Button} colorScheme="purple">
+                        Download ⬇️
+                    </MenuButton>
+                    <MenuList>
+                        <MenuItem onClick={handleDownloadPDF}>PDF</MenuItem>
+                        <MenuItem onClick={handleDownloadHTML}>HTML</MenuItem>
+                    </MenuList>
+                </Menu>
             </Flex>
 
             <Box mt={4}>
                 {contentLoading && <Text>Loading content...</Text>}
 
                 {contentData && (
-                    <>
+                    <div ref={contentRef}>
+
                         {/* 📘 NOTES VIEW */}
+
                         {contentType === "Notes" && (
                             <Box>
                                 {contentData.notes?.map((item: any, index: number) => (
@@ -297,6 +364,7 @@ const FilterDetails = () => {
                             </Box>
                         )}
 
+
                         {contentType === "Flow Chart" && contentData.mindMap && (() => {
                             const parsed = parseMindMap(contentData.mindMap);
                             const { nodes, edges } = buildFlow(parsed);
@@ -344,7 +412,7 @@ const FilterDetails = () => {
                                 ))}
                             </Box>
                         )}
-                    </>
+                    </div>
                 )}
             </Box>
         </Box>
