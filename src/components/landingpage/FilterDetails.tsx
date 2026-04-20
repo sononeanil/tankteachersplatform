@@ -24,7 +24,11 @@ import {
     MenuItem
 } from "@chakra-ui/react";
 
+import { PdfLayout } from "../notes/PdfLayout";
+import { parseMindMap } from "../../service/ParseMindMap";
+
 const FilterDetails = () => {
+    const pdfRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const { type } = useParams();
     const decodedType = type ? decodeURIComponent(type) : null;
@@ -81,6 +85,25 @@ const FilterDetails = () => {
         }
     };
 
+
+    const handleDownloadPDFAll = () => {
+        if (!pdfRef.current) return;
+
+        const opt = {
+            margin: 0.5,
+            filename: `${decodedType}-Ch${selectedChapter}.pdf`,
+            image: { type: "jpeg" as const, quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: {
+                unit: "in" as const,
+                format: "a4" as const,
+                orientation: "portrait" as const
+            }
+        };
+
+        html2pdf().set(opt).from(pdfRef.current).save();
+    };
+
     const handleDownloadPDF = () => {
         if (!contentRef.current) return;
 
@@ -111,30 +134,7 @@ const FilterDetails = () => {
         link.click();
     };
 
-    const parseMindMap = (text: string) => {
-        const lines = text.split("\n").filter(Boolean);
 
-        const root: any = { name: "Root", children: [] };
-        const stack: any[] = [{ indent: -1, node: root }];
-
-        lines.forEach((line) => {
-            const trimmed = line.trim();
-
-            if (trimmed === "mindmap" || /^\d+$/.test(trimmed)) return;
-
-            const indent = line.search(/\S/);
-            const newNode = { name: trimmed, children: [] };
-
-            while (stack.length && indent <= stack[stack.length - 1].indent) {
-                stack.pop();
-            }
-
-            stack[stack.length - 1].node.children.push(newNode);
-            stack.push({ indent, node: newNode });
-        });
-
-        return root.children[0];
-    };
 
     const MindMapNode = ({ node, level = 0 }: any) => {
         const [open, setOpen] = useState(level < 2);
@@ -292,7 +292,8 @@ const FilterDetails = () => {
                         Download ⬇️
                     </MenuButton>
                     <MenuList>
-                        <MenuItem onClick={handleDownloadPDF}>PDF</MenuItem>
+                        <MenuItem onClick={handleDownloadPDF}>PDF Single Page</MenuItem>
+                        <MenuItem onClick={handleDownloadPDFAll}>PDF Complete Chapter</MenuItem>
                         <MenuItem onClick={handleDownloadHTML}>HTML</MenuItem>
                     </MenuList>
                 </Menu>
@@ -415,6 +416,14 @@ const FilterDetails = () => {
                     </div>
                 )}
             </Box>
+            <div style={{ position: "absolute", left: "-9999px", top: 0 }}>
+                <div ref={pdfRef}>
+                    <PdfLayout
+                        contentData={contentData}
+                        selectedChapter={selectedChapter}
+                    />
+                </div>
+            </div>
         </Box>
     );
 };
