@@ -14,18 +14,28 @@ const SimpleCarousel: React.FC = () => {
 
   const slides = [
     "Welcome to TANK Teachers Platform - Empowering Educators, Inspiring Learners",
-    "You become a teacher and start earning by sharing your knowledge. We provide you with the tools and support to create and sell your courses online.",
-    "We will enable you to be an international teacher and reach students worldwide.",
-    "Notes for Students: We provide comprehensive study materials, including notes, practice questions, and interactive resources to help you excel in your studies.",
+    "Become a teacher and start earning by sharing your knowledge.",
+    "Reach students worldwide and teach globally 🌍",
+    "Get AI-powered notes, summaries, and question papers instantly ⚡",
   ];
 
   return (
-    <Box maxW="full" mx="auto" p={1} mb={5}>
+    <Box maxW="full" mx="auto" px={2} mb={5}>
       <Slider {...settings}>
         {slides.map((msg, i) => (
-          <Box key={i} bgGradient="linear(to-r, #80eff7, #a1c4fd, #f2c1c1)"
-            p={5} borderRadius="md" textAlign="center">
-            <Text fontSize="2xl" color="white" fontWeight="bold">
+          <Box
+            key={i}
+            p={{ base: 6, md: 10 }}
+            borderRadius="xl"
+            bgGradient="linear(to-r, white, teal.200)"
+            boxShadow="0 10px 30px rgba(0,0,0,0.1)"
+            mx={2}
+          >
+            <Text
+              fontSize={{ base: "lg", md: "2xl" }}
+              fontWeight="bold"
+              lineHeight="1.6"
+            >
               {msg}
             </Text>
           </Box>

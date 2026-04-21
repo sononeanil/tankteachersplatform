@@ -6,66 +6,125 @@ const HomePage2 = () => {
         <Container
             maxW="container.xl"
             p={{ base: 3, md: 5 }}
-            boxShadow="2xl"
             borderRadius={10}
             m={{ base: 2, md: 5 }}
+            bgGradient="linear(to-br, teal.50, blue.200)"
         >
             <Flex direction="column">
 
                 {/* NAVBAR */}
-                <Box p={3}>
 
-                    {/* MOBILE VERSION 📱 */}
-                    <HStack
-                        display={{ base: "flex", md: "none" }}
-                        spacing={3}
-                        wrap="wrap"
+                <Box
+                    textAlign="center"
+                    py={{ base: 10, md: 16 }}
+                    px={{ base: 4, md: 8 }}
+                    bgGradient="linear(to-r, teal.400, blue.500)"
+                    color="white"
+                    borderRadius="xl"
+                    mb={6}
+                >
+                    <Box
+                        fontSize={{ base: "xl", md: "4xl" }}
+                        fontWeight="bold"
                     >
-                        <Link style={linkStyle} to="/">Home</Link>
-                        <Link style={linkStyle} to="/listAllCourse">Courses</Link>
+                        Learn Smarter with AI 🤖📚
+                    </Box>
 
+                    <Box
+                        mt={4}
+                        fontSize={{ base: "md", md: "lg" }}
+                    >
+                        Create notes, summaries, question papers & find tutors instantly.
+                    </Box>
+
+                    <HStack
+                        mt={6}
+                        spacing={4}
+                        justify="center"
+                        flexWrap="wrap"
+                        direction={{ base: "column", md: "row" }}
+                        w="100%"
+                    >
+
+                        {/* PRIMARY CTA */}
+                        <Button
+                            as={Link}
+                            to="/listAllCourse"
+                            size="lg"
+                            bg="white"
+                            color="teal.600"
+                            borderRadius="full"
+                            px={8}
+                            w={{ base: "100%", md: "auto" }}
+                            boxShadow="0 6px 20px rgba(0,0,0,0.15)"
+                            _hover={{
+                                transform: "translateY(-2px)",
+                                boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+                            }}
+                        >
+                            Explore Courses
+                        </Button>
+                        <Button
+                            as={Link}
+                            to="/parent/searchTutor"
+                            size="lg"
+                            bg="white"
+                            color="teal.600"
+                            borderRadius="full"
+                            px={8}
+                            w={{ base: "100%", md: "auto" }}
+                            boxShadow="0 6px 20px rgba(0,0,0,0.15)"
+                            _hover={{
+                                transform: "translateY(-2px)",
+                                boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+                            }}
+                        >
+                            Find Tutors for Your Child
+                        </Button>
+
+                        {/* SECONDARY */}
                         <Button
                             as={Link}
                             to="/login"
-                            colorScheme="blue"
-                            borderRadius="lg"
+                            size="lg"
+                            variant="outline"
+                            borderColor="white"
+                            color="white"
+                            borderRadius="full"
+                            px={8}
+                            w={{ base: "100%", md: "auto" }}
+                            _hover={{
+                                bg: "whiteAlpha.200",
+                            }}
                         >
                             Login / Sign Up
                         </Button>
-                    </HStack>
 
-                    {/* DESKTOP VERSION 💻 */}
-                    <HStack
-                        display={{ base: "none", md: "flex" }}
-                        spacing={6}
-                        justify="flex-end"
-                    >
-                        <Link style={linkStyle} to="/">Home</Link>
-                        <Link style={linkStyle} to="/listAllCourse">Courses</Link>
                         <Button
                             as={Link}
-                            to="/login"
-                            colorScheme="blue"
-                            variant="solid"
-                            size="md"
-                            borderRadius="lg"
+                            to="/"
+                            size="lg"
+                            variant="outline"
+                            borderColor="white"
+                            color="white"
+                            borderRadius="full"
+                            px={8}
+                            w={{ base: "100%", md: "auto" }}
+                            _hover={{
+                                bg: "whiteAlpha.200",
+                            }}
                         >
-                            Login / Sign Up
+                            Home
                         </Button>
-                    </HStack>
 
+
+
+                    </HStack>
                 </Box>
-
                 <Outlet />
             </Flex>
         </Container>
     );
-};
-
-const linkStyle = {
-    color: "teal",
-    fontWeight: "bold",
-    textDecoration: "underline",
 };
 
 
