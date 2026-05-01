@@ -316,7 +316,7 @@ const FilterDetails = () => {
                                         mb={3}
                                         borderWidth="1px"
                                         borderRadius="md"
-                                        boxShadow="sm"
+                                        boxShadow="dark-lg"
                                     >
                                         <Text fontWeight="bold" fontSize="md">
                                             {index + 1}. {item.note}

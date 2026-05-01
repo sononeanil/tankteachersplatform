@@ -20,15 +20,15 @@ const SimpleCarousel: React.FC = () => {
   ];
 
   return (
-    <Box maxW="full" mx="auto" px={2} mb={5}>
+    <Box maxW="full" mx="auto" px={2} mb={5} boxShadow="xl">
       <Slider {...settings}>
         {slides.map((msg, i) => (
           <Box
             key={i}
             p={{ base: 6, md: 10 }}
             borderRadius="xl"
-            bgGradient="linear(to-r, white, teal.200)"
-            boxShadow="0 10px 30px rgba(0,0,0,0.1)"
+            bgGradient="linear(to-r, blue.400, teal.200)"
+
             mx={2}
           >
             <Text

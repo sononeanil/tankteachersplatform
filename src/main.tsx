@@ -47,6 +47,7 @@ import MindMap from './components/notes/MindMap.tsx'
 import FilterDetails from './components/landingpage/FilterDetails.tsx'
 import CreateBio from './components/teacher/CreateBio.tsx'
 import SearchTutor from './components/teacher/SearchTutor.tsx'
+import NotesBatchDetails from './components/notes/NotesBatchDetails.tsx'
 
 
 const router = createBrowserRouter([
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
     {
       path: "/parent/searchTutor",
       element: <SearchTutor></SearchTutor>
+    },
+    {
+      path: "/notesBatchDetails",
+      element: <NotesBatchDetails></NotesBatchDetails>
     }
     ]
   },

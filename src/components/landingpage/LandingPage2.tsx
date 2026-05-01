@@ -7,6 +7,7 @@ import ViewCourse from "../teacher/ViewCourse";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Filter from "./Filter";
+import DetailedNotesFilter from "../notes/DetailedNotesFilter";
 
 const LandingPage2 = () => {
     const landingPageData = [
@@ -53,6 +54,7 @@ const LandingPage2 = () => {
 
             <LandingPageCorousel />
             <Filter />
+            <DetailedNotesFilter />
             <ViewCourse />
 
             {/* GRID 1 */}
