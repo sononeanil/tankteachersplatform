@@ -48,6 +48,8 @@ import FilterDetails from './components/landingpage/FilterDetails.tsx'
 import CreateBio from './components/teacher/CreateBio.tsx'
 import SearchTutor from './components/teacher/SearchTutor.tsx'
 import NotesBatchDetails from './components/notes/NotesBatchDetails.tsx'
+import DetailNotesBatch from './components/notes/DetailNotesBatch.tsx';
+import DetailedNotes from './components/notes/DetailedNotes.tsx';
 
 
 const router = createBrowserRouter([
@@ -80,6 +82,10 @@ const router = createBrowserRouter([
     {
       path: "/notesBatchDetails",
       element: <NotesBatchDetails></NotesBatchDetails>
+    },
+    {
+      path: "/getDetailedNotes",
+      element: <DetailedNotes></DetailedNotes>
     }
     ]
   },
@@ -107,6 +113,10 @@ const router = createBrowserRouter([
       path: "/db2/publish",
       element: <Publish></Publish>
     }, {
+      path: "/db2/detailNotesBatch",
+      element: <DetailNotesBatch></DetailNotesBatch>
+    },
+    {
       path: "/db2/generateNotesImage",
       element: <Publish></Publish>
     }, {

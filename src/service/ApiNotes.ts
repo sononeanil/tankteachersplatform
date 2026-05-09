@@ -1,6 +1,7 @@
 
 import axios from "axios";
 import aiClient from "./AiClient";
+import apiClient from "./ApiClient";
 
 export const getChapterNotes = async (params: {
     key: string;
@@ -43,11 +44,21 @@ export const getNotesBatchChapterList = async (standard: string, subject: string
     }
 }
 
+export const getDetailedNotes = async (params: { classNumber: string; subject: string; chapterNumber: string }) => {
+    // Axios 'params' puts these in the URL: /getDetailedNotes?standard=6&subject=Science...
+    const { data } = await apiClient.get(`/gemmaai/notes/getDetailedNotes`, { params });
+    // alert("Chapter Details: " + JSON.stringify(data));
+    console.log("Chapter Details: ", data.erpSystemResponse.lstDetailedNotesSections);
+    return data.erpSystemResponse.lstDetailedNotesSections;
+};
+
+
 
 export const getNotesBatchChapterDetails = async (chapterId: number) => {
 
     try {
         const { data } = await aiClient.get(`/learningplatform/notesbatch/getNotesBatchChapterDetails`, { params: { chapterId } })
+
         return data;
     }
     catch (error: unknown) {

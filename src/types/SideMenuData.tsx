@@ -27,6 +27,7 @@ const teacherMenu: MenuItemType[] = [
 const adminMenu: MenuItemType[] = [
     { label: "User Details", icon: AiOutlineUser, path: "userdetails" },
     { label: "Edit Role", icon: MdWeb, path: "editRole" },
+    { label: "Generate Detailed Notes", icon: MdWeb, path: "detailNotesBatch" },
     { label: "Class room", icon: MdOutlineClass, path: "classroom" },
     { label: "Notes - Images", icon: AiOutlineUser, path: "/db2/generateNotesImage" },
 ];
