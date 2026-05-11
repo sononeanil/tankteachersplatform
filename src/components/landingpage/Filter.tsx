@@ -6,13 +6,23 @@ import { StarIcon, InfoIcon } from "@chakra-ui/icons";
 
 const Filter = () => {
     const filters = [
-        "VIII", "IX", "X", "XI", "XII",
+        "VI", "VII", "VIII", "IX", "X", "XI", "XII",
         "Tutor", "Parent", "Course Publisher", "Engineering Graduate"
     ];
 
-    const classFilters = ["VIII", "IX", "X", "XI", "XII"];
-    const boardFilters = ["cbse", "icsc"];
-    const subjectFilters = ["English", "Science"];
+    const romanToNumeric: Record<string, string> = {
+        "VI": "6",
+        "VII": "7",
+        "VIII": "8",
+        "IX": "9",
+        "X": "10",
+        "XI": "11",
+        "XII": "12"
+    };
+
+    const classFilters = ["VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+    const boardFilters = ["cbse"];
+    const subjectFilters = ["Science"];
 
     const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
     const [selectedBoard, setSelectedBoard] = useState<string | null>(null);
@@ -74,7 +84,7 @@ const Filter = () => {
                 mb={6}
                 lineHeight="tall"
             >
-                Click on the filters to explore resources tailored for you! 🚀
+                Select Standard to view Notes, Interactive Mindmap and Practice MCQs! 🚀
             </Text>
 
             {/* 🔹 Main Filters */}
@@ -147,7 +157,9 @@ const Filter = () => {
                                 key={item}
                                 onClick={() => {
                                     setSelectedSubject(item);
-                                    const finalKey = `${selectedBoard}/Class${selectedFilter}/${item}`;
+                                    // const finalKey = `${selectedBoard}/Class${selectedFilter}/${item}`;
+                                    const finalKey = `Class_${romanToNumeric[selectedFilter] || selectedFilter}_${item}`;
+                                    alert(`You selected: ${finalKey}`);
                                     navigate(`/filterDetails/${encodeURIComponent(finalKey)}`);
                                 }}
                                 bg="white"

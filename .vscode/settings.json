@@ -9,6 +9,17 @@
             "name": "local",
             "username": "postgres",
             "database": "erpsystem"
+        },
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5430,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "name": "tankclass_springboot_ms",
+            "database": "tankclass_springboot_ms",
+            "username": "postgres"
         }
     ]
 }

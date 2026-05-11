@@ -1,40 +1,37 @@
-export const parseMindMap = (text: string) => {
-    const lines = text.split("\n").filter(Boolean);
+export const parseMindMap = (mermaidText: string) => {
+    if (!mermaidText) return { name: "No Data", children: [] };
 
-    const root: any = { name: "Root", children: [] };
-    const stack: any[] = [{ indent: -1, node: root }];
+    // 1. Clean the string: remove the "mindmap" keyword and empty lines
+    const lines = mermaidText
+        .split("\n")
+        .filter((line) => line.trim() !== "" && !line.trim().startsWith("mindmap"));
 
-    let lastNode: any = null;
+    if (lines.length === 0) return { name: "Root", children: [] };
+
+    const root: any = { name: "", children: [] };
+    const stack: { node: any; indent: number }[] = [];
 
     lines.forEach((line) => {
-        const trimmed = line.trim();
-
-        if (!trimmed || trimmed === "mindmap") return;
-
+        // 2. Calculate indentation level
         const indent = line.search(/\S/);
+        // 3. Clean node name (remove Mermaid shapes like (( )) or [ ] or {{ }})
+        const name = line.trim().replace(/[()\[\]{}]+/g, "");
 
-        // 🧠 Detect heading (starts with number like 3.1, 3.1.1 etc.)
-        const isHeading = /^\d+(\.\d+)*\s/.test(trimmed);
+        const newNode = { name, children: [] };
 
-        if (isHeading) {
-            const newNode = { name: trimmed, children: [] };
-
-            while (stack.length && indent <= stack[stack.length - 1].indent) {
+        if (stack.length === 0) {
+            root.name = name;
+            stack.push({ node: root, indent });
+        } else {
+            // Find the parent: pop the stack until we find a node with less indentation
+            while (stack.length > 0 && stack[stack.length - 1].indent >= indent) {
                 stack.pop();
             }
 
-            stack[stack.length - 1].node.children.push(newNode);
-            stack.push({ indent, node: newNode });
-
-            lastNode = newNode;
-        } else {
-            // 📌 Treat as description → attach to last node
-            if (lastNode) {
-                lastNode.children.push({
-                    name: trimmed,
-                    children: []
-                });
+            if (stack.length > 0) {
+                stack[stack.length - 1].node.children.push(newNode);
             }
+            stack.push({ node: newNode, indent });
         }
     });
 

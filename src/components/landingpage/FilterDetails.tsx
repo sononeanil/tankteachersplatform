@@ -7,13 +7,14 @@ import {
     Flex,
     Button
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
     getChapterList,
 
     getChapterNotes
 } from "../../service/ApiNotes";
-import ReactFlow, { Background, Controls } from "reactflow";
+import ReactFlow, { Background, BackgroundVariant, Controls, MiniMap } from "reactflow";
+import 'reactflow/dist/style.css';
 import "reactflow/dist/style.css";
 import html2pdf from "html2pdf.js";
 import { toPng } from "html-to-image";
@@ -26,6 +27,8 @@ import {
 
 import { PdfLayout } from "../notes/PdfLayout";
 import { parseMindMap } from "../../service/ParseMindMap";
+import VennView from "../notes/VennView";
+
 
 const FilterDetails = () => {
     const pdfRef = useRef<HTMLDivElement>(null);
@@ -42,6 +45,9 @@ const FilterDetails = () => {
         decodedType,
         selectedChapter,
     ]);
+
+
+
     // 🔹 First API → Get Chapters
     const {
         data: chapters,
@@ -67,8 +73,57 @@ const FilterDetails = () => {
         enabled: false,
         staleTime: Infinity, // 💥 cache forever (no refetch)
     });
-    if (isLoading) return <Text>Loading chapters...</Text>;
-    if (isError) return <Text>Error loading chapters</Text>;
+    const buildFlow = (root: any) => {
+        const nodes: any[] = [];
+        const edges: any[] = [];
+        let id = 0;
+
+        const traverse = (node: any, x = 0, y = 0, parentId: any = null, level = 0) => {
+            const currentId = `${id++}`;
+
+            nodes.push({
+                id: currentId,
+                data: { label: node.name },
+                position: { x, y },
+                style: {
+                    padding: "10px",
+                    borderRadius: "8px",
+                    background: level === 0 ? "#3182CE" : "#E2E8F0", // Color coding by level
+                    color: level === 0 ? "white" : "black",
+                    width: 150,
+                },
+            });
+
+            if (parentId !== null) {
+                edges.push({
+                    id: `e-${parentId}-${currentId}`,
+                    source: parentId,
+                    target: currentId,
+                    animated: true, // Make it look "interactive"
+                });
+            }
+
+            if (node.children) {
+                const totalWidth = node.children.length * 200;
+                node.children.forEach((child: any, index: number) => {
+                    // Better horizontal distribution
+                    const childX = x - (totalWidth / 2) + (index * 200) + 100;
+                    traverse(child, childX, y + 120, currentId, level + 1);
+                });
+            }
+        };
+
+        traverse(root);
+        return { nodes, edges };
+    };
+
+    const flowData = useMemo(() => {
+        if (contentType === "Flow Chart" && contentData?.mindMap) {
+            const parsed = parseMindMap(contentData.mindMap);
+            return buildFlow(parsed);
+        }
+        return { nodes: [], edges: [] };
+    }, [contentData, contentType]);
 
     const opt = {
         margin: 0.5,
@@ -133,7 +188,6 @@ const FilterDetails = () => {
         link.download = `${selectedChapter}-${contentType}.html`;
         link.click();
     };
-
 
 
     const MindMapNode = ({ node, level = 0 }: any) => {
@@ -201,45 +255,11 @@ const FilterDetails = () => {
     };
 
 
-    const buildFlow = (root: any) => {
-        const nodes: any[] = [];
-        const edges: any[] = [];
 
-        let id = 0;
 
-        const traverse = (node: any, x = 0, y = 0, parentId: any = null) => {
-            const currentId = `${id++}`;
 
-            nodes.push({
-                id: currentId,
-                data: { label: node.name },
-                position: { x, y },
-                style: {
-                    padding: 10,
-                    borderRadius: 10,
-                    border: "1px solid #ccc",
-                    background: "#EDF2F7",
-                },
-            });
-
-            if (parentId !== null) {
-                edges.push({
-                    id: `e-${parentId}-${currentId}`,
-                    source: parentId,
-                    target: currentId,
-                });
-            }
-
-            node.children?.forEach((child: any, index: number) => {
-                traverse(child, x + index * 200 - 100, y + 100, currentId);
-            });
-        };
-
-        traverse(root);
-
-        return { nodes, edges };
-    };
-
+    if (isLoading) return <Text>Loading chapters...</Text>;
+    if (isError) return <Text>Error loading chapters</Text>;
 
     return (
         <Box p={4}>
@@ -272,7 +292,7 @@ const FilterDetails = () => {
                 >
                     {isCached ? "Loaded ✅" : "Fetch Details"}
                 </Button>
-                {["Notes", "Mind Map", "Question", "Mind Map2", "Flow Chart", "Download to PDF"].map((item) => (
+                {["Notes", "Mind Map", "Question", "Mind Map2", "Flow Chart", "Venn Diagram"].map((item) => (
                     <Button
                         key={item}
                         onClick={() => setContentType(item)}
@@ -366,24 +386,28 @@ const FilterDetails = () => {
                         )}
 
 
-                        {contentType === "Flow Chart" && contentData.mindMap && (() => {
-                            const parsed = parseMindMap(contentData.mindMap);
-                            const { nodes, edges } = buildFlow(parsed);
-
-                            return (
-                                <Box
-                                    height="500px"
-                                    borderWidth="1px"
-                                    borderRadius="lg"
-                                    bg="gray.50"
+                        {contentType === "Flow Chart" && contentData?.mindMap && (
+                            <Box
+                                height="500px"
+                                width="100%"
+                                borderWidth="1px"
+                                borderRadius="lg"
+                                bg="gray.50"
+                                position="relative"
+                            >
+                                <ReactFlow
+                                    nodes={flowData.nodes}
+                                    edges={flowData.edges}
+                                    fitView
+                                    // Wait for nodes to be ready before fitting view
+                                    onInit={(instance) => setTimeout(() => instance.fitView(), 100)}
                                 >
-                                    <ReactFlow nodes={nodes} edges={edges} fitView>
-                                        <Background />
-                                        <Controls />
-                                    </ReactFlow>
-                                </Box>
-                            );
-                        })()}
+                                    <Background color="#cbd5e0" variant={BackgroundVariant.Dots} gap={12} />
+                                    <Controls />
+                                    <MiniMap nodeStrokeWidth={3} zoomable pannable />
+                                </ReactFlow>
+                            </Box>
+                        )}
 
                         {/* ❓ QUESTIONS VIEW */}
                         {contentType === "Question" && (
@@ -413,6 +437,31 @@ const FilterDetails = () => {
                                 ))}
                             </Box>
                         )}
+
+                        {/* 📊 VENN DIAGRAM VIEW */}
+                        {contentType === "Venn Diagram" && (
+                            <Box
+                                p={5}
+                                borderWidth="1px"
+                                borderRadius="xl"
+                                bg="white"
+                                boxShadow="inner"
+                                minH="500px"
+                            >
+                                <Text fontWeight="bold" fontSize="xl" mb={5} textAlign="center">
+                                    Comparison Diagram
+                                </Text>
+
+                                {contentData?.vennDiagram ? (
+                                    <VennView data={contentData.vennDiagram} />
+                                ) : (
+                                    <Text color="red.500" textAlign="center">
+                                        No Venn Diagram data available for this chapter.
+                                    </Text>
+                                )}
+                            </Box>
+                        )}
+
                     </div>
                 )}
             </Box>
