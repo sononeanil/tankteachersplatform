@@ -12,7 +12,7 @@ export const getChapterNotes = async (params: {
             params, // query params
         });
 
-        console.log("Chapter Notes: 11111", response.data);
+        // console.log("Chapter Notes: 11111", response.data);
         return response.data.notes;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
