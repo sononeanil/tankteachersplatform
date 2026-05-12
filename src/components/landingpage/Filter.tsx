@@ -159,7 +159,6 @@ const Filter = () => {
                                     setSelectedSubject(item);
                                     // const finalKey = `${selectedBoard}/Class${selectedFilter}/${item}`;
                                     const finalKey = `Class_${romanToNumeric[selectedFilter] || selectedFilter}_${item}`;
-                                    alert(`You selected: ${finalKey}`);
                                     navigate(`/filterDetails/${encodeURIComponent(finalKey)}`);
                                 }}
                                 bg="white"
