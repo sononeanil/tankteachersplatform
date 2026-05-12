@@ -5,7 +5,13 @@ import {
     Box,
     Select,
     Flex,
-    Button
+    Button,
+    VStack,
+    HStack,
+    Heading,
+    Badge,
+    Divider,
+    Icon
 } from "@chakra-ui/react";
 import { useMemo, useRef, useState } from "react";
 import {
@@ -13,7 +19,7 @@ import {
 
     getChapterNotes
 } from "../../service/ApiNotes";
-import ReactFlow, { Background, BackgroundVariant, Controls, MiniMap } from "reactflow";
+import ReactFlow, { Background, BackgroundVariant, Controls, MiniMap, ReactFlowProvider } from "reactflow";
 import 'reactflow/dist/style.css';
 import "reactflow/dist/style.css";
 import html2pdf from "html2pdf.js";
@@ -28,6 +34,10 @@ import {
 import { PdfLayout } from "../notes/PdfLayout";
 import { parseMindMap } from "../../service/ParseMindMap";
 import VennView from "../notes/VennView";
+import { buildFlow, nodeTypes } from "../notes/FlowChartNode";
+import FlowChartControlPanel from "../notes/FlowChartControlPanel";
+import { StarIcon } from "@chakra-ui/icons";
+
 
 
 const FilterDetails = () => {
@@ -73,49 +83,7 @@ const FilterDetails = () => {
         enabled: false,
         staleTime: Infinity, // 💥 cache forever (no refetch)
     });
-    const buildFlow = (root: any) => {
-        const nodes: any[] = [];
-        const edges: any[] = [];
-        let id = 0;
 
-        const traverse = (node: any, x = 0, y = 0, parentId: any = null, level = 0) => {
-            const currentId = `${id++}`;
-
-            nodes.push({
-                id: currentId,
-                data: { label: node.name },
-                position: { x, y },
-                style: {
-                    padding: "10px",
-                    borderRadius: "8px",
-                    background: level === 0 ? "#3182CE" : "#E2E8F0", // Color coding by level
-                    color: level === 0 ? "white" : "black",
-                    width: 150,
-                },
-            });
-
-            if (parentId !== null) {
-                edges.push({
-                    id: `e-${parentId}-${currentId}`,
-                    source: parentId,
-                    target: currentId,
-                    animated: true, // Make it look "interactive"
-                });
-            }
-
-            if (node.children) {
-                const totalWidth = node.children.length * 200;
-                node.children.forEach((child: any, index: number) => {
-                    // Better horizontal distribution
-                    const childX = x - (totalWidth / 2) + (index * 200) + 100;
-                    traverse(child, childX, y + 120, currentId, level + 1);
-                });
-            }
-        };
-
-        traverse(root);
-        return { nodes, edges };
-    };
 
     const flowData = useMemo(() => {
         if (contentType === "Flow Chart" && contentData?.mindMap) {
@@ -328,33 +296,96 @@ const FilterDetails = () => {
                         {/* 📘 NOTES VIEW */}
 
                         {contentType === "Notes" && (
-                            <Box>
-                                {contentData.notes?.map((item: any, index: number) => (
-                                    <Box
-                                        key={index}
-                                        p={4}
-                                        mb={3}
-                                        borderWidth="1px"
-                                        borderRadius="md"
-                                        boxShadow="dark-lg"
-                                    >
-                                        <Text fontWeight="bold" fontSize="md">
-                                            {index + 1}. {item.note}
-                                        </Text>
-                                        <Text mt={2} color="gray.600">
-                                            {item.explanation}
-                                        </Text>
-                                    </Box>
-                                ))}
+                            <VStack spacing={6} align="stretch" w="100%">
+                                {/* Header Section */}
+                                <HStack justify="space-between" pb={2} borderBottom="2px solid" borderColor="blue.500">
+                                    <Heading size="lg" color="gray.700">Chapter Insights</Heading>
+                                    <Badge colorScheme="blue" variant="subtle" px={3} py={1} borderRadius="full">
+                                        {contentData.notes?.length} Key Points
+                                    </Badge>
+                                </HStack>
 
-                                {/* 🧾 Summary */}
+                                {/* Notes Grid/List */}
+                                <Box>
+                                    {contentData.notes?.map((item: any, index: number) => (
+                                        <Box
+                                            key={index}
+                                            position="relative"
+                                            p={6}
+                                            mb={5}
+                                            bg="white"
+                                            borderRadius="xl"
+                                            borderWidth="1px"
+                                            borderColor="gray.100"
+                                            boxShadow="sm"
+                                            transition="all 0.2s"
+                                            _hover={{
+                                                boxShadow: "xl",
+                                                transform: "translateY(-2px)",
+                                                borderColor: "blue.200"
+                                            }}
+                                        >
+                                            {/* Decorative Side Bar */}
+                                            <Box
+                                                position="absolute"
+                                                left={0}
+                                                top={0}
+                                                bottom={0}
+                                                w="4px"
+                                                bgGradient="linear(to-b, blue.400, purple.500)"
+                                                borderTopLeftRadius="xl"
+                                                borderBottomLeftRadius="xl"
+                                            />
+
+                                            <HStack spacing={4} align="flex-start">
+                                                <Box
+                                                    bg="blue.50"
+                                                    color="blue.600"
+                                                    borderRadius="full"
+                                                    p={2}
+                                                    minW="40px"
+                                                    textAlign="center"
+                                                    fontWeight="bold"
+                                                >
+                                                    {index + 1}
+                                                </Box>
+
+                                                <VStack align="start" spacing={2}>
+                                                    <Text fontWeight="extrabold" fontSize="lg" color="gray.800">
+                                                        {item.note}
+                                                    </Text>
+                                                    <Divider />
+                                                    <Text color="gray.600" lineHeight="tall" fontSize="md">
+                                                        {item.explanation}
+                                                    </Text>
+                                                </VStack>
+                                            </HStack>
+                                        </Box>
+                                    ))}
+                                </Box>
+
+                                {/* 🧾 Enhanced Summary Section */}
                                 {contentData.summary && (
-                                    <Box mt={5} p={4} bg="gray.50" borderRadius="md">
-                                        <Text fontWeight="bold">Summary:</Text>
-                                        <Text mt={2}>{contentData.summary}</Text>
+                                    <Box
+                                        mt={8}
+                                        p={8}
+                                        bgGradient="linear(to-br, gray.50, white)"
+                                        borderRadius="2xl"
+                                        borderWidth="1px"
+                                        borderStyle="dashed"
+                                        borderColor="gray.300"
+                                        position="relative"
+                                    >
+                                        <HStack mb={4}>
+                                            <Icon as={StarIcon} color="orange.400" />
+                                            <Heading size="md" color="gray.700">Quick Recap</Heading>
+                                        </HStack>
+                                        <Text fontSize="lg" color="gray.700" fontStyle="italic" letterSpacing="wide">
+                                            "{contentData.summary}"
+                                        </Text>
                                     </Box>
                                 )}
-                            </Box>
+                            </VStack>
                         )}
 
                         {/* 🧠 MIND MAP VIEW */}
@@ -388,24 +419,44 @@ const FilterDetails = () => {
 
                         {contentType === "Flow Chart" && contentData?.mindMap && (
                             <Box
-                                height="500px"
+                                height="600px"
                                 width="100%"
                                 borderWidth="1px"
-                                borderRadius="lg"
+                                borderRadius="2xl"
                                 bg="gray.50"
                                 position="relative"
+                                boxShadow="inner"
+                                overflow="hidden"
                             >
-                                <ReactFlow
-                                    nodes={flowData.nodes}
-                                    edges={flowData.edges}
-                                    fitView
-                                    // Wait for nodes to be ready before fitting view
-                                    onInit={(instance) => setTimeout(() => instance.fitView(), 100)}
-                                >
-                                    <Background color="#cbd5e0" variant={BackgroundVariant.Dots} gap={12} />
-                                    <Controls />
-                                    <MiniMap nodeStrokeWidth={3} zoomable pannable />
-                                </ReactFlow>
+                                {/* 1. Wrap everything in the Provider */}
+                                <ReactFlowProvider>
+
+                                    <ReactFlow
+                                        nodes={flowData.nodes}
+                                        edges={flowData.edges}
+                                        nodeTypes={nodeTypes}
+                                        fitView
+                                        onInit={(instance) => setTimeout(() => instance.fitView(), 100)}
+                                    >
+                                        <Background variant={BackgroundVariant.Lines} color="#E2E8F0" gap={20} />
+                                        <Controls style={{ borderRadius: '10px', overflow: 'hidden' }} />
+                                        <MiniMap
+                                            nodeColor={(n) => n.data.levelColor}
+                                            maskColor="rgba(247, 250, 252, 0.7)"
+                                            style={{ borderRadius: '10px' }}
+                                        />
+                                    </ReactFlow>
+
+                                    {/* 2. Place your custom ControlPanel inside the Provider, 
+                   but outside the ReactFlow component itself so it floats */}
+                                    <FlowChartControlPanel />
+
+                                </ReactFlowProvider>
+
+                                {/* Floating Legend */}
+                                <Box position="absolute" top={4} right={4} bg="whiteAlpha.800" p={2} borderRadius="md" shadow="sm">
+                                    <Text fontSize="xs" color="gray.500" fontWeight="bold">Interactive View: Drag to explore</Text>
+                                </Box>
                             </Box>
                         )}
 

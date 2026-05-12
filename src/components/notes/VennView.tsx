@@ -1,42 +1,90 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { InfoIcon } from "@chakra-ui/icons";
+import { Box, Flex, Text, VStack, Heading, UnorderedList, ListItem, Tooltip, Icon } from "@chakra-ui/react";
 
-const VennView = ({ data }: { data: any }) => {
-    console.log("VennView Data Received:", data); // Check your browser console!
-
-    if (!data || !data.uniqueA) {
-        return <Text>Data is missing internal properties!</Text>;
-    }
-
+const VennView = ({ data }) => {
     return (
-        <Flex position="relative" height="400px" width="100%" justify="center" align="center" mt={10}>
-            {/* Circle A */}
+        <Flex
+            position="relative"
+            justify="center"
+            align="center"
+            h="500px"
+            w="100%"
+            overflow="hidden"
+            bg="gray.50"
+            borderRadius="2xl"
+        >
+            {/* Concept A: Exothermic */}
             <Box
-                position="absolute" left="15%" w="300px" h="300px"
-                borderRadius="full" bg="rgba(66, 153, 225, 0.4)" border="2px solid #3182ce"
-                p={10} textAlign="left"
+                w="350px"
+                h="350px"
+                borderRadius="full"
+                bgGradient="radial(orange.400, red.500)"
+                opacity="0.7"
+                position="absolute"
+                left="15%"
+                display="flex"
+                flexDirection="column"
+                p={8}
+                color="white"
+                boxShadow="0 0 40px rgba(255, 69, 0, 0.4)"
+                transition="all 0.3s"
+                _hover={{ opacity: 0.8, transform: "scale(1.02)" }}
             >
-                <Text fontWeight="bold" mb={2} textAlign="center">{data.conceptA}</Text>
-                {data.uniqueA.map((p: string, i: number) => <Text fontSize="xs" key={i}>• {p}</Text>)}
+                <Heading size="md" mb={4} textAlign="left">{data.conceptA}</Heading>
+                <VStack align="start" spacing={2}>
+                    {data.uniqueA.map((item, i) => (
+                        <Tooltip key={i} label={item} fontSize="md" placement="top" hasArrow>
+                            <Flex align="center" cursor="pointer" _hover={{ color: "orange.200" }}>
+                                <Icon as={InfoIcon} mr={2} />
+                                <Text fontSize="sm" noOfLines={1}>{item.split(':')[0]}</Text>
+                            </Flex>
+                        </Tooltip>
+                    ))}
+                </VStack>
             </Box>
 
-            {/* Circle B */}
+            {/* Concept B: Endothermic */}
             <Box
-                position="absolute" right="15%" w="300px" h="300px"
-                borderRadius="full" bg="rgba(72, 187, 120, 0.4)" border="2px solid #38a169"
-                p={10} textAlign="right"
+                w="350px"
+                h="350px"
+                borderRadius="full"
+                bgGradient="radial(cyan.400, blue.600)"
+                opacity="0.7"
+                position="absolute"
+                right="15%"
+                display="flex"
+                flexDirection="column"
+                p={8}
+                color="white"
+                boxShadow="0 0 40px rgba(0, 191, 255, 0.4)"
+                transition="all 0.3s"
+                _hover={{ opacity: 0.8, transform: "scale(1.02)" }}
             >
-                <Text fontWeight="bold" mb={2} textAlign="center">{data.conceptB}</Text>
-                {data.uniqueB.map((p: string, i: number) => <Text fontSize="xs" key={i}>• {p}</Text>)}
+                <Heading size="md" mb={4} textAlign="right">{data.conceptB}</Heading>
+                <VStack align="end" spacing={2} textAlign="right">
+                    {data.uniqueB.map((item, i) => (
+                        <Text key={i} fontSize="xs" fontWeight="bold">• {item}</Text>
+                    ))}
+                </VStack>
             </Box>
 
-            {/* Intersection (Center) */}
+            {/* Intersection: Common Ground */}
             <Box
-                zIndex={2} position="absolute" w="150px" textAlign="center"
+                zIndex={2}
+                w="180px"
+                textAlign="center"
+                p={4}
+                bg="rgba(255, 255, 255, 0.2)"
+                backdropFilter="blur(10px)"
+                borderRadius="xl"
+                border="1px solid rgba(255,255,255,0.3)"
             >
-                <Text fontWeight="bold" fontSize="sm">Both</Text>
-                {data.common.map((p: string, i: number) => (
-                    <Text fontSize="xs" fontWeight="medium" key={i}>{p}</Text>
-                ))}
+                <Text fontWeight="black" fontSize="sm" color="gray.800" mb={2}>SHARED</Text>
+                <VStack spacing={1}>
+                    {data.common.map((item, i) => (
+                        <Text key={i} fontSize="10px" color="gray.700" lineHeight="tight">{item}</Text>
+                    ))}
+                </VStack>
             </Box>
         </Flex>
     );
