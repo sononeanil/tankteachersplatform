@@ -20,6 +20,22 @@
             "name": "tankclass_springboot_ms",
             "database": "tankclass_springboot_ms",
             "username": "postgres"
+        },
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "ep-lively-grass-amb5jieh-pooler.c-5.us-east-1.aws.neon.tech",
+            "port": 5432,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "name": "NeonProd",
+            "database": "neondb",
+            "username": "neondb_owner"
         }
     ]
 }

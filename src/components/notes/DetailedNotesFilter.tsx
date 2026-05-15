@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import {
     Box, Button, Menu, MenuButton, MenuList, MenuItem,
-    MenuDivider, HStack, Text, Badge, Flex, Portal, useDisclosure
+    MenuDivider, HStack, Text, Badge, Flex, Collapse, useDisclosure, Icon
 } from '@chakra-ui/react';
 import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +15,6 @@ const CHAPTER_DATA: Record<string, string[]> = {
 };
 
 const DetailedNotesFilter = () => {
-    const navigate = useNavigate();
     const standards = ["VI", "VII", "VIII", "IX", "X", "XI", "XII"];
 
     const getStdNum = (std: string) => {
@@ -24,24 +23,72 @@ const DetailedNotesFilter = () => {
     };
 
     return (
-        <Box mt={10} w="100%" p={6} bg="white" shadow="2xl" borderRadius="2xl" border="1px solid" borderColor="blue.50">
+        <Box
+            mt={10}
+            w="100%"
+            p={{ base: 4, md: 6 }}
+            // Soft gradient background
+            bgGradient="linear(to-br, blue.50, white, purple.50)"
+            shadow="2xl"
+            borderRadius="2xl"
+            border="1px solid"
+            borderColor="blue.100"
+            borderTop="4px solid" // Adds a nice "accent" bar at the top
+            borderTopColor="blue.500"
+        >
+
             <Flex justify="space-between" align="center" mb={6}>
-                <Text fontSize="xl" fontWeight="extrabold" color="blue.800">Select Your Curriculum</Text>
+                <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="extrabold" color="blue.800">Select Your Curriculum</Text>
                 <Badge colorScheme="purple" variant="solid" px={3} py={1} borderRadius="full">Detailed Notes</Badge>
             </Flex>
 
-            <HStack spacing={4} overflowX="auto" pb={2} sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
+            <HStack
+                spacing={4}
+                overflowX="auto"
+                pb={4}
+                px={1}
+                sx={{
+                    /* For Chrome, Safari and Opera */
+                    '&::-webkit-scrollbar': {
+                        height: '8px' // Slightly thicker for easier visibility
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: 'blue.50', // Light blue background track
+                        borderRadius: '10px'
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        background: 'blue.600', // Strong blue color
+                        borderRadius: '10px',
+                        border: '2px solid', // Creates a "padding" effect around the thumb
+                        borderColor: 'blue.50',
+                    },
+                    '&::-webkit-scrollbar-thumb:active': {
+                        background: 'blue.800', // Darker blue when touched
+                    },
+                    /* For Firefox */
+                    scrollbarWidth: 'auto', // Standard thickness
+                    scrollbarColor: '#2B6CB0 #EBF8FF', // Blue.600 and Blue.50
+                }}
+            >
                 {standards.map((std) => (
                     <Menu key={std} isLazy closeOnSelect={false}>
-                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="blue" variant="outline" minW="140px">
+                        <MenuButton
+                            as={Button}
+                            rightIcon={<ChevronDownIcon />}
+                            colorScheme="blue"
+                            variant="outline"
+                            flexShrink={0}
+                            minW="130px"
+                        >
                             Class {std}
                         </MenuButton>
 
-                        <MenuList borderRadius="xl" shadow="xl" p={2}>
+                        <MenuList borderRadius="xl" shadow="xl" p={2} minW="200px">
                             <Text px={3} py={1} fontSize="10px" fontWeight="bold" color="gray.400" letterSpacing="widest">
                                 CBSE BOARD
                             </Text>
-                            <SubMenu label="Science" std={getStdNum(std)} board="CBSE" />
+                            {/* Pass parent menu close logic if needed, but closeOnSelect={false} handles it */}
+                            <MobileFriendlySubMenu label="Science" std={getStdNum(std)} board="CBSE" />
                             <MenuDivider />
                         </MenuList>
                     </Menu>
@@ -51,62 +98,53 @@ const DetailedNotesFilter = () => {
     );
 };
 
-const SubMenu = ({ label, std, board }: { label: string, std: string, board: string }) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+const MobileFriendlySubMenu = ({ label, std, board }: { label: string, std: string, board: string }) => {
+    const { isOpen, onToggle } = useDisclosure();
     const navigate = useNavigate();
-    const timeoutRef = useRef<number>();
-
     const chapters = CHAPTER_DATA[`${std}_${label}`] || [];
 
-    const handleMouseEnter = () => {
-        if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-        onOpen();
-    };
-
-    const handleMouseLeave = () => {
-        timeoutRef.current = window.setTimeout(onClose, 200); // 200ms delay to prevent accidental closing
-    };
-
     return (
-        <Menu isOpen={isOpen} placement="right-start" offset={[0, 10]} isLazy>
-            <MenuButton
-                as={MenuItem}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onClick={onOpen}
-                borderRadius="md"
+        <Box>
+            <MenuItem
+                onClick={onToggle}
                 _hover={{ bg: "blue.500", color: "white" }}
+                _active={{ bg: "blue.600", color: "white" }}
+                display="flex"
+                justifyContent="space-between"
+                fontWeight="semibold"
+                borderRadius="md"
             >
-                <Flex justify="space-between" align="center" w="100%">
-                    <Text fontWeight="semibold">{label}</Text>
-                    <ChevronRightIcon />
-                </Flex>
-            </MenuButton>
+                {label}
+                <Icon
+                    as={ChevronRightIcon}
+                    transform={isOpen ? "rotate(90deg)" : ""}
+                    transition="transform 0.2s"
+                />
+            </MenuItem>
 
-            <Portal>
-                <MenuList
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    shadow="2xl"
-                    borderRadius="xl"
-                    p={1}
-                    zIndex={9999}
-                >
-                    {chapters.map((chap) => (
-                        <MenuItem
-                            key={chap}
-                            onClick={() => {
-                                onClose();
-                                navigate(`/getDetailedNotes?standard=${std}&board=${board}&subject=${label}&chapter=${chap.replace(/\D/g, "")}`);
-                            }}
-                            _hover={{ bg: "blue.50", color: "blue.600" }}
-                        >
-                            {chap}
-                        </MenuItem>
-                    ))}
-                </MenuList>
-            </Portal>
-        </Menu>
+            <Collapse in={isOpen} animateOpacity>
+                <Box pl={4} mt={1} borderLeft="2px solid" borderColor="blue.100" mb={2}>
+                    {chapters.length > 0 ? (
+                        chapters.map((chap) => (
+                            <MenuItem
+                                key={chap}
+                                fontSize="sm"
+                                py={2}
+                                borderRadius="md"
+                                onClick={() => {
+                                    navigate(`/getDetailedNotes?standard=${std}&board=${board}&subject=${label}&chapter=${chap.replace(/\D/g, "")}`);
+                                }}
+                                _hover={{ bg: "blue.50", color: "blue.600" }}
+                            >
+                                {chap}
+                            </MenuItem>
+                        ))
+                    ) : (
+                        <Text fontSize="xs" color="gray.500" pl={3} py={2}>No Chapters Found</Text>
+                    )}
+                </Box>
+            </Collapse>
+        </Box>
     );
 };
 

@@ -6,7 +6,18 @@ import { getDetailedNotes } from '../../service/ApiNotes';
 
 // REMOVED: import Note from 'mermaid/dist/dagre-wrapper/shapes/note.js'; 
 import NoteSection from './NoteSection';
+interface MCQ {
+    question: string;
+    options: string[];
+    answer: string;
+}
 
+interface StructuredData {
+    title: string | null;
+    summary: string;
+    study_notes: string[];
+    mcqs: MCQ[] | null; // Critical: can be null
+}
 const DetailedNotes = () => {
     const [searchParams] = useSearchParams();
 
