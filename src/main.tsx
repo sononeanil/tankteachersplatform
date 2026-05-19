@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 // import { createBrowserRouter, RouterProvider } from 'react-router'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import posthog from 'posthog-js'
 import PageNotFound from './components/PageNotFound.tsx'
 import HomePage from './components/HomePage.tsx'
 import Tanstack from './components/Tanstack.tsx'
@@ -51,6 +52,10 @@ import NotesBatchDetails from './components/notes/NotesBatchDetails.tsx'
 import DetailNotesBatch from './components/notes/DetailNotesBatch.tsx';
 import DetailedNotes from './components/notes/DetailedNotes.tsx';
 
+posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
+  api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
+  capture_pageview: false,
+})
 
 const router = createBrowserRouter([
   {
@@ -311,6 +316,15 @@ const router = createBrowserRouter([
     path: "/tankstackQuery",
     element: <Tanstack></Tanstack>
   }])
+
+let lastPathname = ''
+router.subscribe((state) => {
+  const pathname = state.location.pathname
+  if (state.navigation.state === 'idle' && pathname !== lastPathname) {
+    lastPathname = pathname
+    posthog.capture('$pageview')
+  }
+})
 
 const queryClient = new QueryClient()
 
