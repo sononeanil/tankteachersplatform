@@ -20,10 +20,24 @@ import { SearchIcon } from '@chakra-ui/icons';
 import { searchTutors } from '../../service/ApiTutorBiography';
 import { useState } from 'react';
 
+
+// 1. Define the TypeScript structure for a tutor
+interface Tutor {
+    id: string | number;
+    firstName: string;
+    lastName: string;
+    headline: string;
+    subjectList?: string[];
+    matchScore: number;
+    fees?: {
+        monthly?: number | string;
+    };
+}
+
 const SearchTutor = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(false);
-    const [results, setResults] = useState([]);
+    const [results, setResults] = useState<Tutor[]>([]);
 
     // Glassmorphism Styles
     const bgColor = useColorModeValue('whiteAlpha.800', 'whiteAlpha.100');

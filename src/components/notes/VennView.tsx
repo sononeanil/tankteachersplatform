@@ -1,7 +1,24 @@
 import { InfoIcon } from "@chakra-ui/icons";
-import { Box, Flex, Text, VStack, Heading, UnorderedList, ListItem, Tooltip, Icon } from "@chakra-ui/react";
+import {
+    Box, Flex, Text, VStack, Heading,
+    Tooltip, Icon
+} from "@chakra-ui/react";
 
-const VennView = ({ data }) => {
+
+// 1. Define the structure of your component's props
+interface VennData {
+    conceptA: string;
+    uniqueA: string[];
+    conceptB: string;
+    uniqueB: string[];
+    common: string[];
+}
+
+interface VennViewProps {
+    data: VennData;
+}
+
+const VennView = ({ data }: VennViewProps) => {
     return (
         <Flex
             position="relative"

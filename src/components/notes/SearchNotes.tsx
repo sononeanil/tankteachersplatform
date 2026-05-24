@@ -1,10 +1,14 @@
-import { Input, InputGroup, InputLeftElement, Box, Spinner, VStack } from '@chakra-ui/react';
+import {
+    Input, InputGroup, InputLeftElement,
+    Box, Spinner
+} from '@chakra-ui/react';
 import { MdSearch } from 'react-icons/md';
+import { useState } from 'react';
 const SearchNotes = () => {
 
-    const [query, setQuery] = React.useState("");
-    const [results, setResults] = React.useState([]);
-    const [loading, setLoading] = React.useState(false);
+    const [query, setQuery] = useState("");
+    // const [results, setResults] = useState<any[]>([]); // Typed as an array to prevent future 'never' errors
+    const [loading, setLoading] = useState(false);
 
 
     const handleSearch = async () => {
@@ -24,18 +28,14 @@ const SearchNotes = () => {
                 <Input
                     placeholder="Ask a question (e.g., 'What is meristematic tissue?')"
                     borderRadius="full"
-                    onChange={(e) => setQuery(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                    value={query} // 2. Bounded the state value to the input field
+                    // 3. Typed the change and key down events for absolute TS safety
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleSearch()}
                 />
             </InputGroup>
 
             {loading && <Spinner mt={4} />}
-
-            {/* <VStack mt={6} spacing={4}>
-                {results.map((res, i) => (
-                    <SearchResultCard key={i} data={res} />
-                ))}
-            </VStack> */}
         </Box>
     );
 }

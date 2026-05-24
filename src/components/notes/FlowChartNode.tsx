@@ -1,7 +1,7 @@
 import { Box, Text } from '@chakra-ui/react';
 import { Handle, Position } from 'reactflow';
 
-const FlowChartNode = ({ data }) => {
+const FlowChartNode = ({ data }: { data: { label: string; levelColor?: string } }) => {
     return (
         <Box
             px={4}

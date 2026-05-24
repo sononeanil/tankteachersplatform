@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Spinner, Box, Text, Flex, Badge, Stack, VStack, Divider, Heading } from '@chakra-ui/react';
@@ -18,19 +17,13 @@ const DetailedNotes = () => {
         queryFn: () => getDetailedNotes({
             classNumber: standard,
             // Try removing .toLowerCase() if your DB fields are capitalized!
-            subject: subject.toLocaleLowerCase(),
+            subject: subject.toLowerCase(),
             chapterNumber: chapter
         }),
         enabled: !!standard && !!subject && !!chapter,
     });
 
-    // DEBUG LOGGING: Open your browser inspect console to check these values
-    useEffect(() => {
-        console.log("--- URL PARAMETERS ---");
-        console.log("Standard:", standard, "Subject:", subject, "Chapter:", chapter);
-        console.log("--- API RESPONSE DATA ---");
-        console.log("Received data payload:", fullChapterNotes);
-    }, [fullChapterNotes, standard, subject, chapter]);
+
 
     return (
         <Box p={8} maxW="1200px" mx="auto">

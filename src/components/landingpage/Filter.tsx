@@ -7,7 +7,7 @@ import { StarIcon, InfoIcon } from "@chakra-ui/icons";
 const Filter = () => {
     const filters = [
         "VI", "VII", "VIII", "IX", "X", "XI", "XII",
-        "Tutor", "Parent", "Course Publisher", "Engineering Graduate"
+        "Tutor", "Parent", "Course Publisher"
     ];
 
     const romanToNumeric: Record<string, string> = {
@@ -26,7 +26,6 @@ const Filter = () => {
 
     const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
     const [selectedBoard, setSelectedBoard] = useState<string | null>(null);
-    const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
 
     const isClassSelected = selectedFilter && classFilters.includes(selectedFilter);
     const isBoardSelected = !!selectedBoard;
@@ -95,7 +94,7 @@ const Filter = () => {
                         onClick={() => {
                             setSelectedFilter(item);
                             setSelectedBoard(null);
-                            setSelectedSubject(null);
+                            // setSelectedSubject(null);
                         }}
                         bg={selectedFilter === item ? "blue.600" : "white"}
                         color={selectedFilter === item ? "white" : "blue.600"}
@@ -129,7 +128,7 @@ const Filter = () => {
                                 key={item}
                                 onClick={() => {
                                     setSelectedBoard(item);
-                                    setSelectedSubject(null);
+                                    // setSelectedSubject(null);
                                 }}
                                 colorScheme="blue"
                                 variant={selectedBoard === item ? "solid" : "outline"}
@@ -156,10 +155,10 @@ const Filter = () => {
                             <Button
                                 key={item}
                                 onClick={() => {
-                                    setSelectedSubject(item);
+                                    // setSelectedSubject(item);
                                     // const finalKey = `${selectedBoard}/Class${selectedFilter}/${item}`;
                                     const finalKey = `Class_${romanToNumeric[selectedFilter] || selectedFilter}_${item}`;
-                                    navigate(`/filterDetails/${encodeURIComponent(finalKey)}`);
+                                    navigate(`/notes/oneHourBeforeExam/${encodeURIComponent(finalKey)}`);
                                 }}
                                 bg="white"
                                 color="blue.700"

@@ -77,6 +77,9 @@ const router = createBrowserRouter([
       path: "/filterDetails/:type/*",
       element: <FilterDetails></FilterDetails>
     }, {
+      path: "/notes/oneHourBeforeExam/:type/*",
+      element: <FilterDetails></FilterDetails>
+    }, {
       path: "/tutor/createBio",
       element: <CreateBio></CreateBio>
     },

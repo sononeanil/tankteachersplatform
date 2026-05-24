@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
 import { Box, Flex, Text, Badge, Button, Collapse, HStack, List, ListItem, ListIcon } from '@chakra-ui/react';
 import { ChevronDownIcon, ChevronUpIcon, InfoIcon } from '@chakra-ui/icons';
 import NoteSection from './NoteSection';
 import HighlightText from './HighlightText';
+import { useState } from 'react';
 
 interface SearchResultCardProps {
     match: any;

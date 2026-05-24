@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Box, Spinner, Button, VStack, Heading, Text, SimpleGrid, Divider } from '@chakra-ui/react';
 import { getNotesBatchChapterDetails, getNotesBatchChapterList } from '../../service/ApiNotes';
+import { useState } from 'react';
 
 const NotesBatchDetails = () => {
     const [searchParams] = useSearchParams();

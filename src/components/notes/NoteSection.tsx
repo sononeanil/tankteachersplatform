@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {
-    Box, Text, VStack, Heading, List, ListItem, ListIcon,
-    SimpleGrid, Tag, Divider, Card, CardBody,
-    Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon,
-    Flex, Icon, Alert, AlertIcon, Button, Badge, HStack, Stack
+    Box, Text, VStack, Heading,
+    SimpleGrid, Card, CardBody,
+    Flex, Icon, Alert,
+    AlertIcon, Button, Badge, HStack
 } from '@chakra-ui/react';
 import { MdCheckCircle, MdInfoOutline, MdQuestionAnswer, MdTimer, MdAutoStories } from 'react-icons/md';
 

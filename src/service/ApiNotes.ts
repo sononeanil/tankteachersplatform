@@ -47,8 +47,9 @@ export const getNotesBatchChapterList = async (standard: string, subject: string
 
 export const getDetailedNotes = async (params: { classNumber: string; subject: string; chapterNumber: string }) => {
     // Axios 'params' puts these in the URL: /getDetailedNotes?standard=6&subject=Science...
+    // alert("Chapter Details: " + params.subject);
     const { data } = await apiClient.get(`/gemmaai/notes/getDetailedNotes`, { params });
-    // alert("Chapter Details: " + JSON.stringify(data));
+
     console.log("Chapter Details: ", data.erpSystemResponse.lstDetailedNotesSections);
     return data.erpSystemResponse.lstDetailedNotesSections;
 };

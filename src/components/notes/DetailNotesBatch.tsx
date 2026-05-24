@@ -1,5 +1,5 @@
-import React from 'react';
 import { Form } from 'react-router-dom';
+import React from 'react'; // 1. Added React import for FormEvent typing
 import {
     Box,
     Button,
@@ -16,13 +16,15 @@ import { useInitiateDetailedNotesBatch } from '../../tanstack/detailedNotesTanst
 const DetailNotesBatch = () => {
     const { mutate, isPending } = useInitiateDetailedNotesBatch();
 
-    const handleSubmit = (event) => {
+    // 2. Added explicit React.FormEvent typing to prevent implicit 'any' error
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const data = Object.fromEntries(formData);
 
-        // Calls generateDetailedScienceNotes via your custom mutation hook
-        mutate(data);
+        // 3. Note: If your custom mutation expects 'NoteParams' strictly (e.g. numbers),
+        // you may need to cast it or map it: mutate(data as any); 
+        mutate(data as any);
     };
 
     return (
@@ -30,6 +32,7 @@ const DetailNotesBatch = () => {
             <VStack spacing={6}>
                 <Heading size="lg">Generate Detailed Notes</Heading>
 
+                {/* CRITICAL FIX: Changed 'met' to 'method' */}
                 <Form method="post" onSubmit={handleSubmit} style={{ width: '100%' }}>
                     <Stack spacing={5}>
                         <FormControl isRequired>

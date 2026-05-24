@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     Box, Button, Menu, MenuButton, MenuList, MenuItem,
     MenuDivider, HStack, Text, Badge, Flex, Collapse, useDisclosure, Icon
