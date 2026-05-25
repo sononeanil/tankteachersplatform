@@ -10,19 +10,19 @@ export default defineConfig({
     Sitemap({
       hostname: 'https://studentsnotes.in',
       // List your main accessible user routes below so search engines index them
+      // vite.config.ts
       dynamicRoutes: [
-        '/',
         '/filterDetails/Class_6_Science',
         '/filterDetails/Class_7_Science',
         '/filterDetails/Class_8_Science',
         '/filterDetails/Class_9_Science',
         '/filterDetails/Class_10_Science',
-        '/getDetailedNotes?standard=6&board=CBSE&subject=Science&chapter=1',
-        '/getDetailedNotes?standard=7&board=CBSE&subject=Science&chapter=1',
-        '/getDetailedNotes?standard=8&board=CBSE&subject=Science&chapter=1',
-        '/getDetailedNotes?standard=9&board=CBSE&subject=Science&chapter=1',
-        '/getDetailedNotes?standard=10&board=CBSE&subject=Science&chapter=1',
-
+        // Change '&' to '&amp;' for all query parameters below:
+        '/getDetailedNotes?standard=6&amp;board=CBSE&amp;subject=Science&amp;chapter=1',
+        '/getDetailedNotes?standard=7&amp;board=CBSE&amp;subject=Science&amp;chapter=1',
+        '/getDetailedNotes?standard=8&amp;board=CBSE&amp;subject=Science&amp;chapter=1',
+        '/getDetailedNotes?standard=9&amp;board=CBSE&amp;subject=Science&amp;chapter=1',
+        '/getDetailedNotes?standard=10&amp;board=CBSE&amp;subject=Science&amp;chapter=1',
       ],
       // This ensures it generates exactly 'sitemap.xml' instead of guessing extensions
       outDir: 'dist',
