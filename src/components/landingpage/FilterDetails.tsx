@@ -11,34 +11,29 @@ import {
     Heading,
     Badge,
     Divider,
-    Icon
-} from "@chakra-ui/react";
-import { useMemo, useRef, useState } from "react";
-import {
-    getChapterList,
-
-    getChapterNotes
-} from "../../service/ApiNotes";
-import ReactFlow, { Background, BackgroundVariant, Controls, MiniMap, ReactFlowProvider } from "reactflow";
-import 'reactflow/dist/style.css';
-import "reactflow/dist/style.css";
-import html2pdf from "html2pdf.js";
-import { toPng } from "html-to-image";
-import {
+    Icon,
+    SimpleGrid,
+    Tag,
+    TagLabel,
+    Collapse,
+    IconButton,
     Menu,
     MenuButton,
     MenuList,
     MenuItem
 } from "@chakra-ui/react";
-
+import { useMemo, useRef, useState } from "react";
+import { getChapterList, getChapterNotes } from "../../service/ApiNotes";
+import ReactFlow, { Background, BackgroundVariant, Controls, MiniMap, ReactFlowProvider } from "reactflow";
+import 'reactflow/dist/style.css';
+import html2pdf from "html2pdf.js";
+import { toPng } from "html-to-image";
 import { PdfLayout } from "../notes/PdfLayout";
 import { parseMindMap } from "../../service/ParseMindMap";
 import VennView from "../notes/VennView";
 import { buildFlow, nodeTypes } from "../notes/FlowChartNode";
 import FlowChartControlPanel from "../notes/FlowChartControlPanel";
-import { StarIcon } from "@chakra-ui/icons";
-
-
+import { StarIcon, ChevronDownIcon, ChevronUpIcon, DownloadIcon, CheckCircleIcon, WarningIcon } from "@chakra-ui/icons";
 
 const FilterDetails = () => {
     const pdfRef = useRef<HTMLDivElement>(null);
@@ -48,6 +43,8 @@ const FilterDetails = () => {
 
     const [selectedChapter, setSelectedChapter] = useState("");
     const [contentType, setContentType] = useState("Notes");
+    const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
+    const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
     const queryClient = useQueryClient();
 
     const isCached = !!queryClient.getQueryData([
@@ -56,34 +53,18 @@ const FilterDetails = () => {
         selectedChapter,
     ]);
 
-
-
-    // 🔹 First API → Get Chapters
-    const {
-        data: chapters,
-        isLoading,
-        isError
-    } = useQuery({
+    const { data: chapters, isLoading, isError } = useQuery({
         queryKey: ["chapters", decodedType],
         queryFn: () => getChapterList({ key: decodedType! }),
         enabled: !!decodedType,
     });
 
-    const {
-        data: contentData,
-        isFetching: contentLoading,
-        refetch: fetchChapterDetails,
-    } = useQuery({
+    const { data: contentData, isFetching: contentLoading, refetch: fetchChapterDetails } = useQuery({
         queryKey: ["chapterContent", decodedType, selectedChapter],
-        queryFn: () =>
-            getChapterNotes({
-                key: decodedType!,
-                chapter: selectedChapter,
-            }),
+        queryFn: () => getChapterNotes({ key: decodedType!, chapter: selectedChapter }),
         enabled: false,
-        staleTime: Infinity, // 💥 cache forever (no refetch)
+        staleTime: Infinity,
     });
-
 
     const flowData = useMemo(() => {
         if (contentType === "Flow Chart" && contentData?.mindMap) {
@@ -93,128 +74,86 @@ const FilterDetails = () => {
         return { nodes: [], edges: [] };
     }, [contentData, contentType]);
 
+    const toggleCard = (index: number) => {
+        setFlippedCards(prev => ({ ...prev, [index]: !prev[index] }));
+    };
+
+    const handleSelectOption = (qIndex: number, option: string) => {
+        setQuizAnswers(prev => ({ ...prev, [qIndex]: option }));
+    };
+
     const opt = {
         margin: 0.5,
         filename: `${selectedChapter}-${contentType}.pdf`,
         image: { type: "jpeg" as const, quality: 0.98 },
-        html2canvas: {
-            scale: 2,
-            useCORS: true
-        },
-        jsPDF: {
-            unit: "in" as const,
-            format: "a4" as const,
-            orientation: "portrait" as const
-        }
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "in" as const, format: "a4" as const, orientation: "portrait" as const }
     };
-
 
     const handleDownloadPDFAll = () => {
         if (!pdfRef.current) return;
-
-        const opt = {
-            margin: 0.5,
-            filename: `${decodedType}-Ch${selectedChapter}.pdf`,
-            image: { type: "jpeg" as const, quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
-            jsPDF: {
-                unit: "in" as const,
-                format: "a4" as const,
-                orientation: "portrait" as const
-            }
+        const completeOpt = {
+            ...opt,
+            filename: `${decodedType}-Ch${selectedChapter}.pdf`
         };
-
-        html2pdf().set(opt).from(pdfRef.current).save();
+        html2pdf().set(completeOpt).from(pdfRef.current).save();
     };
 
     const handleDownloadPDF = () => {
         if (!contentRef.current) return;
-
         html2pdf().set(opt).from(contentRef.current).save();
     };
 
-
-
     const handleDownloadHTML = async () => {
         if (!contentRef.current) return;
-
         const dataUrl = await toPng(contentRef.current);
-
         const htmlContent = `
-    <html>
-    <body style="text-align:center">
-        <h2>${selectedChapter} - ${contentType}</h2>
-        <img src="${dataUrl}" />
-    </body>
-    </html>
-    `;
-
+        <html>
+        <body style="text-align:center; font-family: sans-serif; background: #F7FAFC; padding: 20px;">
+            <h2>${selectedChapter} - ${contentType}</h2>
+            <img src="${dataUrl}" style="max-width:100%; border-radius:12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
+        </body>
+        </html>`;
         const blob = new Blob([htmlContent], { type: "text/html" });
-
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
         link.download = `${selectedChapter}-${contentType}.html`;
         link.click();
     };
 
-
     const MindMapNode = ({ node, level = 0 }: any) => {
         const [open, setOpen] = useState(level < 2);
-
-        const colors = [
-            "blue.500",
-            "green.500",
-            "purple.500",
-            "orange.500",
-            "teal.500",
-        ];
+        const colors = ["brand.500", "teal.400", "purple.400", "pink.400", "orange.400"];
 
         return (
-            <Box ml={level * 4} mt={3} position="relative">
-                {/* 🌿 Connector Line */}
+            <Box ml={level * 6} mt={3} position="relative">
                 {level > 0 && (
-                    <Box
-                        position="absolute"
-                        left="-10px"
-                        top="12px"
-                        width="10px"
-                        height="1px"
-                        bg="gray.400"
-                    />
+                    <Box position="absolute" left="-16px" top="18px" width="16px" height="2px" bg="gray.300" />
                 )}
-
-                {/* 🧠 Node Card */}
                 <Box
-                    display="inline-block"
-                    px={3}
-                    py={2}
-                    bg={colors[level % colors.length]}
+                    display="inline-flex"
+                    alignItems="center"
+                    px={4}
+                    py={2.5}
+                    bg={colors[level % colors.length] || "blue.400"}
                     color="white"
-                    borderRadius="lg"
+                    borderRadius="xl"
                     cursor="pointer"
-                    boxShadow="md"
+                    boxShadow="sm"
+                    fontWeight="bold"
+                    fontSize="sm"
                     onClick={() => setOpen(!open)}
-                    _hover={{ transform: "scale(1.05)" }}
-                    transition="0.2s"
+                    _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
+                    transition="all 0.2s"
                 >
-                    {node.children?.length > 0 && (open ? "▼ " : "▶ ")}
+                    {node.children?.length > 0 && (open ? <ChevronDownIcon mr={1} /> : <ChevronUpIcon mr={1} />)}
                     {node.name}
                 </Box>
 
-                {/* 🌳 Children */}
                 {open && node.children?.length > 0 && (
-                    <Box
-                        borderLeft="2px solid #CBD5E0"
-                        ml={3}
-                        pl={3}
-                        mt={2}
-                    >
+                    <Box borderLeft="2px solid" borderColor="gray.200" ml={4} pl={4} mt={1}>
                         {node.children.map((child: any, idx: number) => (
-                            <MindMapNode
-                                key={idx}
-                                node={child}
-                                level={level + 1}
-                            />
+                            <MindMapNode key={idx} node={child} level={level + 1} />
                         ))}
                     </Box>
                 )}
@@ -222,311 +161,428 @@ const FilterDetails = () => {
         );
     };
 
-
-
-
-
-    if (isLoading) return <Text>Loading chapters...</Text>;
-    if (isError) return <Text>Error loading chapters</Text>;
+    if (isLoading) return <Text p={6} textAlign="center" fontWeight="medium">Loading your study universe...</Text>;
+    if (isError) return <Text p={6} color="red.500" textAlign="center">Error setting up study workspace.</Text>;
 
     return (
-        <Box p={4}>
-            <Text fontSize="lg" fontWeight="bold" mb={4}>
-                Selected: {decodedType}
-            </Text>
+        <Box p={{ base: 4, md: 8 }} maxW="1400px" mx="auto" bg="gray.50" minH="100vh">
+            {/* Top Minimalist Header Section */}
+            <Flex justify="space-between" align="center" mb={6} wrap="wrap" gap={3}>
+                <Box>
+                    <Heading size="md" color="gray.800" fontWeight="black" letterSpacing="tight">
+                        {decodedType || "Dashboard Workspace"}
+                    </Heading>
+                    <Text fontSize="xs" color="gray.500" mt={0.5}>
+                        Pick a module below to launch tailored dynamic content revision guides.
+                    </Text>
+                </Box>
 
+                {selectedChapter && (
+                    <Badge colorScheme="purple" px={3} py={1} borderRadius="lg" fontSize="xs" textTransform="uppercase" fontWeight="bold">
+                        Chapter {selectedChapter} Loaded
+                    </Badge>
+                )}
+            </Flex>
 
-
-
-            {/* 🎯 Content Type Buttons */}
-            <Flex gap={3} mb={4} align="center" wrap="wrap">
+            {/* Sticky Action Filter Dashboard Container Bar */}
+            <Flex
+                bg="white"
+                p={4}
+                borderRadius="2xl"
+                boxShadow="0 4px 20px -4px rgba(160, 174, 192, 0.15)"
+                gap={4}
+                mb={8}
+                align="center"
+                wrap="wrap"
+                position="sticky"
+                top="12px"
+                zIndex={10}
+                backdropFilter="blur(8px)"
+                backgroundColor="rgba(255, 255, 255, 0.95)"
+                border="1px solid"
+                borderColor="gray.100"
+            >
                 <Select
-                    placeholder="Select Chapter"
+                    placeholder="Choose Target Chapter"
                     value={selectedChapter}
                     onChange={(e) => setSelectedChapter(e.target.value)}
-                    mb={4}
+                    maxW={{ base: "100%", md: "240px" }}
+                    borderRadius="xl"
+                    fontWeight="semibold"
+                    size="md"
+                    borderColor="gray.200"
+                    _hover={{ borderColor: "blue.400" }}
+                    _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px #3182ce" }}
                 >
                     {chapters?.map((ch: string) => (
-                        <option key={ch} value={ch}>
-                            Chapter {ch}
-                        </option>
+                        <option key={ch} value={ch}>Chapter {ch}</option>
                     ))}
-
                 </Select>
+
                 <Button
-                    colorScheme="teal"
+                    colorScheme="blue"
                     onClick={() => fetchChapterDetails()}
                     isDisabled={!selectedChapter || isCached}
+                    borderRadius="xl"
+                    px={6}
+                    fontSize="sm"
+                    fontWeight="bold"
+                    boxShadow={isCached ? "none" : "0 4px 12px rgba(49, 130, 206, 0.24)"}
+                    _hover={{ transform: isCached ? "none" : "translateY(-1px)" }}
                 >
-                    {isCached ? "Loaded ✅" : "Fetch Details"}
+                    {isCached ? "Ready ✅" : "Load Dashboard Data"}
                 </Button>
-                {["Notes", "Mind Map", "Question", "Mind Map2", "Flow Chart", "Venn Diagram"].map((item) => (
-                    <Button
-                        key={item}
-                        onClick={() => setContentType(item)}
-                        colorScheme={contentType === item ? "blue" : "gray"}
-                        variant={contentType === item ? "solid" : "outline"}
-                        borderColor={contentType === item ? "blue.600" : "gray.500"}
-                        borderRadius="full"
-                        isDisabled={!selectedChapter}
-                        boxShadow="xl"
-                    >
-                        {item}
-                    </Button>
-                ))}
+
+                <Divider orientation="vertical" height="30px" display={{ base: "none", md: "block" }} />
+
+                <Flex gap={2} wrap="wrap" flex={1}>
+                    {["Notes", "Mind Map", "Question", "Mind Map2", "Flow Chart", "Venn Diagram"].map((item) => (
+                        <Button
+                            key={item}
+                            onClick={() => setContentType(item)}
+                            colorScheme={contentType === item ? "blue" : "gray"}
+                            variant={contentType === item ? "solid" : "ghost"}
+                            borderRadius="xl"
+                            size="sm"
+                            px={4}
+                            fontWeight="bold"
+                            isDisabled={!selectedChapter}
+                            _active={{ transform: "scale(0.98)" }}
+                        >
+                            {item === "Question" ? "Practice Quiz" : item === "Mind Map2" ? "Interactive Tree" : item}
+                        </Button>
+                    ))}
+                </Flex>
 
                 <Menu>
-                    <MenuButton as={Button} colorScheme="purple">
-                        Download ⬇️
+                    <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="purple" size="sm" borderRadius="xl" px={4} leftIcon={<DownloadIcon />}>
+                        Export Assets
                     </MenuButton>
-                    <MenuList>
-                        <MenuItem onClick={handleDownloadPDF}>PDF Single Page</MenuItem>
-                        <MenuItem onClick={handleDownloadPDFAll}>PDF Complete Chapter</MenuItem>
-                        <MenuItem onClick={handleDownloadHTML}>HTML</MenuItem>
+                    <MenuList borderRadius="xl" shadow="xl" border="none" p={1}>
+                        <MenuItem onClick={handleDownloadPDF} fontSize="sm" fontWeight="medium" borderRadius="lg">Download Page View (PDF)</MenuItem>
+                        <MenuItem onClick={handleDownloadPDFAll} fontSize="sm" fontWeight="medium" borderRadius="lg">Download Whole Notebook (PDF)</MenuItem>
+                        <MenuItem onClick={handleDownloadHTML} fontSize="sm" fontWeight="medium" borderRadius="lg">Export HTML Layout Canvas</MenuItem>
                     </MenuList>
                 </Menu>
             </Flex>
 
+            {/* Central Content Section Workspace Render */}
             <Box mt={4}>
-                {contentLoading && <Text>Loading content...</Text>}
+                {contentLoading && (
+                    <Text textAlign="center" py={12} color="gray.500" fontSize="sm" fontWeight="medium">
+                        Structuring beautiful assets, hold tight...
+                    </Text>
+                )}
 
                 {contentData && (
                     <div ref={contentRef}>
-
-                        {/* 📘 NOTES VIEW */}
-
+                        {/* 📘 DYNAMIC ENHANCED NOTES VIEW CONTAINER */}
                         {contentType === "Notes" && (
-                            <VStack spacing={6} align="stretch" w="100%">
-                                {/* Header Section */}
-                                <HStack justify="space-between" pb={2} borderBottom="2px solid" borderColor="blue.500">
-                                    <Heading size="lg" color="gray.700">Chapter Insights</Heading>
-                                    <Badge colorScheme="blue" variant="subtle" px={3} py={1} borderRadius="full">
-                                        {contentData.notes?.length} Key Points
+                            <VStack spacing={8} align="stretch" w="100%">
+                                <HStack justify="space-between" pb={3} borderBottom="1px solid" borderColor="gray.200">
+                                    <VStack align="start" spacing={0}>
+                                        <Heading size="md" color="gray.800" fontWeight="black">Chapter Core Breakdown</Heading>
+                                        <Text fontSize="xs" color="gray.500">Click any card block to expand or focus on strict metrics criteria guidelines.</Text>
+                                    </VStack>
+                                    <Badge colorScheme="blue" px={3} py={1} borderRadius="full" fontSize="xs" fontWeight="bold">
+                                        {contentData.notes?.length || 0} Critical Milestones
                                     </Badge>
                                 </HStack>
 
-                                {/* Notes Grid/List */}
-                                <Box>
-                                    {contentData.notes?.map((item: any, index: number) => (
-                                        <Box
-                                            key={index}
-                                            position="relative"
-                                            p={6}
-                                            mb={5}
-                                            bg="white"
-                                            borderRadius="xl"
-                                            borderWidth="1px"
-                                            borderColor="gray.100"
-                                            boxShadow="sm"
-                                            transition="all 0.2s"
-                                            _hover={{
-                                                boxShadow: "xl",
-                                                transform: "translateY(-2px)",
-                                                borderColor: "blue.200"
-                                            }}
-                                        >
-                                            {/* Decorative Side Bar */}
+                                <SimpleGrid columns={{ base: 1, xl: 2 }} spacing={6}>
+                                    {contentData.notes?.map((item: any, index: number) => {
+                                        const isFlipped = !!flippedCards[index];
+                                        return (
                                             <Box
-                                                position="absolute"
-                                                left={0}
-                                                top={0}
-                                                bottom={0}
-                                                w="4px"
-                                                bgGradient="linear(to-b, blue.400, purple.500)"
-                                                borderTopLeftRadius="xl"
-                                                borderBottomLeftRadius="xl"
-                                            />
-
-                                            <HStack spacing={4} align="flex-start">
+                                                key={index}
+                                                bg="white"
+                                                borderRadius="2xl"
+                                                p={6}
+                                                border="1px solid"
+                                                borderColor={isFlipped ? "blue.100" : "gray.100"}
+                                                boxShadow="0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.01)"
+                                                position="relative"
+                                                transition="all 0.25s cubic-bezier(0.4, 0, 0.2, 1)"
+                                                cursor="pointer"
+                                                onClick={() => toggleCard(index)}
+                                                _hover={{
+                                                    boxShadow: "0 12px 24px -4px rgba(160, 174, 192, 0.25)",
+                                                    transform: "translateY(-3px)",
+                                                    borderColor: "blue.200"
+                                                }}
+                                            >
+                                                {/* Visual Accent ID Anchor Badge Left */}
                                                 <Box
-                                                    bg="blue.50"
-                                                    color="blue.600"
-                                                    borderRadius="full"
-                                                    p={2}
-                                                    minW="40px"
-                                                    textAlign="center"
-                                                    fontWeight="bold"
-                                                >
-                                                    {index + 1}
-                                                </Box>
+                                                    position="absolute"
+                                                    left={0} top={0} bottom={0} w="5px"
+                                                    bgGradient="linear(to-b, blue.400, purple.400)"
+                                                    borderTopLeftRadius="2xl"
+                                                    borderBottomLeftRadius="2xl"
+                                                />
 
-                                                <VStack align="start" spacing={2}>
-                                                    <Text fontWeight="extrabold" fontSize="lg" color="gray.800">
-                                                        {item.note}
-                                                    </Text>
-                                                    <Divider />
-                                                    <Text color="gray.600" lineHeight="tall" fontSize="md">
-                                                        {item.explanation}
-                                                    </Text>
+                                                <VStack align="stretch" spacing={4}>
+                                                    <Flex justify="space-between" align="center">
+                                                        <HStack spacing={3}>
+                                                            <Flex bg="blue.50" color="blue.600" h="32px" w="32px" align="center" justify="center" borderRadius="xl" fontWeight="black" fontSize="sm">
+                                                                {index + 1}
+                                                            </Flex>
+                                                            <Text fontWeight="extrabold" fontSize="md" color="gray.800" maxW="80%">
+                                                                {item.note}
+                                                            </Text>
+                                                        </HStack>
+                                                        <Tag size="sm" colorScheme={isFlipped ? "purple" : "gray"} borderRadius="full" fontWeight="bold" variant="subtle">
+                                                            {isFlipped ? "Technical Parameters" : "Explanation Overview"}
+                                                        </Tag>
+                                                    </Flex>
+
+                                                    <Divider borderColor="gray.100" />
+
+                                                    {/* Explanatory Context Field */}
+                                                    {!isFlipped ? (
+                                                        <Text color="gray.600" lineHeight="relaxed" fontSize="sm" minH="54px">
+                                                            {item.explanation}
+                                                        </Text>
+                                                    ) : (
+                                                        <VStack align="stretch" spacing={3} minH="54px" bg="gray.50" p={3} borderRadius="xl">
+                                                            {item.examKeywords && (
+                                                                <Box>
+                                                                    <Text fontSize="xs" fontWeight="black" color="gray.500" textTransform="uppercase" mb={1.5} letterSpacing="wider">
+                                                                        Target Exam Scoring Keywords
+                                                                    </Text>
+                                                                    <Flex gap={1.5} flexWrap="wrap">
+                                                                        {item.examKeywords.map((kw: string, i: number) => (
+                                                                            <Tag key={i} size="sm" colorScheme="teal" borderRadius="md" fontWeight="bold">
+                                                                                <TagLabel>{kw}</TagLabel>
+                                                                            </Tag>
+                                                                        ))}
+                                                                    </Flex>
+                                                                </Box>
+                                                            )}
+                                                            {item.marksBoosterTip && (
+                                                                <Box borderTop="1px dashed" borderColor="gray.200" pt={2}>
+                                                                    <Text fontSize="xs" fontWeight="black" color="orange.600" textTransform="uppercase" mb={0.5} display="flex" alignItems="center" gap={1}>
+                                                                        🚀 Strategic Marks Booster Point
+                                                                    </Text>
+                                                                    <Text fontSize="xs" color="gray.600" fontWeight="medium" lineHeight="normal">
+                                                                        {item.marksBoosterTip}
+                                                                    </Text>
+                                                                </Box>
+                                                            )}
+                                                        </VStack>
+                                                    )}
                                                 </VStack>
-                                            </HStack>
-                                        </Box>
-                                    ))}
-                                </Box>
+                                            </Box>
+                                        );
+                                    })}
+                                </SimpleGrid>
 
-                                {/* 🧾 Enhanced Summary Section */}
+                                {/* Quick Recap Highlights System panel */}
                                 {contentData.summary && (
                                     <Box
-                                        mt={8}
-                                        p={8}
-                                        bgGradient="linear(to-br, gray.50, white)"
+                                        mt={4} p={6}
+                                        bgGradient="linear(to-br, white, gray.50)"
                                         borderRadius="2xl"
-                                        borderWidth="1px"
-                                        borderStyle="dashed"
-                                        borderColor="gray.300"
-                                        position="relative"
+                                        border="1px solid"
+                                        borderColor="gray.200"
+                                        boxShadow="sm"
                                     >
-                                        <HStack mb={4}>
-                                            <Icon as={StarIcon} color="orange.400" />
-                                            <Heading size="md" color="gray.700">Quick Recap</Heading>
+                                        <HStack mb={3} spacing={2}>
+                                            <Icon as={StarIcon} color="orange.400" w={4} h={4} />
+                                            <Heading size="xs" textTransform="uppercase" tracking-space="wider" color="gray.700" fontWeight="black">
+                                                Consolidated High-Yield Synthesis Summary
+                                            </Heading>
                                         </HStack>
-                                        <Text fontSize="lg" color="gray.700" fontStyle="italic" letterSpacing="wide">
-                                            "{contentData.summary}"
+                                        <Text fontSize="sm" color="gray.600" lineHeight="relaxed" fontWeight="medium">
+                                            {contentData.summary}
                                         </Text>
                                     </Box>
                                 )}
                             </VStack>
                         )}
 
-                        {/* 🧠 MIND MAP VIEW */}
+                        {/* 🧠 MIND MAP FLAT ASSET CODES VIEW */}
                         {contentType === "Mind Map" && (
-                            <Box p={4} borderWidth="1px" borderRadius="md">
-                                <Text fontWeight="bold" mb={2}>
-                                    Mind Map
-                                </Text>
-                                <Text whiteSpace="pre-wrap" fontFamily="monospace">
-                                    {contentData.mindMap}
-                                </Text>
+                            <Box p={6} bg="white" borderWidth="1px" borderColor="gray.200" borderRadius="2xl" boxShadow="sm">
+                                <Heading size="sm" mb={4} color="gray.800" fontWeight="black">Structural Text Hierarchy Map</Heading>
+                                <Box bg="gray.900" p={4} borderRadius="xl" overflowX="auto">
+                                    <Text whiteSpace="pre-wrap" fontFamily="mono" color="emerald.300" fontSize="xs" lineHeight="relaxed">
+                                        {contentData.mindMap}
+                                    </Text>
+                                </Box>
                             </Box>
                         )}
 
+                        {/* 🌳 INTERACTIVE TREE GRAPH GRAPH VIEW PANEL */}
                         {contentType === "Mind Map2" && contentData.mindMap && (
-                            <Box
-                                p={5}
-                                borderWidth="1px"
-                                borderRadius="xl"
-                                bg="gray.50"
-                                overflowX="auto"
-                            >
-                                <Text fontWeight="bold" mb={3}>
-                                    Mind Map
-                                </Text>
-
-                                <MindMapNode node={parseMindMap(contentData.mindMap)} />
+                            <Box p={6} bg="white" borderWidth="1px" borderColor="gray.200" borderRadius="2xl" boxShadow="sm" overflowX="auto">
+                                <VStack align="start" spacing={1} mb={6}>
+                                    <Heading size="sm" color="gray.800" fontWeight="black">Expandable Taxonomy Tree</Heading>
+                                    <Text fontSize="xs" color="gray.500">Tap active colored root keys to collapse downstream branches dynamically.</Text>
+                                </VStack>
+                                <Box p={4} bg="gray.50" borderRadius="xl" border="1px solid" borderColor="gray.100" minH="300px">
+                                    <MindMapNode node={parseMindMap(contentData.mindMap)} />
+                                </Box>
                             </Box>
                         )}
 
-
+                        {/* ⚡ REACT FLOW ENGINE CONTROLS LAYERING CHART */}
                         {contentType === "Flow Chart" && contentData?.mindMap && (
                             <Box
-                                height="600px"
-                                width="100%"
-                                borderWidth="1px"
-                                borderRadius="2xl"
-                                bg="gray.50"
-                                position="relative"
-                                boxShadow="inner"
-                                overflow="hidden"
+                                height="620px" w="100%"
+                                borderWidth="1px" borderColor="gray.200" borderRadius="2xl"
+                                bg="white" position="relative" boxShadow="sm" overflow="hidden"
                             >
-                                {/* 1. Wrap everything in the Provider */}
                                 <ReactFlowProvider>
-
                                     <ReactFlow
                                         nodes={flowData.nodes}
                                         edges={flowData.edges}
                                         nodeTypes={nodeTypes}
                                         fitView
-                                        onInit={(instance) => setTimeout(() => instance.fitView(), 100)}
+                                        onInit={(instance) => setTimeout(() => instance.fitView(), 120)}
                                     >
-                                        <Background variant={BackgroundVariant.Lines} color="#E2E8F0" gap={20} />
-                                        <Controls style={{ borderRadius: '10px', overflow: 'hidden' }} />
+                                        <Background variant={BackgroundVariant.Dots} color="#CBD5E0" gap={24} size={1} />
+                                        <Controls style={{ borderRadius: '12px', overflow: 'hidden', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }} />
                                         <MiniMap
-                                            nodeColor={(n) => n.data.levelColor}
-                                            maskColor="rgba(247, 250, 252, 0.7)"
-                                            style={{ borderRadius: '10px' }}
+                                            nodeColor={(n) => n.data?.levelColor || "#cbd5e0"}
+                                            maskColor="rgba(247, 250, 252, 0.8)"
+                                            style={{ borderRadius: '12px', border: '1px solid #E2E8F0' }}
                                         />
                                     </ReactFlow>
-
-                                    {/* 2. Place your custom ControlPanel inside the Provider, 
-                   but outside the ReactFlow component itself so it floats */}
                                     <FlowChartControlPanel />
-
                                 </ReactFlowProvider>
 
-                                {/* Floating Legend */}
-                                <Box position="absolute" top={4} right={4} bg="whiteAlpha.800" p={2} borderRadius="md" shadow="sm">
-                                    <Text fontSize="xs" color="gray.500" fontWeight="bold">Interactive View: Drag to explore</Text>
+                                <Box position="absolute" top={4} right={4} bg="rgba(255,255,255,0.9)" backdropFilter="blur(4px)" px={3} py={1.5} borderRadius="xl" border="1px solid" borderColor="gray.200" shadow="sm">
+                                    <Text fontSize="11px" color="gray.600" fontWeight="bold">Infinite Canvas Sandbox: Drag & zoom to examine details</Text>
                                 </Box>
                             </Box>
                         )}
 
-                        {/* ❓ QUESTIONS VIEW */}
+                        {/* ❓ PRACTICE MCQS INTERACTIVE QUIZ ENGINE DESIGN */}
                         {contentType === "Question" && (
-                            <Box>
-                                {contentData.questions?.map((q: any, index: number) => (
-                                    <Box
-                                        key={index}
-                                        p={4}
-                                        mb={4}
-                                        borderWidth="1px"
-                                        borderRadius="md"
-                                    >
-                                        <Text fontWeight="bold">
-                                            Q{index + 1}. {q.question}
-                                        </Text>
+                            <VStack spacing={6} align="stretch" w="100%">
+                                <VStack align="start" spacing={0} pb={2} borderBottom="1px solid" borderColor="gray.200">
+                                    <Heading size="md" color="gray.800" fontWeight="black">Active Recall Knowledge Check</Heading>
+                                    <Text fontSize="xs" color="gray.500">Select options below to score testing performance criteria dynamically metrics.</Text>
+                                </VStack>
 
-                                        {q.options.map((opt: string, i: number) => (
-                                            <Text key={i} ml={4}>
-                                                • {opt}
-                                            </Text>
-                                        ))}
+                                <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6}>
+                                    {contentData.questions?.map((q: any, index: number) => {
+                                        const selectedOption = quizAnswers[index];
+                                        const hasAnswered = selectedOption !== undefined;
+                                        const isCorrect = selectedOption === q.answer;
 
-                                        <Text mt={2} color="green.600">
-                                            ✅ Answer: {q.answer}
-                                        </Text>
-                                    </Box>
-                                ))}
-                            </Box>
+                                        return (
+                                            <Box
+                                                key={index}
+                                                bg="white" p={6} borderRadius="2xl"
+                                                border="1px solid"
+                                                borderColor={hasAnswered ? (isCorrect ? "green.200" : "red.200") : "gray.100"}
+                                                boxShadow="sm"
+                                                transition="all 0.2s"
+                                                position="relative"
+                                            >
+                                                <VStack align="stretch" spacing={4}>
+                                                    <HStack align="start" spacing={3}>
+                                                        <Flex
+                                                            bg={hasAnswered ? (isCorrect ? "green.500" : "red.500") : "blue.500"}
+                                                            color="white" minW="28px" h="28px" borderRadius="lg" align="center" justify="center" fontSize="xs" fontWeight="black"
+                                                        >
+                                                            Q{index + 1}
+                                                        </Flex>
+                                                        <Text fontWeight="extrabold" fontSize="sm" color="gray.800" lineHeight="base">
+                                                            {q.question}
+                                                        </Text>
+                                                    </HStack>
+
+                                                    <VStack align="stretch" spacing={2.5} pt={2}>
+                                                        {q.options.map((option: string, i: number) => {
+                                                            const isSelected = selectedOption === option;
+                                                            let optionBg = "gray.50";
+                                                            let optionBorderColor = "gray.200";
+                                                            let optionColor = "gray.700";
+
+                                                            if (isSelected) {
+                                                                if (isCorrect) {
+                                                                    optionBg = "green.50";
+                                                                    optionBorderColor = "green.500";
+                                                                    optionColor = "green.700";
+                                                                } else {
+                                                                    optionBg = "red.50";
+                                                                    optionBorderColor = "red.500";
+                                                                    optionColor = "red.700";
+                                                                }
+                                                            } else if (hasAnswered && option === q.answer) {
+                                                                // Highlight correct answer if student guessed wrong
+                                                                optionBg = "green.50";
+                                                                optionBorderColor = "green.300";
+                                                            }
+
+                                                            return (
+                                                                <Flex
+                                                                    key={i} align="center" px={4} py={3} borderRadius="xl" border="2px solid"
+                                                                    borderColor={optionBorderColor} bg={optionBg} color={optionColor}
+                                                                    cursor={hasAnswered ? "not-allowed" : "pointer"}
+                                                                    fontWeight="semibold" fontSize="xs" transition="all 0.15s"
+                                                                    onClick={() => !hasAnswered && handleSelectOption(index, option)}
+                                                                    _hover={hasAnswered ? {} : { bg: "blue.50", borderColor: "blue.300" }}
+                                                                >
+                                                                    <Box mr={3} h="6px" w="6px" borderRadius="full" bg={isSelected ? "currentColor" : "gray.400"} />
+                                                                    <Text flex={1}>{option}</Text>
+                                                                </Flex>
+                                                            );
+                                                        })}
+                                                    </VStack>
+
+                                                    {/* Animated Dropdown Explanation feedback banner panel */}
+                                                    <Collapse in={hasAnswered} animateOpacity>
+                                                        <HStack p={3} borderRadius="xl" bg={isCorrect ? "green.50" : "red.50"} color={isCorrect ? "green.800" : "red.800"} fontSize="xs" fontWeight="bold" spacing={2} mt={2}>
+                                                            <Icon as={isCorrect ? CheckCircleIcon : WarningIcon} />
+                                                            <Text>
+                                                                {isCorrect
+                                                                    ? "Correct! You've mastered this insight asset milestone criterion."
+                                                                    : `Incorrect. Expected core resolution target: ${q.answer}`}
+                                                            </Text>
+                                                        </HStack>
+                                                    </Collapse>
+                                                </VStack>
+                                            </Box>
+                                        );
+                                    })}
+                                </SimpleGrid>
+                            </VStack>
                         )}
 
-                        {/* 📊 VENN DIAGRAM VIEW */}
+                        {/* 📊 VENN MATRIX ANALYSIS VIEWER PANEL */}
                         {contentType === "Venn Diagram" && (
-                            <Box
-                                p={5}
-                                borderWidth="1px"
-                                borderRadius="xl"
-                                bg="white"
-                                boxShadow="inner"
-                                minH="500px"
-                            >
-                                <Text fontWeight="bold" fontSize="xl" mb={5} textAlign="center">
-                                    Comparison Diagram
-                                </Text>
+                            <Box p={6} bg="white" borderWidth="1px" borderColor="gray.200" borderRadius="2xl" boxShadow="sm" minH="500px">
+                                <VStack align="stretch" spacing={2} mb={6} textAlign="center">
+                                    <Heading size="sm" color="gray.800" fontWeight="black">Comparative Structural Venn Matrix</Heading>
+                                    <Text fontSize="xs" color="gray.500">Visual overlap and differentiation between target contextual modules layout models.</Text>
+                                </VStack>
 
                                 {contentData?.vennDiagram ? (
-                                    <VennView data={contentData.vennDiagram} />
+                                    <Box p={4} bg="gray.50" borderRadius="xl">
+                                        <VennView data={contentData.vennDiagram} />
+                                    </Box>
                                 ) : (
-                                    <Text color="red.500" textAlign="center">
-                                        No Venn Diagram data available for this chapter.
-                                    </Text>
+                                    <Flex align="center" justify="center" minH="300px" direction="column" gap={2}>
+                                        <Text color="gray.400" fontSize="sm" fontWeight="bold">No Venn Diagram mapping registered for this chapter unit.</Text>
+                                    </Flex>
                                 )}
                             </Box>
                         )}
-
                     </div>
                 )}
             </Box>
+
+            {/* Hidden Target PDF Frame Layer Build Rendering Pipeline */}
             <div style={{ position: "absolute", left: "-9999px", top: 0 }}>
                 <div ref={pdfRef}>
-                    <PdfLayout
-                        contentData={contentData}
-                        selectedChapter={selectedChapter}
-                    />
+                    <PdfLayout contentData={contentData} selectedChapter={selectedChapter} />
                 </div>
             </div>
         </Box>
     );
 };
-
 
 export default FilterDetails;
