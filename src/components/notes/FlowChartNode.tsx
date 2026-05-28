@@ -15,7 +15,6 @@ const FlowChartNode = ({ data }: { data: { label: string; levelColor?: string } 
             textAlign="center"
             position="relative"
         >
-            {/* React Flow Handles (Connection Points) */}
             <Handle type="target" position={Position.Top} style={{ background: '#CBD5E0' }} />
 
             <Text fontWeight="bold" fontSize="sm" color="gray.700">
@@ -27,7 +26,6 @@ const FlowChartNode = ({ data }: { data: { label: string; levelColor?: string } 
     );
 };
 
-// Define this outside your component
 export const nodeTypes = {
     custom: FlowChartNode,
 };
@@ -44,9 +42,10 @@ export const buildFlow = (root: any) => {
 
         nodes.push({
             id: currentId,
-            type: 'custom', // Use our custom node type
+            type: 'custom',
             data: {
-                label: node.name,
+                // 🎯 FIXED: Falls back gracefully to node.title to perfectly match your backend parser payload keys
+                label: node.title || node.name || "Untitled Node",
                 levelColor: levelColors[level % levelColors.length]
             },
             position: { x, y },
@@ -59,12 +58,10 @@ export const buildFlow = (root: any) => {
                 target: currentId,
                 animated: true,
                 type: 'smoothstep',
-                // Path styling
                 style: {
                     stroke: levelColors[(level - 1) % levelColors.length],
-                    strokeWidth: 3 // Slightly thicker for visibility
+                    strokeWidth: 3
                 },
-                // Adding an arrow head
                 markerEnd: {
                     type: 'arrowclosed',
                     color: levelColors[(level - 1) % levelColors.length],

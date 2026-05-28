@@ -1,110 +1,101 @@
-import { InfoIcon } from "@chakra-ui/icons";
-import {
-    Box, Flex, Text, VStack, Heading,
-    Tooltip, Icon
-} from "@chakra-ui/react";
+import React from "react";
+import { Box, SimpleGrid, Text, Heading, VStack, UnorderedList, ListItem, Divider } from "@chakra-ui/react";
 
-
-// 1. Define the structure of your component's props
-interface VennData {
+// 🎯 Match TypeScript types EXACTLY with your real API structure
+interface VennDataPayload {
     conceptA: string;
-    uniqueA: string[];
     conceptB: string;
+    uniqueA: string[];
     uniqueB: string[];
     common: string[];
 }
 
-interface VennViewProps {
-    data: VennData;
+interface VennDiagramViewProps {
+    vennData?: VennDataPayload;
 }
 
-const VennView = ({ data }: VennViewProps) => {
+export const VennDiagramView: React.FC<VennDiagramViewProps> = React.memo(({ vennData }) => {
+    // Defensive check to gracefully prevent application crashes if data is missing
+    if (!vennData || !vennData.uniqueA || !vennData.uniqueB || !vennData.common) {
+        return <Text textAlign="center" py={8} color="gray.500">No comparative analysis available for this section.</Text>;
+    }
+
     return (
-        <Flex
-            position="relative"
-            justify="center"
-            align="center"
-            h="500px"
-            w="100%"
-            overflow="hidden"
-            bg="gray.50"
-            borderRadius="2xl"
-        >
-            {/* Concept A: Exothermic */}
-            <Box
-                w="350px"
-                h="350px"
-                borderRadius="full"
-                bgGradient="radial(orange.400, red.500)"
-                opacity="0.7"
-                position="absolute"
-                left="15%"
-                display="flex"
-                flexDirection="column"
-                p={8}
-                color="white"
-                boxShadow="0 0 40px rgba(255, 69, 0, 0.4)"
-                transition="all 0.3s"
-                _hover={{ opacity: 0.8, transform: "scale(1.02)" }}
-            >
-                <Heading size="md" mb={4} textAlign="left">{data.conceptA}</Heading>
-                <VStack align="start" spacing={2}>
-                    {data.uniqueA.map((item, i) => (
-                        <Tooltip key={i} label={item} fontSize="md" placement="top" hasArrow>
-                            <Flex align="center" cursor="pointer" _hover={{ color: "orange.200" }}>
-                                <Icon as={InfoIcon} mr={2} />
-                                <Text fontSize="sm" noOfLines={1}>{item.split(':')[0]}</Text>
-                            </Flex>
-                        </Tooltip>
-                    ))}
-                </VStack>
-            </Box>
+        <Box bg="white" p={{ base: 4, md: 8 }} borderRadius="2xl" boxShadow="sm" border="1px solid" borderColor="gray.100">
+            <Heading size="md" color="gray.800" mb={6} textAlign="center">
+                Comparative Breakdown: {vennData.conceptA} vs {vennData.conceptB}
+            </Heading>
 
-            {/* Concept B: Endothermic */}
-            <Box
-                w="350px"
-                h="350px"
-                borderRadius="full"
-                bgGradient="radial(cyan.400, blue.600)"
-                opacity="0.7"
-                position="absolute"
-                right="15%"
-                display="flex"
-                flexDirection="column"
-                p={8}
-                color="white"
-                boxShadow="0 0 40px rgba(0, 191, 255, 0.4)"
-                transition="all 0.3s"
-                _hover={{ opacity: 0.8, transform: "scale(1.02)" }}
-            >
-                <Heading size="md" mb={4} textAlign="right">{data.conceptB}</Heading>
-                <VStack align="end" spacing={2} textAlign="right">
-                    {data.uniqueB.map((item, i) => (
-                        <Text key={i} fontSize="xs" fontWeight="bold">• {item}</Text>
-                    ))}
-                </VStack>
-            </Box>
+            {/* 3-Column Split Deck Interface mimicking an interactive Venn breakdown on screen */}
+            <SimpleGrid columns={{ base: 1, lg: 3 }} gap={6} alignItems="stretch">
 
-            {/* Intersection: Common Ground */}
-            <Box
-                zIndex={2}
-                w="180px"
-                textAlign="center"
-                p={4}
-                bg="rgba(255, 255, 255, 0.2)"
-                backdropFilter="blur(10px)"
-                borderRadius="xl"
-                border="1px solid rgba(255,255,255,0.3)"
-            >
-                <Text fontWeight="black" fontSize="sm" color="gray.800" mb={2}>SHARED</Text>
-                <VStack spacing={1}>
-                    {data.common.map((item, i) => (
-                        <Text key={i} fontSize="10px" color="gray.700" lineHeight="tight">{item}</Text>
-                    ))}
+                {/* Column A: Unique to Left Concept */}
+                <VStack
+                    align="stretch"
+                    p={5}
+                    bg="blue.50"
+                    borderRadius="xl"
+                    borderTop="4px solid"
+                    borderColor="blue.400"
+                    spacing={3}
+                >
+                    <Heading size="xs" color="blue.700" textTransform="uppercase" letterSpacing="wider">
+                        Only {vennData.conceptA}
+                    </Heading>
+                    <Divider borderColor="blue.200" />
+                    <UnorderedList spacing={2.5} pl={4} fontSize="sm" color="gray.700">
+                        {vennData.uniqueA.map((item, index) => (
+                            <ListItem key={index} lineHeight="tall">{item}</ListItem>
+                        ))}
+                    </UnorderedList>
                 </VStack>
-            </Box>
-        </Flex>
+
+                {/* Column B: Common Shared Core Overlaps */}
+                <VStack
+                    align="stretch"
+                    p={5}
+                    bg="purple.50"
+                    borderRadius="xl"
+                    borderTop="4px solid"
+                    borderColor="purple.400"
+                    spacing={3}
+                >
+                    <Heading size="xs" color="purple.700" textTransform="uppercase" letterSpacing="wider">
+                        Shared Characteristics
+                    </Heading>
+                    <Divider borderColor="purple.200" />
+                    <UnorderedList spacing={2.5} pl={4} fontSize="sm" color="gray.700" fontWeight="medium">
+                        {vennData.common.map((item, index) => (
+                            <ListItem key={index} lineHeight="tall">{item}</ListItem>
+                        ))}
+                    </UnorderedList>
+                </VStack>
+
+                {/* Column C: Unique to Right Concept */}
+                <VStack
+                    align="stretch"
+                    p={5}
+                    bg="orange.50"
+                    borderRadius="xl"
+                    borderTop="4px solid"
+                    borderColor="orange.400"
+                    spacing={3}
+                >
+                    <Heading size="xs" color="orange.700" textTransform="uppercase" letterSpacing="wider">
+                        Only {vennData.conceptB}
+                    </Heading>
+                    <Divider borderColor="orange.200" />
+                    <UnorderedList spacing={2.5} pl={4} fontSize="sm" color="gray.700">
+                        {vennData.uniqueB.map((item, index) => (
+                            <ListItem key={index} lineHeight="tall">{item}</ListItem>
+                        ))}
+                    </UnorderedList>
+                </VStack>
+
+            </SimpleGrid>
+        </Box>
     );
-};
+});
 
-export default VennView;
+VennDiagramView.displayName = "VennDiagramView";
+export default VennDiagramView;
