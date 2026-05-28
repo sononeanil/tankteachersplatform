@@ -10,6 +10,7 @@ import QuizView from "../notes/QuizView";
 import MindMapView from "../notes/MindMap";
 import { VennDiagramView } from "../notes/VennView";
 import { FlowChartView } from "../notes/FlowChartView"; // 🎯 1. IMPORT DETECTED
+import { TreeStructureView } from "../notes/TreeStructureView";
 
 const FilterDetails = () => {
     const contentRef = useRef<HTMLDivElement>(null);
@@ -124,7 +125,7 @@ const FilterDetails = () => {
                 <Divider orientation="vertical" height="30px" display={{ base: "none", md: "block" }} />
 
                 <Flex gap={2} wrap="wrap" flex={1}>
-                    {["Notes", "Mind Map", "Question", "Flow Chart", "Venn Diagram"].map((item) => (
+                    {["Notes", "Mind Map", "Question", "Flow Chart", "Tree View", "Venn Diagram"].map((item) => (
                         <Button
                             key={item} onClick={() => setContentType(item)}
                             colorScheme={contentType === item ? "blue" : "gray"}
@@ -169,6 +170,11 @@ const FilterDetails = () => {
                         {/* 🎯 2. FIXED: MOUNTED FLOW CHART ROUTE TO PREVENT PLACEHOLDER OVERWRITE */}
                         {contentType === "Flow Chart" && (
                             <FlowChartView mindMapData={normalizedData.mindMap} />
+                        )}
+
+                        {/* 🎯 Perfectly uniform, standalone mounting just like FlowChartView */}
+                        {contentType === "Tree View" && (
+                            <TreeStructureView mindMapData={normalizedData.mindMap} />
                         )}
 
                         {/* 🎯 3. CLEANED UP CONDITIONS TO PREVENT BLANK VISIBILITY ISSUES */}
