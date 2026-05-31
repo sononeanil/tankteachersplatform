@@ -1,22 +1,21 @@
-import { Container, Flex, HStack, Box, Button } from "@chakra-ui/react";
+import { Container, Flex, Stack, Box, Button } from "@chakra-ui/react";
 import { Outlet, Link } from "react-router-dom";
 
 const HomePage2 = () => {
     return (
         <Container
             maxW="container.xl"
-            p={{ base: 3, md: 5 }}
+            p={{ base: 2, sm: 3, md: 5 }} // Lightened padding for tight screens
             borderRadius={10}
-            m={{ base: 2, md: 5 }}
+            m={{ base: "4px auto", md: 5 }} // Centered layout margins safely on mobile
             bgGradient="linear(to-br, teal.50, blue.200)"
         >
             <Flex direction="column">
 
                 {/* NAVBAR */}
-
                 <Box
                     textAlign="center"
-                    py={{ base: 10, md: 16 }}
+                    py={{ base: 8, md: 16 }} // Slimmer height on mobile viewports
                     px={{ base: 4, md: 8 }}
                     bgGradient="linear(to-r, teal.400, blue.500)"
                     color="white"
@@ -24,7 +23,7 @@ const HomePage2 = () => {
                     mb={6}
                 >
                     <Box
-                        fontSize={{ base: "xl", md: "4xl" }}
+                        fontSize={{ base: "2xl", md: "4xl" }} // Adjusted readable scale
                         fontWeight="bold"
                     >
                         Learn Smarter with AI 🤖📚
@@ -32,20 +31,20 @@ const HomePage2 = () => {
 
                     <Box
                         mt={4}
-                        fontSize={{ base: "md", md: "lg" }}
+                        fontSize={{ base: "sm", md: "lg" }}
                     >
                         Create notes, summaries, question papers & find tutors instantly.
                     </Box>
 
-                    <HStack
+                    {/* FIXED: Swapped HStack for responsive Stack to allow actual layout rotation */}
+                    <Stack
                         mt={6}
                         spacing={4}
                         justify="center"
-                        flexWrap="wrap"
                         direction={{ base: "column", md: "row" }}
+                        align="center"
                         w="100%"
                     >
-
                         {/* PRIMARY CTA */}
                         <Button
                             as={Link}
@@ -115,18 +114,15 @@ const HomePage2 = () => {
                             }}
                         >
                             Home
-                        </Button>a
-
-
-
-                    </HStack>
+                        </Button>
+                    </Stack>
                 </Box>
+
+                {/* INJECTED CHILDREN */}
                 <Outlet />
             </Flex>
         </Container>
     );
 };
-
-
 
 export default HomePage2;

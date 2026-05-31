@@ -9,6 +9,7 @@ import DetailedNotesFilter from "../notes/DetailedNotesFilter";
 import MsbFilter from "./MsbFilter";
 
 const LandingPage2 = () => {
+    // Explicitly declaring the array here so Vite handles compilation perfectly
     const landingPageData = [
         {
             id: 1,
@@ -48,26 +49,28 @@ const LandingPage2 = () => {
         },
     ];
 
-    const getTextColor = (colorCode) => {
+    const getTextColor = (colorCode: string) => {
         return colorCode === "#dde80fff" ? "gray.800" : "white";
     };
 
     return (
-        // Max width constraint strictly matches a proportional container layout
-        <Box px={{ base: 4, md: 6 }} maxW="1200px" mx="auto" my={3}>
+        // Root component constraints to force mobile responsiveness
+        <Box width="100%" maxW="100%" mx="auto" py={2} overflow="hidden">
 
             {/* 1. HERO CAROUSEL */}
-            <LandingPageCorousel />
+            <Box width="100%" overflow="hidden" mb={2}>
+                <LandingPageCorousel />
+            </Box>
 
-            {/* 2. FILTERS & SEARCH CONTROLS (Tighter vertical margins) */}
-            <VStack spacing={3} align="stretch" my={4}>
+            {/* 2. FILTERS & SEARCH CONTROLS */}
+            <VStack spacing={3} align="stretch" my={4} width="100%" overflowX="auto">
                 <Filter />
                 <DetailedNotesFilter />
                 <MsbFilter />
             </VStack>
 
-            {/* 3. GRID 1: Analytics Dashboard (Slimmer cards to match carousel thickness) */}
-            <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} gap={4} mb={6}>
+            {/* 3. GRID 1: Analytics Dashboard */}
+            <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} gap={4} mb={6} width="100%">
                 {landingPageData.map((data) => {
                     const textColor = getTextColor(data.color);
                     return (
@@ -80,8 +83,9 @@ const LandingPage2 = () => {
                             rounded="lg"
                             boxShadow="sm"
                             color={textColor}
-                            p={3} // Compact padding
-                            minH="90px" // Short height to prevent vertical stretching
+                            p={4}
+                            minH={{ base: "auto", md: "90px" }}
+                            h="100%"
                         >
                             <HStack spacing={2} mb={1}>
                                 <Text fontSize="xl">{data.icon}</Text>
@@ -89,7 +93,7 @@ const LandingPage2 = () => {
                                     {data.value}
                                 </Text>
                             </HStack>
-                            <Text fontSize="xs" fontWeight="medium" opacity={0.9} noOfLines={1}>
+                            <Text fontSize="xs" fontWeight="medium" opacity={0.9} noOfLines={{ base: 2, md: 1 }}>
                                 {data.title}
                             </Text>
                         </Flex>
@@ -98,16 +102,16 @@ const LandingPage2 = () => {
             </SimpleGrid>
 
             {/* 4. COURSE VIEW / LISTINGS */}
-            <Box my={4}>
+            <Box my={4} width="100%" overflow="hidden">
                 <ViewCourse />
             </Box>
 
-            {/* 5. GRID 2: Detailed Feature Cards (Proportional heights) */}
-            <Box mt={6} mb={4}>
+            {/* 5. GRID 2: Detailed Feature Cards */}
+            <Box mt={6} mb={4} width="100%">
                 <Text fontSize="lg" fontWeight="bold" mb={3} textAlign="center">
                     Our Features & Resources
                 </Text>
-                <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} gap={4}>
+                <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} gap={4} width="100%">
                     {landingPageData.map((item) => {
                         const textColor = getTextColor(item.color);
                         return (
@@ -119,19 +123,22 @@ const LandingPage2 = () => {
                                 borderRadius="lg"
                                 boxShadow="sm"
                                 p={4}
-                                minH="130px" // Scaled down from 180px to align with the slim carousel
+                                minH={{ base: "auto", md: "130px" }}
+                                h="100%"
                                 color={textColor}
                             >
-                                <VStack align="start" spacing={2}>
-                                    <HStack spacing={2} width="100%">
-                                        <Text fontSize="md">{item.icon}</Text>
-                                        <Text fontSize="sm" fontWeight="bold" noOfLines={1}>
-                                            {item.title}
+                                <VStack align="start" spacing={2} h="100%" justify="space-between">
+                                    <Box width="100%">
+                                        <HStack spacing={2} width="100%" mb={1}>
+                                            <Text fontSize="md">{item.icon}</Text>
+                                            <Text fontSize="sm" fontWeight="bold" noOfLines={{ base: 2, md: 1 }}>
+                                                {item.title}
+                                            </Text>
+                                        </HStack>
+                                        <Text fontSize="xs" opacity={0.85} lineHeight="normal" noOfLines={{ base: 4, md: 3 }}>
+                                            {item.description}
                                         </Text>
-                                    </HStack>
-                                    <Text fontSize="xs" opacity={0.85} lineHeight="normal" noOfLines={3}>
-                                        {item.description}
-                                    </Text>
+                                    </Box>
                                 </VStack>
                             </Flex>
                         );
