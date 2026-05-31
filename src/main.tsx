@@ -80,6 +80,10 @@ const router = createBrowserRouter([
       path: "/notes/oneHourBeforeExam/:type/*",
       element: <FilterDetails></FilterDetails>
     }, {
+      path: "/notes/onehourBeforeexam/maharashtra-state-board/:type/*",
+      element: <FilterDetails></FilterDetails>
+    }, {
+    }, {
       path: "/tutor/createBio",
       element: <CreateBio></CreateBio>
     },
