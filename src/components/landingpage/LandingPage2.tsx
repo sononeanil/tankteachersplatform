@@ -7,6 +7,7 @@ import ViewCourse from "../teacher/ViewCourse";
 import Filter from "./Filter";
 import DetailedNotesFilter from "../notes/DetailedNotesFilter";
 import MsbFilter from "./MsbFilter";
+import SendMessageToAdmin from "./SendMessageToAdmin";
 
 const LandingPage2 = () => {
     // Explicitly declaring the array here so Vite handles compilation perfectly
@@ -31,7 +32,7 @@ const LandingPage2 = () => {
         },
         {
             id: 3,
-            title: "Contact Us",
+            title: "Write email to admin on anilsonone@gmail.com",
             description: "Contact admin at anilsonone@gmail.com for support.",
             color: "#37e80fff",
             gradient: "linear-gradient(#37e80fff, #0c98f0ff)",
@@ -69,8 +70,9 @@ const LandingPage2 = () => {
                 <MsbFilter />
             </VStack>
 
-            {/* 3. GRID 1: Analytics Dashboard */}
-            <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} gap={4} mb={6} width="100%">
+            {/* 3. GRID 1: Analytics Dashboard (The Boxes) */}
+            <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} gap={4} mb={6} width="100%"
+                shadow={"xl"} marginTop={5}>
                 {landingPageData.map((data) => {
                     const textColor = getTextColor(data.color);
                     return (
@@ -87,7 +89,7 @@ const LandingPage2 = () => {
                             minH={{ base: "auto", md: "90px" }}
                             h="100%"
                         >
-                            <HStack spacing={2} mb={1}>
+                            <HStack spacing={2} mb={1} >
                                 <Text fontSize="xl">{data.icon}</Text>
                                 <Text fontSize="lg" fontWeight="bold">
                                     {data.value}
@@ -100,6 +102,11 @@ const LandingPage2 = () => {
                     );
                 })}
             </SimpleGrid>
+
+            {/* 3b. FULL WIDTH MESSAGE TO ADMIN (Placed perfectly below the boxes) */}
+            <Box width="100%" mb={6}>
+                <SendMessageToAdmin />
+            </Box>
 
             {/* 4. COURSE VIEW / LISTINGS */}
             <Box my={4} width="100%" overflow="hidden">
