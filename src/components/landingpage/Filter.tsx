@@ -22,7 +22,7 @@ const Filter = () => {
 
     const classFilters = ["VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const boardFilters = ["cbse"];
-    const subjectFilters = ["Science"];
+    const subjectFilters = ["Science", "English"];
 
     const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
     const [selectedBoard, setSelectedBoard] = useState<string | null>(null);

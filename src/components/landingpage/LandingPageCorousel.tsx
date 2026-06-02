@@ -1,9 +1,15 @@
-import React from "react";
 import Slider from "react-slick";
 import { Box, Text, Flex } from "@chakra-ui/react";
 
-// Custom arrow components for slick-carousel using Chakra styling
-const NextArrow = (props) => {
+// 1. Define types for the custom arrow component props
+interface ArrowProps {
+  className?: string;
+  style?: React.CSSProperties;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+}
+
+// Custom arrow components with explicit TypeScript types
+const NextArrow = (props: ArrowProps) => {
   const { className, style, onClick } = props;
   return (
     <Box
@@ -22,7 +28,7 @@ const NextArrow = (props) => {
   );
 };
 
-const PrevArrow = (props) => {
+const PrevArrow = (props: ArrowProps) => {
   const { className, style, onClick } = props;
   return (
     <Box
@@ -61,7 +67,6 @@ const LandingPageCorousel = () => {
     "Get AI-powered notes, summaries, and question papers instantly ⚡",
   ];
 
-  // Gradients matching the playful, educational vibe of your main page data
   const gradients = [
     "linear-gradient(135deg, #0c98f0ff, #b00ccdff)",
     "linear-gradient(135deg, #b00ccdff, #ee7dcaff)",
@@ -86,9 +91,9 @@ const LandingPageCorousel = () => {
               justify="center"
               align="center"
               bgGradient={gradients[index % gradients.length]}
-              height={{ base: "120px", md: "160px" }} // Significantly reduced height
+              height={{ base: "120px", md: "160px" }}
               color="white"
-              px={{ base: 10, md: 16 }} // Side padding padded so text doesn't hit arrows
+              px={{ base: 10, md: 16 }}
               textAlign="center"
             >
               <Text

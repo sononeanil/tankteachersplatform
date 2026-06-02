@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Box, VStack, HStack, Text, Input, Button, Grid, GridItem, Collapse, Badge, Divider } from '@chakra-ui/react';
+// ✅ FIXED: Removed 'Divider' from the imports list
+import { Box, VStack, HStack, Text, Input, Button, Grid, GridItem, Collapse, Badge } from '@chakra-ui/react';
 
 interface ExerciseItem {
     id: string;
@@ -99,7 +100,8 @@ export const ChapterExerciseView: React.FC<ChapterExerciseViewProps> = ({ exerci
 
                                     <Collapse in={revealedSolutions[ex.id]} animateOpacity>
                                         <Box p={4} bg="blue.50" borderLeft="4px solid" borderColor="blue.500" borderRadius="md">
-                                            <Text fontSize="xs" fontWeight="bold" color="blue.700" uppercase mb={1}>
+                                            {/* ✅ FIXED: Changed 'uppercase' prop to 'textTransform="uppercase"' */}
+                                            <Text fontSize="xs" fontWeight="bold" color="blue.700" textTransform="uppercase" mb={1}>
                                                 Ideal Textbook Criteria Key:
                                             </Text>
                                             <Text fontSize="sm" color="gray.700" lineHeight="tall">

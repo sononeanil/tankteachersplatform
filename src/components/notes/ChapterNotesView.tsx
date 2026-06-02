@@ -15,7 +15,8 @@ import {
     AlertIcon,
 } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
-import MindMap from "./MindMap";
+// import MindMap from "./MindMap";
+import MindMapView from "./MindMap";
 
 type Note = {
     note: string;
@@ -34,7 +35,7 @@ type ChapterData = {
     notes: Note[];
     summary: string;
     questions: Question[];
-    mindMap: string;   // Add this
+    mindMap: string;
     viewMode: string;
 };
 
@@ -44,7 +45,7 @@ const ChapterNotesView = () => {
 
     const cardBg = useColorModeValue("white", "gray.800");
 
-    // 🚨 Handle refresh / empty state
+    // Handle refresh / empty state
     if (!data) {
         return (
             <Container py={10}>
@@ -56,8 +57,10 @@ const ChapterNotesView = () => {
         );
     }
 
-    if (state.viewMode === "MindMap") {
-        return <MindMap chartCode={state.mindMap} />;
+    // ✅ FIXED: Evaluates the strongly-typed 'data' object 
+    // Change 'value' below to whatever prop parameter name MindMap.tsx requires
+    if (data.viewMode === "MindMap") {
+        return <MindMapView mindMapRawData={data.mindMap} />;
     }
 
     return (
@@ -127,8 +130,6 @@ const ChapterNotesView = () => {
             <Heading size="md" mb={4}>
                 📝 Practice Questions
             </Heading>
-
-
         </Container>
     );
 };

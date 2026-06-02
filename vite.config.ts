@@ -17,12 +17,14 @@ export default defineConfig({
         '/filterDetails/Class_8_Science',
         '/filterDetails/Class_9_Science',
         '/filterDetails/Class_10_Science',
-        // Change '&' to '&amp;' for all query parameters below:
-        '/getDetailedNotes?standard=6&amp;board=CBSE&amp;subject=Science&amp;chapter=1',
-        '/getDetailedNotes?standard=7&amp;board=CBSE&amp;subject=Science&amp;chapter=1',
-        '/getDetailedNotes?standard=8&amp;board=CBSE&amp;subject=Science&amp;chapter=1',
-        '/getDetailedNotes?standard=9&amp;board=CBSE&amp;subject=Science&amp;chapter=1',
-        '/getDetailedNotes?standard=10&amp;board=CBSE&amp;subject=Science&amp;chapter=1',
+        // Cleaned up: Using plain '&' characters here
+        '/getDetailedNotes?standard=6&board=CBSE&subject=Science&chapter=1',
+        '/getDetailedNotes?standard=7&board=CBSE&subject=Science&chapter=1',
+        '/getDetailedNotes?standard=8&board=CBSE&subject=Science&chapter=1',
+        '/getDetailedNotes?standard=9&board=CBSE&subject=Science&chapter=1',
+        '/getDetailedNotes?standard=10&board=CBSE&subject=Science&chapter=1',
+        '/notes/onehourBeforeexam/maharashtra-state-board/msb11economics',
+        '/notes/onehourBeforeexam/maharashtra-state-board/msb12economics',
       ],
       // This ensures it generates exactly 'sitemap.xml' instead of guessing extensions
       outDir: 'dist',
