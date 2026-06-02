@@ -11,15 +11,25 @@ import {
     WrapItem,
     Icon,
     Tooltip,
-    HStack
+    HStack,
+    VStack
 } from "@chakra-ui/react";
-import { FaCheckCircle, FaLightbulb, FaExchangeAlt, FaBookmark } from "react-icons/fa";
+import {
+    FaCheckCircle,
+    FaLightbulb,
+    FaExchangeAlt,
+    FaBookmark,
+    FaExclamationTriangle,
+    FaSchool
+} from "react-icons/fa";
 
 interface NoteItem {
     note: string;
     explanation: string;
     examKeywords?: string[];
     marksBoosterTip?: string;
+    commonMisconception?: string;
+    classroomConnection?: string;
 }
 
 interface NotesViewProps {
@@ -35,18 +45,18 @@ export const NotesView: React.FC<NotesViewProps> = React.memo(({
 }) => {
     if (notes.length === 0) {
         return (
-            <Text textAlign="center" py={12} color="gray.400" fontWeight="medium">
+            <Text textAlign="center" py={16} color="gray.400" fontSize="lg" fontWeight="semibold">
                 No interactive revision assets compiled for this module yet.
             </Text>
         );
     }
 
     return (
-        <SimpleGrid columns={{ base: 1, xl: 2 }} gap={6}>
+        <SimpleGrid columns={{ base: 1, xl: 2 }} gap={8}>
             {notes.map((item, index) => {
                 const isRead = !!readCards[index];
 
-                // 🎯 SMART PARSER: Isolate any embedded text analogies out of explanations dynamically
+                // Isolate embedded text analogies out of explanations dynamically
                 const parts = item.explanation.split(/Analogy:/i);
                 const coreExplanation = parts[0].trim();
                 const analogyText = parts[1] ? parts[1].trim() : null;
@@ -55,86 +65,138 @@ export const NotesView: React.FC<NotesViewProps> = React.memo(({
                     <Box
                         key={index}
                         bg="white"
-                        p={{ base: 5, md: 6 }}
+                        p={{ base: 6, md: 8 }}
                         borderRadius="2xl"
                         position="relative"
                         overflow="hidden"
                         border="1px solid"
-                        borderColor={isRead ? "green.200" : "gray.100"}
+                        borderColor={isRead ? "green.300" : "blue.100"}
                         boxShadow={
                             isRead
-                                ? "0 4px 20px -2px rgba(72, 187, 120, 0.08)"
-                                : "0 12px 30px -10px rgba(0, 0, 0, 0.04), 0 4px 10px -5px rgba(0, 0, 0, 0.02)"
+                                ? "0 10px 30px -5px rgba(72, 187, 120, 0.1)"
+                                : "0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 5px 15px -5px rgba(0, 0, 0, 0.01)"
                         }
                         display="flex"
                         flexDirection="column"
                         justifyContent="space-between"
-                        transition="all 0.25s cubic-bezier(0.4, 0, 0.2, 1)"
+                        transition="all 0.3s cubic-bezier(0.16, 1, 0.3, 1)"
                         _hover={{
-                            transform: "translateY(-4px)",
+                            transform: "translateY(-6px)",
                             boxShadow: isRead
-                                ? "0 10px 25px -2px rgba(72, 187, 120, 0.15)"
-                                : "0 20px 35px -10px rgba(0, 0, 0, 0.09)"
+                                ? "0 20px 40px -5px rgba(72, 187, 120, 0.18)"
+                                : "0 30px 50px -10px rgba(0, 0, 0, 0.12)"
                         }}
                     >
-                        {/* Status Decorative Highlight Bar */}
+                        {/* Decorative Top Accent Bar */}
                         <Box
-                            position="absolute" top={0} left={0} right={0} h="4px"
-                            bg={isRead ? "green.400" : "blue.400"}
+                            position="absolute"
+                            top={0}
+                            left={0}
+                            right={0}
+                            h="5px"
+                            bg={isRead ? "green.400" : "blue.500"}
                             transition="background-color 0.2s"
                         />
 
                         <Box>
-                            {/* Card Header Profile */}
-                            <Flex justify="space-between" align="start" mb={4}>
-                                <HStack spacing={2} align="start">
-                                    <Icon as={FaBookmark} mt={1} color={isRead ? "green.400" : "blue.300"} w={4} h={4} />
-                                    <Heading size="sm" fontSize="md" color="gray.800" letterSpacing="tight" lineHeight="short">
+                            {/* Card Header */}
+                            <Flex justify="space-between" align="start" mb={5}>
+                                <HStack spacing={3} align="start" maxW={isRead ? "75%" : "100%"}>
+                                    <Icon
+                                        as={FaBookmark}
+                                        mt={1}
+                                        color={isRead ? "green.500" : "blue.500"}
+                                        w={5}
+                                        h={5}
+                                        flexShrink={0}
+                                    />
+                                    <Heading
+                                        size="sm"
+                                        fontSize="lg"
+                                        color="gray.800"
+                                        fontWeight="extrabold"
+                                        letterSpacing="tight"
+                                        lineHeight="short"
+                                    >
                                         {item.note}
                                     </Heading>
                                 </HStack>
 
                                 {isRead && (
-                                    <Badge colorScheme="green" variant="solid" borderRadius="full" px={2} py={0.5} display="flex" alignItems="center" gap={1}>
-                                        <Icon as={FaCheckCircle} /> Completed
+                                    <Badge
+                                        colorScheme="green"
+                                        variant="subtle"
+                                        bg="green.50"
+                                        color="green.600"
+                                        border="1px solid"
+                                        borderColor="green.200"
+                                        borderRadius="full"
+                                        px={3}
+                                        py={1}
+                                        fontSize="xs"
+                                        fontWeight="bold"
+                                        display="flex"
+                                        alignItems="center"
+                                        gap={1.5}
+                                    >
+                                        <Icon as={FaCheckCircle} w={3.5} h={3.5} /> Mastered
                                     </Badge>
                                 )}
                             </Flex>
 
-                            {/* Core Technical Concept Explanation Block */}
-                            <Text color="gray.600" fontSize="14px" lineHeight="relaxed" mb={4}>
+                            {/* Core Explanation Block */}
+                            <Text
+                                color="gray.700"
+                                fontSize="15px"
+                                fontWeight="medium"
+                                lineHeight="relaxed"
+                                mb={5}
+                            >
                                 {coreExplanation}
                             </Text>
 
                             {/* Analogy Bridge Block */}
                             {analogyText && (
                                 <Box
-                                    bg="blue.50" p={3.5} borderRadius="xl" mb={4}
-                                    border="1px solid" borderColor="blue.100"
-                                    position="relative"
+                                    bg="blue.50"
+                                    p={4}
+                                    borderRadius="xl"
+                                    mb={5}
+                                    border="1px solid"
+                                    borderColor="blue.100"
+                                    borderLeft="4px solid"
+                                    borderLeftColor="blue.400"
                                 >
-                                    <Flex align="center" mb={1.5}>
-                                        <Icon as={FaExchangeAlt} color="blue.500" w={3.5} h={3.5} mr={1.5} />
-                                        <Text fontSize="11px" fontWeight="extrabold" color="blue.700" letterSpacing="wider" uppercase>
+                                    <Flex align="center" mb={2}>
+                                        <Icon as={FaExchangeAlt} color="blue.600" w={4} h={4} mr={2} />
+                                        <Text fontSize="11px" fontWeight="black" color="blue.700" letterSpacing="wider" textTransform="uppercase">
                                             Conceptual Bridge (Analogy)
                                         </Text>
                                     </Flex>
-                                    <Text fontSize="xs" color="gray.600" fontStyle="italic" lineHeight="md">
+                                    <Text fontSize="13px" color="gray.700" fontStyle="italic" fontWeight="medium" lineHeight="base">
                                         "{analogyText}"
                                     </Text>
                                 </Box>
                             )}
 
-                            {/* Syllabus Keywords Badges Deck */}
+                            {/* Keywords Badges Deck */}
                             {item.examKeywords && item.examKeywords.length > 0 && (
-                                <Wrap spacing={1.5} mb={4}>
+                                <Wrap spacing={2} mb={6}>
                                     {item.examKeywords.map((kw) => (
                                         <WrapItem key={kw}>
                                             <Badge
-                                                bg="gray.50" color="gray.500" border="1px solid" borderColor="gray.200"
-                                                px={2.5} py={0.5} borderRadius="full" fontSize="10px" fontWeight="bold"
-                                                _hover={{ bg: "blue.50", color: "blue.600", borderColor: "blue.200" }}
-                                                transition="all 0.15s" cursor="default"
+                                                // bg="gray.50"
+                                                color="gray.600"
+                                                border="1px solid"
+                                                // borderColor="gray.200"
+                                                px={3}
+                                                py={1}
+                                                borderRadius="md"
+                                                fontSize="11px"
+                                                fontWeight="bold"
+                                                _hover={{ bg: "blue.50", color: "blue.600", borderColor: "blue.300" }}
+                                                transition="all 0.2s"
+                                                cursor="default"
                                             >
                                                 #{kw}
                                             </Badge>
@@ -143,47 +205,112 @@ export const NotesView: React.FC<NotesViewProps> = React.memo(({
                                 </Wrap>
                             )}
 
-                            {/* Interactive Marks Booster Block */}
-                            {item.marksBoosterTip && (
-                                <Box
-                                    bg="amber.50" backgroundColor="#FFFDF5" p={3.5} borderRadius="xl"
-                                    borderLeft="4px solid" borderColor="yellow.400" mb={4}
-                                    boxShadow="xs"
-                                >
-                                    <Flex align="center" mb={1}>
-                                        <Icon as={FaLightbulb} color="yellow.500" w={3.5} h={3.5} mr={1.5} />
-                                        <Text fontSize="11px" fontWeight="extrabold" color="amber.800" uppercase letterSpacing="wide">
-                                            Exam Score Booster
+                            {/* Supplemental Revision Cards Container */}
+                            <VStack align="stretch" spacing={4} mb={5}>
+                                {/* Exam Score Booster */}
+                                {item.marksBoosterTip && (
+                                    <Box
+                                        bg="#de9ade"
+                                        p={4}
+                                        borderRadius="xl"
+                                        borderLeft="4px solid"
+                                        borderColor="amber.400"
+                                        // border="1px solid"
+                                        borderLeftColor="yellow.400"
+                                        // borderColor="yellow.100"
+                                        boxShadow="2xl"
+                                    >
+                                        <Flex align="center" mb={1.5}>
+                                            <Icon as={FaLightbulb} color="yellow.500" w={4} h={4} mr={2} />
+                                            <Text fontSize="11px" fontWeight="black" textTransform="uppercase" letterSpacing="wider">
+                                                Exam Score Booster
+                                            </Text>
+                                        </Flex>
+                                        <Text fontSize="13px" color="gray.700" fontWeight="semibold" lineHeight="normal">
+                                            {item.marksBoosterTip}
                                         </Text>
-                                    </Flex>
-                                    <Text fontSize="xs" color="gray.600" fontWeight="medium" lineHeight="short">
-                                        {item.marksBoosterTip}
-                                    </Text>
-                                </Box>
-                            )}
+                                    </Box>
+                                )}
+
+                                {/* Common Misconceptions */}
+                                {item.commonMisconception && (
+                                    <Box
+                                        bg="red.50"
+                                        p={4}
+                                        borderRadius="xl"
+                                        border="1px solid"
+                                        borderColor="red.100"
+                                        borderLeft="4px solid"
+                                        borderLeftColor="red.400"
+                                        boxShadow="sm"
+                                    >
+                                        <Flex align="center" mb={1.5}>
+                                            <Icon as={FaExclamationTriangle} color="red.500" w={4} h={4} mr={2} />
+                                            <Text fontSize="11px" fontWeight="black" color="red.800" textTransform="uppercase" letterSpacing="wider">
+                                                Common Misconception
+                                            </Text>
+                                        </Flex>
+                                        <Text fontSize="13px" color="gray.700" fontWeight="semibold" lineHeight="normal">
+                                            {item.commonMisconception}
+                                        </Text>
+                                    </Box>
+                                )}
+
+                                {/* Classroom Connections */}
+                                {item.classroomConnection && (
+                                    <Box
+                                        bg="purple.50"
+                                        p={4}
+                                        borderRadius="xl"
+                                        border="1px solid"
+                                        borderColor="purple.100"
+                                        borderLeft="4px solid"
+                                        borderLeftColor="purple.400"
+                                        boxShadow="sm"
+                                    >
+                                        <Flex align="center" mb={1.5}>
+                                            <Icon as={FaSchool} color="purple.500" w={4} h={4} mr={2} />
+                                            <Text fontSize="11px" fontWeight="black" color="purple.800" textTransform="uppercase" letterSpacing="wider">
+                                                Classroom Connection
+                                            </Text>
+                                        </Flex>
+                                        <Text fontSize="13px" color="gray.700" fontWeight="semibold" lineHeight="normal">
+                                            {item.classroomConnection}
+                                        </Text>
+                                    </Box>
+                                )}
+                            </VStack>
                         </Box>
 
-                        {/* Card Interactive Footer Control Station */}
-                        <Flex justify="flex-end" mt={3} borderTop="1px solid" borderColor="gray.50" pt={3}>
+                        {/* Card Footer Control Station */}
+                        <Flex justify="flex-end" mt={4} borderTop="1px solid" borderColor="gray.100" pt={4}>
                             <Tooltip
-                                label={isRead ? "You have unlocked this card's XP reward!" : "Add +10 XP to your account balance"}
-                                placement="top" hasArrow borderRadius="md" fontSize="xs"
+                                label={isRead ? "You have unlocked this card's XP reward!" : "Add +10 XP to your balance"}
+                                placement="top"
+                                hasArrow
+                                borderRadius="lg"
+                                fontSize="xs"
+                                px={3}
+                                py={1.5}
                             >
                                 <Button
-                                    size="sm"
+                                    size="md"
                                     colorScheme={isRead ? "green" : "blue"}
-                                    variant={isRead ? "subtle" : "solid"}
+                                    variant={isRead ? "outline" : "solid"}
+                                    bg={isRead ? "green.50" : "blue.500"}
+                                    color={isRead ? "green.600" : "white"}
+                                    borderColor={isRead ? "green.200" : "transparent"}
                                     onClick={() => onExplore(index)}
                                     isDisabled={isRead}
                                     borderRadius="xl"
                                     fontSize="xs"
                                     fontWeight="bold"
-                                    px={4}
-                                    boxShadow={isRead ? "none" : "sm"}
-                                    leftIcon={isRead ? <Icon as={FaCheckCircle} /> : undefined}
-                                    _hover={isRead ? {} : { transform: "translateY(-1px)", boxShadow: "md" }}
+                                    px={6}
+                                    boxShadow={isRead ? "none" : "0 4px 14px rgba(66, 153, 225, 0.4)"}
+                                    leftIcon={isRead ? <Icon as={FaCheckCircle} w={4} h={4} /> : undefined}
+                                    _hover={isRead ? {} : { transform: "translateY(-2px)", bg: "blue.600", boxShadow: "0 6px 20px rgba(66, 153, 225, 0.6)" }}
                                     _active={isRead ? {} : { transform: "translateY(0)" }}
-                                    transition="all 0.15s"
+                                    transition="all 0.2s"
                                 >
                                     {isRead ? "Mastered (+10 XP)" : "Mark as Studied"}
                                 </Button>

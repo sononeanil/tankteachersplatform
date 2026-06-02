@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Box, HStack, VStack, Text, Collapse } from '@chakra-ui/react';
+import { Box, HStack, VStack, Text, Collapse, Icon, Flex, Circle, Badge, Heading } from '@chakra-ui/react';
+import { FaChevronDown, FaFolder, FaFolderOpen, FaCube, FaGraduationCap } from 'react-icons/fa';
 
 interface TreeNode {
     title: string;
@@ -43,54 +44,140 @@ const TreeBranch: React.FC<{ node: TreeNode; level: number }> = ({ node, level }
     const [isOpen, setIsOpen] = useState(true);
     const hasChildren = node.children && node.children.length > 0;
 
-    // 🎯 DIALED UP CONTRAST: Deep, vibrant solid colors with white text
+    // Rich structural themes per hierarchy layer
     const levelStyles = [
-        { bg: "blue.600", text: "white", badgeColor: "blue.200" },
-        { bg: "green.600", text: "white", badgeColor: "green.200" },
-        { bg: "purple.600", text: "white", badgeColor: "purple.200" },
-        { bg: "orange.600", text: "white", badgeColor: "orange.200" },
-        { bg: "red.600", text: "white", badgeColor: "red.200" }
+        {
+            bg: "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)",
+            text: "white",
+            badgeBg: "rgba(255, 255, 255, 0.2)",
+            badgeText: "white",
+            borderColor: "blue.400",
+            icon: hasChildren ? (isOpen ? FaFolderOpen : FaFolder) : FaCube,
+            fontWeight: "black",
+            leafTextColor: "white"
+        },
+        {
+            bg: "linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)",
+            text: "white",
+            badgeBg: "purple.100",
+            badgeText: "purple.800",
+            borderColor: "purple.400",
+            icon: hasChildren ? (isOpen ? FaFolderOpen : FaFolder) : FaCube,
+            fontWeight: "extrabold",
+            leafTextColor: "white"
+        },
+        {
+            bg: "linear-gradient(135deg, #10B981 0%, #047857 100%)",
+            text: "white",
+            badgeBg: "emerald.100",
+            badgeText: "emerald.800",
+            borderColor: "emerald.400",
+            icon: hasChildren ? (isOpen ? FaFolderOpen : FaFolder) : FaCube,
+            fontWeight: "bold",
+            leafTextColor: "white"
+        },
+        {
+            bg: "linear-gradient(135deg, #F59E0B 0%, #B45309 100%)",
+            text: "white",
+            badgeBg: "amber.100",
+            badgeText: "amber.800",
+            borderColor: "amber.400",
+            icon: hasChildren ? (isOpen ? FaFolderOpen : FaFolder) : FaCube,
+            fontWeight: "bold",
+            leafTextColor: "white"
+        }
     ];
 
-    const currentStyle = levelStyles[level % levelStyles.length];
+    // 🛠️ FIXED: Replaced plain white background with a modern, visible slate/blue-gray tint configuration for last nodes
+    const leafStyle = {
+        bg: "linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%)",
+        text: "gray.700",
+        badgeBg: "gray.200",
+        badgeText: "gray.700",
+        borderColor: "gray.300",
+        icon: FaCube,
+        fontWeight: "semibold",
+        leafTextColor: "gray.700"
+    };
+
+    const currentStyle = hasChildren
+        ? (level < levelStyles.length ? levelStyles[level] : levelStyles[levelStyles.length - 1])
+        : leafStyle;
 
     return (
-        <VStack align="stretch" spacing={2} w="100%" position="relative">
+        <VStack align="start" spacing={2} w="100%">
             <HStack
                 p={3}
                 bg={currentStyle.bg}
                 borderRadius="xl"
+                w="fit-content"
+                maxW="100%"
                 cursor={hasChildren ? "pointer" : "default"}
                 onClick={() => hasChildren && setIsOpen(!isOpen)}
-                transition="all 0.2s"
-                _hover={hasChildren ? { transform: "translateX(6px)", filter: "brightness(1.1)", boxShadow: "md" } : {}}
-                shadow="md"
+                transition="all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1)"
+                _hover={hasChildren ? {
+                    transform: "translateX(6px)",
+                    boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.08)",
+                    filter: "brightness(1.05)"
+                } : {}}
+                boxShadow={hasChildren ? "sm" : "none"}
+                border="1px solid"
+                borderColor={currentStyle.borderColor}
+                spacing={3}
             >
+                {/* Expand / Collapse Indicator Chevron */}
                 {hasChildren && (
-                    <Text fontSize="xs" color={currentStyle.text} fontWeight="bold" mr={1}>
-                        {isOpen ? "▼" : "▶"}
-                    </Text>
+                    <Icon
+                        as={FaChevronDown}
+                        w={3} h={3}
+                        color={currentStyle.text}
+                        transition="transform 0.2s ease"
+                        transform={isOpen ? "rotate(0deg)" : "rotate(-90deg)"}
+                    />
                 )}
-                <Text fontWeight="bold" fontSize="sm" color={currentStyle.text}>
+
+                {/* Layer Semantic Node Icon */}
+                <Icon as={currentStyle.icon} color={hasChildren ? currentStyle.text : "gray.500"} w={3.5} h={3.5} />
+
+                {/* Weight and color dynamically adapt depending on child status */}
+                <Text
+                    fontWeight={currentStyle.fontWeight}
+                    fontSize="sm"
+                    color={currentStyle.leafTextColor}
+                    letterSpacing="wide"
+                    whiteSpace="nowrap"
+                >
                     {node.title}
                 </Text>
+
+                {/* Count Pill Box Badge */}
                 {hasChildren && (
-                    <Text fontSize="xs" color={currentStyle.badgeColor} fontWeight="semibold" ml="auto">
-                        {node.children?.length} items
-                    </Text>
+                    <Badge
+                        bg={currentStyle.badgeBg}
+                        color={currentStyle.badgeText}
+                        borderRadius="md"
+                        px={2} py={0.5}
+                        fontSize="10px"
+                        fontWeight="extrabold"
+                    >
+                        {node.children?.length}
+                    </Badge>
                 )}
             </HStack>
 
+            {/* Hierarchical Child Render Block */}
             {hasChildren && (
-                <Collapse in={isOpen} animateOpacity>
+                <Collapse in={isOpen} animateOpacity style={{ width: "100%" }}>
                     <VStack
-                        align="stretch"
-                        pl={{ base: 4, md: 6 }} // Creates the structured hierarchy indentation
-                        mt={2}
+                        align="start"
+                        pl={{ base: 4, md: 6 }}
+                        mt={1}
+                        mb={2}
                         spacing={2}
-                        borderLeft="2px solid"
-                        borderColor="gray.300" // Made the nesting line darker and solid too
-                        ml={3}
+                        borderLeft="2px dashed"
+                        borderColor={currentStyle.borderColor}
+                        ml={4}
+                        w="100%"
                     >
                         {node.children?.map((child, idx) => (
                             <TreeBranch key={idx} node={child} level={level + 1} />
@@ -106,12 +193,68 @@ export const TreeStructureView: React.FC<TreeStructureViewProps> = ({ mindMapDat
     const structuredTree = React.useMemo(() => parseTextToTree(mindMapData), [mindMapData]);
 
     return (
-        <Box bg="white" p={6} borderRadius="2xl" border="1px solid" borderColor="gray.200" boxShadow="md">
-            <Text fontSize="lg" fontWeight="bold" mb={5} color="gray.800">
-                Chapter Taxonomy Outline Tree 🌲
-            </Text>
-            <VStack align="stretch" spacing={3}>
-                <TreeBranch node={structuredTree} level={0} />
+        <Box
+            bg="linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%)"
+            p={{ base: 4, md: 6 }}
+            borderRadius="3xl"
+            boxShadow="inner"
+            border="1px solid"
+            borderColor="gray.200"
+            overflowX="auto"
+        >
+            <VStack align="stretch" spacing={5}>
+                {/* Compact Ultra-High-Contrast Header Component */}
+                <Flex
+                    direction="row"
+                    align="center"
+                    justify="space-between"
+                    bg="white"
+                    py={3}
+                    px={5}
+                    borderRadius="xl"
+                    boxShadow="0px 4px 12px rgba(0, 0, 0, 0.05)"
+                    border="2px solid"
+                    borderColor="gray.200"
+                    position="relative"
+                    overflow="hidden"
+                >
+                    <Box
+                        position="absolute" left="0" top="0" bottom="0" w="6px"
+                        bgGradient="linear(to-b, blue.500, purple.500)"
+                    />
+
+                    <HStack spacing={3} zIndex={1} w="100%">
+                        <Circle size="36px" bg="blue.600" boxShadow="0px 2px 6px rgba(30, 81, 191, 0.3)">
+                            <Icon as={FaGraduationCap} color="white" w={4} h={4} />
+                        </Circle>
+                        <VStack align="start" spacing={0} flex={1}>
+                            <Text
+                                color="blue.600"
+                                fontSize="10px"
+                                fontWeight="black"
+                                textTransform="uppercase"
+                                letterSpacing="wider"
+                                lineHeight="normal"
+                            >
+                                Structural Taxonomy
+                            </Text>
+                            <Heading size="md" color="gray.900" fontWeight="black" letterSpacing="tight" lineHeight="short">
+                                {structuredTree.title}
+                            </Heading>
+                        </VStack>
+                    </HStack>
+                </Flex>
+
+                {/* Sub-node Data Pipeline Context */}
+                <VStack align="start" spacing={3} w="100%">
+                    {structuredTree.children && structuredTree.children.length > 0 ? (
+                        structuredTree.children.map((child, idx) => (
+                            <TreeBranch key={idx} node={child} level={1} />
+                        ))
+                    ) : (
+                        <TreeBranch node={structuredTree} level={0} />
+                    )}
+                </VStack>
             </VStack>
         </Box>
     );
