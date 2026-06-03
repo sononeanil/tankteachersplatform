@@ -51,6 +51,7 @@ import SearchTutor from './components/teacher/SearchTutor.tsx'
 import NotesBatchDetails from './components/notes/NotesBatchDetails.tsx'
 import DetailNotesBatch from './components/notes/DetailNotesBatch.tsx';
 import DetailedNotes from './components/notes/DetailedNotes.tsx';
+import EnglishNotes from './components/notes/EnglishNotes.tsx';
 
 posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
   api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
@@ -79,6 +80,9 @@ const router = createBrowserRouter([
     }, {
       path: "/notes/oneHourBeforeExam/:type/*",
       element: <FilterDetails></FilterDetails>
+    }, {
+      path: "notes/board/cbsc/english/englishNotes/:type/*",
+      element: <EnglishNotes></EnglishNotes>
     }, {
       path: "/notes/onehourBeforeexam/maharashtra-state-board/:type/*",
       element: <FilterDetails></FilterDetails>

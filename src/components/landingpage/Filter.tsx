@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // Optional: If you have @chakra-ui/icons installed
 import { StarIcon, InfoIcon } from "@chakra-ui/icons";
+import { Link as RouterLink } from 'react-router-dom';
 
 const Filter = () => {
     const filters = [
@@ -143,32 +144,43 @@ const Filter = () => {
                     </Flex>
                 </Box>
             )}
-
             {/* 🔹 Subject Filter */}
             {isClassSelected && isBoardSelected && (
                 <Box bg="blue.600" p={4} borderRadius="2xl" boxShadow="inner">
                     <Text fontSize="xs" fontWeight="bold" color="blue.100" mb={3} textTransform="uppercase">
                         Final Step: Select Subject
                     </Text>
+
+
+
+
                     <Flex w="full" gap={3} wrap="wrap">
-                        {subjectFilters.map((item) => (
-                            <Button
-                                key={item}
-                                onClick={() => {
-                                    // setSelectedSubject(item);
-                                    // const finalKey = `${selectedBoard}/Class${selectedFilter}/${item}`;
-                                    const finalKey = `Class_${romanToNumeric[selectedFilter] || selectedFilter}_${item}`;
-                                    navigate(`/notes/oneHourBeforeExam/${encodeURIComponent(finalKey)}`);
-                                }}
-                                bg="white"
-                                color="blue.700"
-                                borderRadius="lg"
-                                px={10}
-                                _hover={{ bg: "blue.50", transform: "scale(1.05)" }}
-                            >
-                                {item}
-                            </Button>
-                        ))}
+                        {subjectFilters.map((item) => {
+                            // 1. Calculate the target URL BEFORE rendering the button
+                            let targetUrl = '';
+                            const finalKey = `Class_${romanToNumeric[selectedFilter!] || selectedFilter}_${item}`;
+                            if (item.toLowerCase().includes("english")) {
+                                targetUrl = `/notes/board/cbsc/english/englishNotes/${encodeURIComponent(finalKey)}`;
+                            } else {
+
+                                targetUrl = `/notes/oneHourBeforeExam/${encodeURIComponent(finalKey)}`;
+                            }
+
+                            return (
+                                <Button
+                                    key={item}
+                                    as={RouterLink}   // 2. Crucial: Instructs Chakra to render an <a> tag
+                                    to={targetUrl}    // 3. Crucial: Googlebot reads this as href="targetUrl"
+                                    bg="white"
+                                    color="blue.700"
+                                    borderRadius="lg"
+                                    px={10}
+                                    _hover={{ bg: "blue.50", transform: "scale(1.05)" }}
+                                >
+                                    {item}
+                                </Button>
+                            );
+                        })}
                     </Flex>
                 </Box>
             )}

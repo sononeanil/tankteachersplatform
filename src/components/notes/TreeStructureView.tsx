@@ -77,27 +77,28 @@ const TreeBranch: React.FC<{ node: TreeNode; level: number }> = ({ node, level }
             leafTextColor: "white"
         },
         {
-            bg: "linear-gradient(135deg, #F59E0B 0%, #B45309 100%)",
+            // 🛠️ CHANGED: Completely replaced the light brown/amber gradient layer with light sky-blue
+            bg: "linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%)",
             text: "white",
-            badgeBg: "amber.100",
-            badgeText: "amber.800",
-            borderColor: "amber.400",
+            badgeBg: "sky.100",
+            badgeText: "sky.800",
+            borderColor: "sky.300",
             icon: hasChildren ? (isOpen ? FaFolderOpen : FaFolder) : FaCube,
             fontWeight: "bold",
             leafTextColor: "white"
         }
     ];
 
-    // 🛠️ FIXED: Replaced plain white background with a modern, visible slate/blue-gray tint configuration for last nodes
+    // 🛠️ CHANGED: Replaced the final non-expanding leaf background from sand/light-brown to a crisp, cool light blue slate tint
     const leafStyle = {
-        bg: "linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%)",
-        text: "gray.700",
-        badgeBg: "gray.200",
-        badgeText: "gray.700",
-        borderColor: "gray.300",
+        bg: "linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%)", // Beautiful soft solid light blue canvas box
+        text: "sky.900",
+        badgeBg: "sky.200",
+        badgeText: "sky.900",
+        borderColor: "sky.300",
         icon: FaCube,
         fontWeight: "semibold",
-        leafTextColor: "gray.700"
+        leafTextColor: "sky.900"
     };
 
     const currentStyle = hasChildren
@@ -137,7 +138,7 @@ const TreeBranch: React.FC<{ node: TreeNode; level: number }> = ({ node, level }
                 )}
 
                 {/* Layer Semantic Node Icon */}
-                <Icon as={currentStyle.icon} color={hasChildren ? currentStyle.text : "gray.500"} w={3.5} h={3.5} />
+                <Icon as={currentStyle.icon} color={hasChildren ? currentStyle.text : "sky.600"} w={3.5} h={3.5} />
 
                 {/* Weight and color dynamically adapt depending on child status */}
                 <Text
@@ -224,7 +225,7 @@ export const TreeStructureView: React.FC<TreeStructureViewProps> = ({ mindMapDat
                     />
 
                     <HStack spacing={3} zIndex={1} w="100%">
-                        <Circle size="36px" bg="blue.600" boxShadow="0px 2px 6px rgba(30, 81, 191, 0.3)">
+                        <Circle size="36px" bg="blue.600" boxShadow="0px 2px 6px rgba(37, 99, 235, 0.3)">
                             <Icon as={FaGraduationCap} color="white" w={4} h={4} />
                         </Circle>
                         <VStack align="start" spacing={0} flex={1}>
