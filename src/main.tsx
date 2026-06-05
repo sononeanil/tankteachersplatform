@@ -52,6 +52,8 @@ import NotesBatchDetails from './components/notes/NotesBatchDetails.tsx'
 import DetailNotesBatch from './components/notes/DetailNotesBatch.tsx';
 import DetailedNotes from './components/notes/DetailedNotes.tsx';
 import EnglishNotes from './components/notes/EnglishNotes.tsx';
+import EnglishNotesNarrativeNote from './components/notes/EnglishNotesNarrativeNote.tsx';
+import EnglishNotesTextbookExcercise from './components/notes/EnglishNotesTextbookExcercise.tsx';
 
 posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
   api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
@@ -82,7 +84,22 @@ const router = createBrowserRouter([
       element: <FilterDetails></FilterDetails>
     }, {
       path: "notes/board/cbsc/english/englishNotes/:type/*",
-      element: <EnglishNotes></EnglishNotes>
+      element: <EnglishNotes></EnglishNotes>,
+      children: [{
+        index: true,
+        element: <EnglishNotesNarrativeNote></EnglishNotesNarrativeNote>,
+
+      },
+
+      {
+        path: "narrativeNote/narrativeNote",
+        element: <EnglishNotesNarrativeNote></EnglishNotesNarrativeNote>
+      },
+      {
+        path: "textbookSolutions",
+        element: <EnglishNotesTextbookExcercise></EnglishNotesTextbookExcercise>
+      }
+      ]
     }, {
       path: "/notes/onehourBeforeexam/maharashtra-state-board/:type/*",
       element: <FilterDetails></FilterDetails>
