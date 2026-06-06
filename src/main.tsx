@@ -54,6 +54,7 @@ import DetailedNotes from './components/notes/DetailedNotes.tsx';
 import EnglishNotes from './components/notes/EnglishNotes.tsx';
 import EnglishNotesNarrativeNote from './components/notes/EnglishNotesNarrativeNote.tsx';
 import EnglishNotesTextbookExcercise from './components/notes/EnglishNotesTextbookExcercise.tsx';
+import SanskritNotes from './components/notes/SanskritNotes.tsx';
 
 posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
   api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
@@ -91,6 +92,7 @@ const router = createBrowserRouter([
 
       },
 
+
       {
         path: "narrativeNote/narrativeNote",
         element: <EnglishNotesNarrativeNote></EnglishNotesNarrativeNote>
@@ -104,6 +106,8 @@ const router = createBrowserRouter([
       path: "/notes/onehourBeforeexam/maharashtra-state-board/:type/*",
       element: <FilterDetails></FilterDetails>
     }, {
+      path: "/notes/board/cbsc/sanskrit/sanskritNotes/:type/*",
+      element: <SanskritNotes></SanskritNotes>
     }, {
       path: "/tutor/createBio",
       element: <CreateBio></CreateBio>

@@ -23,7 +23,7 @@ const Filter = () => {
 
     const classFilters = ["VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const boardFilters = ["cbse"];
-    const subjectFilters = ["Science", "English"];
+    const subjectFilters = ["Science", "English", "Sanskrit"];
 
     const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
     const [selectedBoard, setSelectedBoard] = useState<string | null>(null);
@@ -161,6 +161,9 @@ const Filter = () => {
                             const finalKey = `Class_${romanToNumeric[selectedFilter!] || selectedFilter}_${item}`;
                             if (item.toLowerCase().includes("english")) {
                                 targetUrl = `/notes/board/cbsc/english/englishNotes/${encodeURIComponent(finalKey)}`;
+                            } else if (item.toLowerCase().includes("sanskrit")) {
+                                // 💡 Custom URL structure for Sanskrit
+                                targetUrl = `/notes/board/cbsc/sanskrit/sanskritNotes/${encodeURIComponent(finalKey)}`;
                             } else {
 
                                 targetUrl = `/notes/oneHourBeforeExam/${encodeURIComponent(finalKey)}`;
