@@ -55,6 +55,8 @@ import EnglishNotes from './components/notes/EnglishNotes.tsx';
 import EnglishNotesNarrativeNote from './components/notes/EnglishNotesNarrativeNote.tsx';
 import EnglishNotesTextbookExcercise from './components/notes/EnglishNotesTextbookExcercise.tsx';
 import SanskritNotes from './components/notes/SanskritNotes.tsx';
+import { HiTrendingDown } from 'react-icons/hi';
+import HindiNotes from './components/notes/HindiNotes.tsx';
 
 posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
   api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
@@ -108,6 +110,12 @@ const router = createBrowserRouter([
     }, {
       path: "/notes/board/cbsc/sanskrit/sanskritNotes/:type/*",
       element: <SanskritNotes></SanskritNotes>
+    }, {
+      path: "/notes/board/cbsc/sanskrit/sanskritNotes/:type/*",
+      element: <SanskritNotes></SanskritNotes>
+    }, {
+      path: "/notes/board/cbsc/hindi/hindiNotes/:type/*",
+      element: <HindiNotes></HindiNotes>
     }, {
       path: "/tutor/createBio",
       element: <CreateBio></CreateBio>

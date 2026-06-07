@@ -23,7 +23,7 @@ const Filter = () => {
 
     const classFilters = ["VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const boardFilters = ["cbse"];
-    const subjectFilters = ["Science", "English", "Sanskrit"];
+    const subjectFilters = ["Science", "English", "Sanskrit", "Hindi"];
 
     const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
     const [selectedBoard, setSelectedBoard] = useState<string | null>(null);
@@ -164,6 +164,9 @@ const Filter = () => {
                             } else if (item.toLowerCase().includes("sanskrit")) {
                                 // 💡 Custom URL structure for Sanskrit
                                 targetUrl = `/notes/board/cbsc/sanskrit/sanskritNotes/${encodeURIComponent(finalKey)}`;
+                            } else if (item.toLowerCase().includes("hindi")) {
+                                // 💡 Custom URL structure for Hindi
+                                targetUrl = `/notes/board/cbsc/hindi/hindiNotes/${encodeURIComponent(finalKey)}`;
                             } else {
 
                                 targetUrl = `/notes/oneHourBeforeExam/${encodeURIComponent(finalKey)}`;
