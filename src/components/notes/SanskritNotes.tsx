@@ -2,20 +2,72 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, useMemo, ChangeEvent } from "react";
 import { useParams } from "react-router-dom";
 import { getChapterList, getChapterNotes } from "../../service/ApiNotes";
+import {
+    Box,
+    Container,
+    Heading,
+    Select,
+    SimpleGrid,
+    Tabs,
+    TabList,
+    TabPanels,
+    Tab,
+    TabPanel,
+    Text,
+    Stack,
+    Badge,
+    Flex,
+    Spinner,
+    Alert,
+    AlertIcon,
+    Divider,
+    VStack,
+    HStack,
+    Icon,
+    Table,
+    Thead,
+    Tbody,
+    Tr,
+    Th,
+    Td,
+    TableContainer,
+    ListItem,
+    UnorderedList,
+    useColorModeValue
+} from "@chakra-ui/react";
+import {
+    FaBookOpen,
+    FaPenSquare,
+    FaQuestionCircle,
+    FaGraduationCap,
+    FaFileAlt,
+    FaLightbulb,
+    FaCheckCircle,
+    FaChevronRight
+} from "react-icons/fa";
 
-// --- Tab Types Definition ---
-type TabType = "explanations" | "grammar_vocab" | "questions" | "textbook";
+// Updated Tab Types definition including "summary"
+type TabType = "summary" | "explanations" | "grammar_vocab" | "questions" | "textbook";
 
 const SanskritNotes = () => {
+    // Defaulting to "summary" for a cleaner initial page load
     const [activeChapter, setActiveChapter] = useState<string>("");
-    const [activeTab, setActiveTab] = useState<TabType>("explanations");
+    const [activeTab, setActiveTab] = useState<TabType>("summary");
+
+    // Semantic Theme Color Hooks for Traditional yet Modern Scholarly Vibe
+    const bgGradient = useColorModeValue("linear(to-b, orange.50/40, red.50/20)", "linear(to-b, gray.900, orange.950/20)");
+    const cardBg = useColorModeValue("white", "gray.800");
+    const shlokaBg = useColorModeValue("orange.50/60", "orange.900/10");
+    const shlokaBorder = useColorModeValue("orange.200", "orange.700");
+    const textColor = useColorModeValue("gray.700", "gray.300");
+    const headingColor = useColorModeValue("orange.800", "orange.200");
 
     const params = useParams<Record<string, string>>();
     const rawParam = params.type || params.id || "";
     const decodedType = useMemo(() => (rawParam ? decodeURIComponent(rawParam) : ""), [rawParam]);
 
     // --- Query 1: Fetch Chapter List ---
-    const { data: dropdownData, isLoading: dropdownLoading } = useQuery<any>({
+    const { data: dropdownData, isLoading: dropdownLoading, isError: isDropdownError, error: dropdownError } = useQuery<any>({
         queryKey: ["chapters", decodedType],
         queryFn: () => {
             if (!decodedType) throw new Error("Route parameter key is missing.");
@@ -46,268 +98,325 @@ const SanskritNotes = () => {
         enabled: !!decodedType && !!activeChapter,
         staleTime: 1000 * 60 * 20,
     });
-    console.log("Fetched Sanskrit Notes Response:", contentResponse);
 
     // --- Safe Extraction of the Notes Array ---
     const notesList = useMemo<any[]>(() => {
-        // 1. Check if 'notes' is a direct array at the root level
-        if (contentResponse?.notes && Array.isArray(contentResponse.notes)) {
-            return contentResponse.notes;
-        }
-        // 2. Fallback check if Axios wrapped it inside a 'data' key
-        if (contentResponse?.data?.notes && Array.isArray(contentResponse.data.notes)) {
-            return contentResponse.data.notes;
-        }
+        if (contentResponse?.notes && Array.isArray(contentResponse.notes)) return contentResponse.notes;
+        if (contentResponse?.data?.notes && Array.isArray(contentResponse.data.notes)) return contentResponse.data.notes;
         return [];
     }, [contentResponse]);
 
     // --- Safe Extraction of Chapter Summary ---
     const chapterSummary = useMemo<string>(() => {
-        return contentResponse?.notes?.summary || contentResponse?.data?.notes?.summary || "";
+        return contentResponse?.notes?.summary || contentResponse?.data?.notes?.summary || contentResponse?.summary || contentResponse?.data?.summary || "";
     }, [contentResponse]);
 
+    // Tab Mapping Strategy for 5 Tabs
+    const tabIndexMap: Record<TabType, number> = { summary: 0, explanations: 1, grammar_vocab: 2, questions: 3, textbook: 4 };
+    const tabStringMap: TabType[] = ["summary", "explanations", "grammar_vocab", "questions", "textbook"];
+
     return (
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px", fontFamily: "'Noto Sans', sans-serif", color: "#2d3748" }}>
+        <Box minH="100vh" bgGradient={bgGradient} py={{ base: 4, md: 8 }} px={{ base: 2, md: 4 }} fontFamily="'Noto Sans', sans-serif">
+            <Container maxW="container.lg">
 
-            {/* Header / Selector Controls */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "15px", background: "#f7fafc", padding: "15px 20px", borderRadius: "8px", border: "1px solid #e2e8f0", marginBottom: "25px" }}>
-                <div>
-                    <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0, color: "#1a202c" }}>संस्कृत अध्ययन केंद्र</h1>
-                    <p style={{ margin: "4px 0 0 0", color: "#718096", fontSize: "14px" }}>Selected Module: {decodedType}</p>
-                </div>
+                {/* Brand Header */}
+                <VStack spacing={2} align="center" mb={{ base: 6, md: 8 }} textAlign="center">
+                    <Heading as="h1" size={{ base: "xl", md: "2xl" }} color={headingColor} fontWeight="extrabold" letterSpacing="tight">
+                        संस्कृत अध्ययन केंद्र
+                    </Heading>
+                    <Text fontSize={{ base: "xs", md: "sm" }} color="gray.500" fontWeight="medium">
+                        Smart Mobile Notes • Module: {decodedType}
+                    </Text>
+                </VStack>
 
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <label htmlFor="chap-select" style={{ fontWeight: 600, color: "#4a5568" }}>अध्याय:</label>
-                    {dropdownLoading ? (
-                        <span style={{ color: "#a0aec0" }}>Loading...</span>
-                    ) : (
-                        <select
+                {/* Chapter Selector Card */}
+                <Box bg={cardBg} p={{ base: 4, md: 5 }} borderRadius="2xl" boxShadow="sm" border="1px" borderColor={useColorModeValue("gray.100", "gray.700")} mb={6} maxW={{ base: "100%", md: "sm" }}>
+                    <Stack spacing={2}>
+                        <Text fontSize="sm" fontWeight="bold" color="gray.600">चुनिए पाठ (Select Chapter):</Text>
+                        <Select
                             id="chap-select"
                             value={activeChapter}
                             onChange={(e: ChangeEvent<HTMLSelectElement>) => setActiveChapter(e.target.value)}
-                            style={{ padding: "8px 12px", borderRadius: "6px", border: "1px solid #cbd5e0", minWidth: "220px", background: "#fff", cursor: "pointer", outline: "none" }}
+                            disabled={dropdownLoading || chapters.length === 0}
+                            size="lg"
+                            borderRadius="xl"
+                            fontWeight="medium"
                         >
+                            {dropdownLoading && <option>अध्याय लोड हो रहे हैं...</option>}
+                            {!dropdownLoading && chapters.length === 0 && <option>कोई अध्याय नहीं मिला</option>}
                             {chapters.map((chap, idx) => (
                                 <option key={idx} value={chap}>{chap}</option>
                             ))}
-                        </select>
-                    )}
-                </div>
-            </div>
+                        </Select>
+                    </Stack>
+                </Box>
 
-            {/* Main Application State Loader */}
-            {contentLoading ? (
-                <div style={{ textAlign: "center", padding: "60px 0", fontSize: "18px", color: "#4a5568" }}>
-                    <div style={{ display: "inline-block", width: "30px", height: "30px", border: "3px solid #e2e8f0", borderTopColor: "#3182ce", borderRadius: "50%", animation: "spin 1s linear infinite", marginBottom: "10px" }}></div>
-                    <div>पाठ्यसामग्री लोड हो रही है... Please wait.</div>
-                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-                </div>
-            ) : contentResponse ? (
-                <div>
+                {/* Error handling */}
+                {isDropdownError && (
+                    <Alert status="error" borderRadius="xl" mb={4}>
+                        <AlertIcon /> {(dropdownError as Error)?.message || "Something went wrong fetching dropdown items."}
+                    </Alert>
+                )}
 
-                    {/* Chapter Summary Block */}
-                    {chapterSummary && (
-                        <div style={{ background: "#ebf8ff", borderLeft: "4px solid #3182ce", padding: "15px 20px", borderRadius: "0 8px 8px 0", marginBottom: "25px" }}>
-                            <h3 style={{ margin: "0 0 8px 0", color: "#2b6cb0", fontSize: "16px", fontWeight: "bold" }}>अध्याय सारांश (Summary)</h3>
-                            <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "#2d3748", whiteSpace: "pre-line" }}>{chapterSummary}</p>
-                        </div>
-                    )}
+                {/* Centered Modern Loader */}
+                {contentLoading && (
+                    <Flex justify="center" align="center" direction="column" minH="250px" gap={3}>
+                        <Spinner size="xl" thickness="4px" speed="0.65s" color="orange.500" />
+                        <Text fontSize="sm" fontWeight="medium" color="orange.600">पाठ्यसामग्री लोड हो रही है...</Text>
+                    </Flex>
+                )}
 
-                    {/* Navigation Tab Bar Layout */}
-                    <div style={{ display: "flex", borderBottom: "2px solid #e2e8f0", marginBottom: "25px", gap: "5px", overflowX: "auto" }}>
-                        {(["explanations", "grammar_vocab", "questions", "textbook"] as TabType[]).map((tab) => {
-                            const labelMap: Record<TabType, string> = {
-                                explanations: "श्लोक व्याख्या एवं भावार्थ",
-                                grammar_vocab: "व्याकरण एवं शब्दार्थ",
-                                questions: "महत्वपूर्ण प्रश्न (MCQs/Extracts)",
-                                textbook: "अभ्यास समाधान (Exercises)"
-                            };
-                            const isSelected = activeTab === tab;
-                            return (
-                                <button
-                                    key={tab}
-                                    onClick={() => setActiveTab(tab)}
-                                    style={{ padding: "12px 20px", border: "none", background: "none", borderBottom: isSelected ? "3px solid #dd6b20" : "3px solid transparent", color: isSelected ? "#dd6b20" : "#4a5568", fontWeight: isSelected ? "bold" : "normal", cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap", fontSize: "15px" }}
-                                >
-                                    {labelMap[tab]}
-                                </button>
-                            );
-                        })}
-                    </div>
+                {/* Content Presentational Layer */}
+                {!contentLoading && contentResponse && (
+                    <Stack spacing={6}>
+                        <Box bg={cardBg} borderRadius="2xl" boxShadow="sm" overflow="hidden" border="1px" borderColor={useColorModeValue("gray.100", "gray.700")} p={2}>
 
-                    {/* --- TAB 1: EXPLANATIONS --- */}
-                    {activeTab === "explanations" && (
-                        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                            {notesList.filter(n => n.nodeType === "narrative_note" && n.analysis?.note).map((item, index) => (
-                                <div key={index} style={{ border: "1px solid #e2e8f0", borderRadius: "8px", overflow: "hidden", boxShadow: "0 2px 4px rgba(0,0,0,0.02)" }}>
-                                    <div style={{ background: "#fffaf0", borderBottom: "1px solid #feebc8", padding: "12px 20px", fontWeight: "bold", color: "#c05621" }}>
-                                        प्रसंग / विषय-वस्तु {index + 1}: {item.sectionOrTheme}
-                                    </div>
-                                    <div style={{ padding: "20px", background: "#fff" }}>
-                                        <div style={{ fontSize: "18px", color: "#2d3748", fontStyle: "italic", textAlign: "center", margin: "10px 0 20px 0", background: "#f7fafc", padding: "15px", borderRadius: "6px", border: "1px dashed #cbd5e0", whiteSpace: "pre-line", fontWeight: 500 }}>
-                                            {item.analysis.note}
-                                        </div>
-                                        {item.analysis.anvayaAndBhavarth && (
-                                            <div style={{ marginBottom: "15px" }}>
-                                                <strong style={{ color: "#4a5568", display: "block", marginBottom: "5px" }}>अन्वय और भावार्थ:</strong>
-                                                <div style={{ background: "#f8f9fa", padding: "12px 15px", borderRadius: "6px", fontSize: "14px", lineHeight: "1.6", whiteSpace: "pre-line" }}>
-                                                    {item.analysis.anvayaAndBhavarth}
-                                                </div>
-                                            </div>
-                                        )}
-                                        {item.analysis.explanation && (
-                                            <div>
-                                                <strong style={{ color: "#4a5568", display: "block", marginBottom: "5px" }}>व्याख्या (Explanation):</strong>
-                                                <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "#4a5568" }}>{item.analysis.explanation}</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                            {/* Navigation Tab Bar Layout */}
+                            <Tabs
+                                isFitted
+                                variant="soft-rounded"
+                                colorScheme="orange"
+                                index={tabIndexMap[activeTab]}
+                                onChange={(index) => setActiveTab(tabStringMap[index])}
+                            >
+                                <TabList display="flex" flexWrap="wrap" gap={1} p={1}>
+                                    <Tab borderRadius="xl" fontSize={{ base: "2xs", sm: "xs", md: "sm" }} py={{ base: 2, md: 3 }} px={2} flex={{ base: "1 1 30%", sm: "1" }}><Icon as={FaFileAlt} mr={1.5} display={{ base: "none", sm: "inline" }} />सारांश</Tab>
+                                    <Tab borderRadius="xl" fontSize={{ base: "2xs", sm: "xs", md: "sm" }} py={{ base: 2, md: 3 }} px={2} flex={{ base: "1 1 55%", sm: "1" }}><Icon as={FaBookOpen} mr={1.5} display={{ base: "none", sm: "inline" }} />व्याख्या</Tab>
+                                    <Tab borderRadius="xl" fontSize={{ base: "2xs", sm: "xs", md: "sm" }} py={{ base: 2, md: 3 }} px={2} flex={{ base: "1 1 45%", sm: "1" }}><Icon as={FaPenSquare} mr={1.5} display={{ base: "none", sm: "inline" }} />व्याकरण</Tab>
+                                    <Tab borderRadius="xl" fontSize={{ base: "2xs", sm: "xs", md: "sm" }} py={{ base: 2, md: 3 }} px={2} flex={{ base: "1 1 45%", sm: "1" }}><Icon as={FaQuestionCircle} mr={1.5} display={{ base: "none", sm: "inline" }} />बोर्ड प्रश्न</Tab>
+                                    <Tab borderRadius="xl" fontSize={{ base: "2xs", sm: "xs", md: "sm" }} py={{ base: 2, md: 3 }} px={2} flex={{ base: "1 1 45%", sm: "1" }}><Icon as={FaGraduationCap} mr={1.5} display={{ base: "none", sm: "inline" }} />अभ्यास</Tab>
+                                </TabList>
+                                <TabPanels mt={2}><TabPanel p={0}></TabPanel></TabPanels>
+                            </Tabs>
 
-                    {/* --- TAB 2: GRAMMAR & VOCABULARY --- */}
-                    {activeTab === "grammar_vocab" && (
-                        <div style={{ display: "flex", flexDirection: "column", gap: "25px" }}>
-                            {notesList.filter(n => n.nodeType === "narrative_note").map((item, index) => {
-                                const grammar = item.analysis?.vyakaranGrammar || [];
-                                const vocab = item.analysis?.contextualVocabulary || [];
-                                const tip = item.analysis?.criticalAnalysisTip;
+                            {/* Main Content Area */}
+                            <Box p={{ base: 2, md: 4 }}>
 
-                                if (grammar.length === 0 && vocab.length === 0) return null;
+                                {/* TAB Area 1: Summary Area */}
+                                {activeTab === "summary" && (
+                                    <Box bg={useColorModeValue("orange.50/40", "orange.900/10")} border="1px" borderColor={shlokaBorder} p={{ base: 4, md: 6 }} borderRadius="xl" mt={2}>
+                                        <HStack spacing={2} mb={3}>
+                                            <Icon as={FaFileAlt} color="orange.600" boxSize={5} />
+                                            <Heading as="h2" size="md" color={useColorModeValue("orange.900", "orange.100")}>अध्याय सारांश (Summary)</Heading>
+                                        </HStack>
+                                        <Text whiteSpace="pre-line" color={textColor} fontSize={{ base: "sm", md: "md" }} lineHeight="tall">
+                                            {chapterSummary || "इस अध्याय का सारांश उपलब्ध नहीं है।"}
+                                        </Text>
+                                    </Box>
+                                )}
 
-                                return (
-                                    <div key={index} style={{ border: "1px solid #e2e8f0", borderRadius: "8px", padding: "20px", background: "#fff" }}>
-                                        <h4 style={{ margin: "0 0 15px 0", color: "#2c5282", borderBottom: "1px solid #e2e8f0", paddingBottom: "8px", fontSize: "16px" }}>
-                                            📦 व्याकरण विश्लेषण: {item.sectionOrTheme}
-                                        </h4>
+                                {/* TAB Area 2: Explanations (Shlokas / Passages) */}
+                                {activeTab === "explanations" && (
+                                    <Stack spacing={5} mt={2}>
+                                        {notesList.filter(n => n.nodeType === "narrative_note" && n.analysis?.note).map((item, index) => (
+                                            <Box key={index} border="1px" borderColor={useColorModeValue("gray.200", "gray.700")} borderRadius="xl" bg={cardBg} overflow="hidden" shadow="xs">
+                                                <Box bg={useColorModeValue("orange.50/70", "orange.900/30")} px={{ base: 4, md: 5 }} py={3} borderBottom="1px" borderColor={useColorModeValue("orange.100", "orange.800")}>
+                                                    <Text fontWeight="bold" color="orange.800" fontSize="sm">
+                                                        प्रसंग / विषय-वस्तु {index + 1}: {item.sectionOrTheme}
+                                                    </Text>
+                                                </Box>
+                                                <Stack spacing={4} p={{ base: 4, md: 6 }}>
+                                                    {/* Sanskrit Shloka Box - Keeps text centered, line-breaks intact, and fully responsive */}
+                                                    <Box fontSize={{ base: "md", md: "lg" }} color="gray.800" _dark={{ color: "gray.100" }} textAlign="center" my={2} bg={shlokaBg} p={{ base: 4, md: 5 }} borderRadius="xl" border="1px dashed" borderColor={shlokaBorder} whiteSpace="pre-line" fontWeight={600} lineHeight="1.8">
+                                                        {item.analysis.note}
+                                                    </Box>
 
-                                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "20px" }}>
-                                            {/* Vocabulary Sub-Table */}
-                                            {vocab.length > 0 && (
-                                                <div>
-                                                    <span style={{ fontWeight: "bold", display: "block", marginBottom: "8px", color: "#4a5568" }}>कठिन शब्दार्थ (Vocabulary)</span>
-                                                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "14px" }}>
-                                                        <thead>
-                                                            <tr style={{ background: "#edf2f7", textAlign: "left" }}>
-                                                                <th style={{ padding: "8px", border: "1px solid #cbd5e0" }}>शब्द</th>
-                                                                <th style={{ padding: "8px", border: "1px solid #cbd5e0" }}>अर्थ</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {vocab.map((v: any, i: number) => (
-                                                                <tr key={i}>
-                                                                    <td style={{ padding: "8px", border: "1px solid #cbd5e0", fontWeight: "bold", color: "#2b6cb0" }}>{v.word}</td>
-                                                                    <td style={{ padding: "8px", border: "1px solid #cbd5e0" }}>{v.meaning}</td>
-                                                                </tr>
+                                                    {item.analysis.anvayaAndBhavarth && (
+                                                        <Stack spacing={1}>
+                                                            <Text fontWeight="bold" color="gray.600" fontSize="xs" display="flex" align="center"><Icon as={FaChevronRight} boxSize={3} mr={1} />अन्वय और भावार्थ:</Text>
+                                                            <Box bg={useColorModeValue("gray.50", "gray.900/30")} p={3} borderRadius="lg" fontSize="sm" lineHeight="relaxed" whiteSpace="pre-line" color={textColor}>
+                                                                {item.analysis.anvayaAndBhavarth}
+                                                            </Box>
+                                                        </Stack>
+                                                    )}
+
+                                                    {item.analysis.explanation && (
+                                                        <Stack spacing={1}>
+                                                            <Text fontWeight="bold" color="gray.600" fontSize="xs" display="flex" align="center"><Icon as={FaChevronRight} boxSize={3} mr={1} />व्याख्या (Explanation):</Text>
+                                                            <Text fontSize="sm" lineHeight="relaxed" color={textColor} pl={1}>
+                                                                {item.analysis.explanation}
+                                                            </Text>
+                                                        </Stack>
+                                                    )}
+                                                </Stack>
+                                            </Box>
+                                        ))}
+                                    </Stack>
+                                )}
+
+                                {/* TAB Area 3: Grammar & Vocabulary */}
+                                {activeTab === "grammar_vocab" && (
+                                    <Stack spacing={5} mt={2}>
+                                        {notesList.filter(n => n.nodeType === "narrative_note").map((item, index) => {
+                                            const grammar = item.analysis?.vyakaranGrammar || [];
+                                            const vocab = item.analysis?.contextualVocabulary || [];
+                                            const tip = item.analysis?.criticalAnalysisTip;
+
+                                            if (grammar.length === 0 && vocab.length === 0) return null;
+
+                                            return (
+                                                <Box key={index} border="1px" borderColor={useColorModeValue("gray.200", "gray.700")} borderRadius="xl" p={{ base: 4, md: 5 }} bg={cardBg}>
+                                                    <Heading size="xs" color="blue.800" _dark={{ color: "blue.200" }} borderBottom="1px" pb={2} mb={4} fontWeight="bold">
+                                                        📦 व्याकरण विश्लेषण: {item.sectionOrTheme}
+                                                    </Heading>
+
+                                                    <SimpleGrid columns={{ base: 1, md: 2 }} gap={5}>
+                                                        {/* Vocabulary Component - Wrapped inside a Table Container for Flawless Mobile Scroll */}
+                                                        {vocab.length > 0 && (
+                                                            <Stack spacing={2}>
+                                                                <Text fontWeight="bold" fontSize="xs" color="gray.600">कठिन शब्दार्थ (Vocabulary)</Text>
+                                                                <TableContainer border="1px" borderColor={useColorModeValue("gray.100", "gray.700")} borderRadius="lg">
+                                                                    <Table variant="simple" size="sm">
+                                                                        <Thead bg={useColorModeValue("gray.50", "gray.900")}>
+                                                                            <Tr>
+                                                                                <Th>शब्द</Th>
+                                                                                <Th>अर्थ</Th>
+                                                                            </Tr>
+                                                                        </Thead>
+                                                                        <Tbody>
+                                                                            {vocab.map((v: any, i: number) => (
+                                                                                <Tr key={i}>
+                                                                                    <Td fontWeight="bold" color="orange.700" _dark={{ color: "orange.300" }} minW="100px" whiteSpace="normal">{v.word}</Td>
+                                                                                    <Td whiteSpace="normal">{v.meaning}</Td>
+                                                                                </Tr>
+                                                                            ))}
+                                                                        </Tbody>
+                                                                    </Table>
+                                                                </TableContainer>
+                                                            </Stack>
+                                                        )}
+
+                                                        {/* Grammar Breakdowns */}
+                                                        {grammar.length > 0 && (
+                                                            <Stack spacing={2}>
+                                                                <Text fontWeight="bold" fontSize="xs" color="gray.600">व्याकरण / सन्धि / विग्रह</Text>
+                                                                <Box p={3} bg={useColorModeValue("gray.50/50", "gray.900/20")} borderRadius="lg" border="1px" borderColor={useColorModeValue("gray.100", "gray.700")}>
+                                                                    <UnorderedList spacing={2} marginStart={4} fontSize="sm">
+                                                                        {grammar.map((g: string, i: number) => (
+                                                                            <ListItem key={i} color={textColor} lineHeight="relaxed">{g}</ListItem>
+                                                                        ))}
+                                                                    </UnorderedList>
+                                                                </Box>
+                                                            </Stack>
+                                                        )}
+                                                    </SimpleGrid>
+
+                                                    {/* Board/Examiner Tips */}
+                                                    {tip && (
+                                                        <HStack spacing={2} mt={4} p={3} bg="red.50" _dark={{ bg: "red.950/20" }} color={useColorModeValue("red.900", "red.200")} borderRadius="xl" border="1px" borderColor="red.100" fontSize="xs">
+                                                            <Icon as={FaLightbulb} boxSize={4} flexShrink={0} color="red.600" />
+                                                            <Text fontWeight="medium"><strong>परीक्षा युक्ति (Exam Tip):</strong> {tip}</Text>
+                                                        </HStack>
+                                                    )}
+                                                </Box>
+                                            );
+                                        })}
+                                    </Stack>
+                                )}
+
+                                {/* TAB Area 4: Board Questions & Extracts */}
+                                {activeTab === "questions" && (
+                                    <Stack spacing={5} mt={2}>
+                                        {notesList.map((item, idx) => {
+                                            const extracts = item.cbseExtractBasedQuestions || [];
+                                            const mcqs = item.quickCheckMCQs || [];
+
+                                            if (extracts.length === 0 && mcqs.length === 0) return null;
+
+                                            return (
+                                                <Stack key={idx} spacing={4}>
+                                                    {/* Extract Context Passages */}
+                                                    {extracts.map((ex: any, eIdx: number) => (
+                                                        <Box key={eIdx} border="1px" borderColor={useColorModeValue("gray.200", "gray.700")} borderRadius="xl" p={{ base: 4, md: 5 }} bg={cardBg}>
+                                                            <Badge colorScheme="purple" px={2} py={0.5} borderRadius="md" fontSize="3xs" mb={2}>CBSE EXTRACT BASED QUESTION</Badge>
+                                                            <Text fontStyle="italic" bg={useColorModeValue("gray.50", "gray.900/40")} p={3} borderLeftWidth="3px" borderLeftColor="purple.400" my={2} fontSize="sm">
+                                                                "{ex.verbatimExcerpt}"
+                                                            </Text>
+                                                            {ex.questions?.map((q: any, qIdx: number) => (
+                                                                <Stack key={qIdx} mt={3} spacing={1} fontSize="sm">
+                                                                    <Text fontWeight="bold">Q: {q.questionText} <small style={{ color: '#718096' }}>({q.questionType})</small></Text>
+                                                                    <Text pl={3} color="emerald.700" _dark={{ color: "emerald.300" }} bg="emerald.50/30" _dark={{ bg: "emerald.950/10" }} p={2} borderRadius="md">
+                                                                        ✔ <strong>उत्तर:</strong> {q.modelAnswer}
+                                                                    </Text>
+                                                                </Stack>
                                                             ))}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            )}
+                                                        </Box>
+                                                    ))}
 
-                                            {/* Grammar Breakdown List */}
-                                            {grammar.length > 0 && (
-                                                <div>
-                                                    <span style={{ fontWeight: "bold", display: "block", marginBottom: "8px", color: "#4a5568" }}>व्याकरण / सन्धि / विग्रह</span>
-                                                    <ul style={{ margin: 0, paddingLeft: "20px", fontSize: "14px", lineHeight: "1.8" }}>
-                                                        {grammar.map((g: string, i: number) => (
-                                                            <li key={i} style={{ color: "#2d3748" }}>{g}</li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            )}
-                                        </div>
+                                                    {/* Interactive Multiple Choice Questions Grid */}
+                                                    {mcqs.map((mcq: any, mIdx: number) => (
+                                                        <Box key={mIdx} border="1px" borderColor={useColorModeValue("gray.200", "gray.700")} borderRadius="xl" p={{ base: 4, md: 5 }} bg={cardBg}>
+                                                            <Badge colorScheme="orange" px={2} py={0.5} borderRadius="md" fontSize="3xs" mb={2}>QUICK CHECK MCQ</Badge>
+                                                            <Text fontWeight="bold" fontSize="sm" my={2}>{mcq.question}</Text>
+                                                            <SimpleGrid columns={{ base: 1, sm: 2 }} gap={2.5} mt={3}>
+                                                                {mcq.options?.map((opt: string, oIdx: number) => {
+                                                                    const isCorrect = opt === mcq.answer;
+                                                                    return (
+                                                                        <HStack
+                                                                            key={oIdx}
+                                                                            p={3}
+                                                                            borderRadius="xl"
+                                                                            border="1px solid"
+                                                                            borderColor={isCorrect ? "emerald.300" : useColorModeValue("gray.100", "gray.700")}
+                                                                            bg={isCorrect ? "emerald.50/40" : useColorModeValue("gray.50/30", "gray.900/10")}
+                                                                            color={isCorrect ? "emerald.800" : textColor}
+                                                                            _dark={isCorrect ? { bg: "emerald.950/20", color: "emerald.200" } : {}}
+                                                                            fontSize="xs"
+                                                                            spacing={2}
+                                                                        >
+                                                                            <Badge variant="solid" colorScheme={isCorrect ? "emerald" : "gray"} borderRadius="full" px={1.5}>{oIdx + 1}</Badge>
+                                                                            <Text fontWeight={isCorrect ? "bold" : "normal"}>{opt}</Text>
+                                                                            {isCorrect && <Icon as={FaCheckCircle} color="emerald.500" marginLeft="auto" />}
+                                                                        </HStack>
+                                                                    );
+                                                                })}
+                                                            </SimpleGrid>
+                                                        </Box>
+                                                    ))}
+                                                </Stack>
+                                            );
+                                        })}
+                                    </Stack>
+                                )}
 
-                                        {/* Board Tip Alert */}
-                                        {tip && (
-                                            <div style={{ marginTop: "15px", background: "#fff5f5", border: "1px solid #fed7d7", padding: "10px 15px", borderRadius: "6px", fontSize: "13px", color: "#c53030" }}>
-                                                💡 <strong>परीक्षा युक्ति (Exam Tip):</strong> {tip}
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-
-                    {/* --- TAB 3: QUESTIONS & MCQS --- */}
-                    {activeTab === "questions" && (
-                        <div style={{ display: "flex", flexDirection: "column", gap: "25px" }}>
-                            {notesList.map((item, idx) => {
-                                const extracts = item.cbseExtractBasedQuestions || [];
-                                const mcqs = item.quickCheckMCQs || [];
-
-                                if (extracts.length === 0 && mcqs.length === 0) return null;
-
-                                return (
-                                    <div key={idx} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                                        {/* Extract Based Passage Questions */}
-                                        {extracts.map((ex: any, eIdx: number) => (
-                                            <div key={eIdx} style={{ border: "1px solid #e2e8f0", borderRadius: "8px", padding: "20px", background: "#fff" }}>
-                                                <span style={{ background: "#e2e8f0", padding: "4px 8px", borderRadius: "4px", fontSize: "11px", fontWeight: "bold", uppercase: "true" }}>CBSE EXTRACT BASED QUESTION</span>
-                                                <p style={{ fontStyle: "italic", background: "#f7fafc", padding: "12px", borderLeft: "3px solid #4a5568", margin: "10px 0" }}>"{ex.verbatimExcerpt}"</p>
-                                                {ex.questions?.map((q: any, qIdx: number) => (
-                                                    <div key={qIdx} style={{ marginTop: "10px", fontSize: "14px" }}>
-                                                        <strong>Q: {q.questionText} <small style={{ color: "#718096" }}>({q.questionType})</small></strong>
-                                                        <p style={{ margin: "5px 0 0 0", color: "#2f855a", background: "#f0fff4", padding: "8px 12px", borderRadius: "4px" }}>✔ <strong>उत्तर:</strong> {q.modelAnswer}</p>
-                                                    </div>
-                                                ))}
-                                            </div>
+                                {/* TAB Area 5: NCERT Exercises Solutions */}
+                                {activeTab === "textbook" && (
+                                    <Stack spacing={4} mt={2}>
+                                        {notesList.filter(n => n.nodeType === "textbook_exercise_section").map((item, index) => (
+                                            <Box key={index}>
+                                                <Heading size="xs" color="orange.800" _dark={{ color: "orange.200" }} mb={4} display="flex" align="center">
+                                                    📝 पाठ्यपुस्तक अभ्यास समाधान (Exercise Solutions)
+                                                </Heading>
+                                                <Stack spacing={3}>
+                                                    {item.fullTextbookSolutions?.map((sol: any, sIdx: number) => (
+                                                        <Box key={sIdx} bg={cardBg} border="1px" borderColor={useColorModeValue("gray.200", "gray.700")} borderRadius="xl" p={{ base: 4, md: 5 }}>
+                                                            <Text fontWeight="bold" color="gray.700" _dark={{ color: "gray.300" }} fontSize="sm" mb={2}>
+                                                                <Text as="span" color="blue.500" mr={1.5}>{sol.questionNumber}.</Text>{sol.textbookQuestion}
+                                                            </Text>
+                                                            <Box bg={useColorModeValue("blue.50/20", "blue.950/10")} p={3} borderRadius="lg" fontSize="sm" color={textColor} borderLeftWidth="3px" borderLeftColor="blue.400" lineHeight="relaxed">
+                                                                <strong style={{ color: '#2B6CB0' }}>समाधानम्:</strong> {sol.modelAnswer}
+                                                            </Box>
+                                                        </Box>
+                                                    ))}
+                                                </Stack>
+                                            </Box>
                                         ))}
+                                    </Stack>
+                                )}
 
-                                        {/* Quick Check Multiple Choice items */}
-                                        {mcqs.map((mcq: any, mIdx: number) => (
-                                            <div key={mIdx} style={{ border: "1px solid #e2e8f0", borderRadius: "8px", padding: "20px", background: "#fff" }}>
-                                                <span style={{ background: "#feebc8", color: "#c05621", padding: "4px 8px", borderRadius: "4px", fontSize: "11px", fontWeight: "bold" }}>QUICK CHECK MCQ</span>
-                                                <p style={{ fontWeight: "bold", margin: "10px 0" }}>{mcq.question}</p>
-                                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", fontSize: "14px" }}>
-                                                    {mcq.options?.map((opt: string, oIdx: number) => {
-                                                        const isCorrect = opt === mcq.answer;
-                                                        return (
-                                                            <div key={oIdx} style={{ padding: "8px 12px", borderRadius: "4px", border: isCorrect ? "1px solid #38a169" : "1px solid #e2e8f0", background: isCorrect ? "#f0fff4" : "#fff", color: isCorrect ? "#276749" : "#4a5568", fontWeight: isCorrect ? "bold" : "normal" }}>
-                                                                {oIdx + 1}. {opt} {isCorrect && " 🌟"}
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
+                            </Box>
+                        </Box>
+                    </Stack>
+                )}
 
-                    {/* --- TAB 4: TEXTBOOK EXERCISES --- */}
-                    {activeTab === "textbook" && (
-                        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                            {notesList.filter(n => n.nodeType === "textbook_exercise_section").map((item, index) => (
-                                <div key={index}>
-                                    <h3 style={{ color: "#2c5282", marginBottom: "15px" }}>📝 पाठ्यपुस्तक अभ्यास समाधान (NCERT/CBSE Exercise Solutions)</h3>
-                                    <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                                        {item.fullTextbookSolutions?.map((sol: any, sIdx: number) => (
-                                            <div key={sIdx} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "15px 20px" }}>
-                                                <div style={{ fontWeight: "bold", color: "#4a5568", fontSize: "15px", marginBottom: "6px" }}>
-                                                    <span style={{ color: "#3182ce", marginRight: "6px" }}>{sol.questionNumber}</span> {sol.textbookQuestion}
-                                                </div>
-                                                <div style={{ background: "#f7fafc", padding: "10px 15px", borderRadius: "6px", fontSize: "14px", color: "#2d3748", borderLeft: "3px solid #3182ce", lineHeight: "1.7" }}>
-                                                    <strong>समाधानम्:</strong> {sol.modelAnswer}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-
-                </div>
-            ) : (
-                <div style={{ textAlign: "center", padding: "40px", color: "#718096" }}>Please pick a valid chapter to display learning items.</div>
-            )}
-        </div>
+                {/* Empty State Fallback */}
+                {!contentLoading && !contentResponse && (
+                    <Box py={12} px={4} textAlign="center" borderWidth="1px" borderStyle="dashed" borderRadius="2xl" color="gray.400" fontSize="sm" bg={cardBg}>
+                        अध्याय उपलब्ध नहीं है। कृपया दूसरा अध्याय चुनें।
+                    </Box>
+                )}
+            </Container>
+        </Box>
     );
 };
 
