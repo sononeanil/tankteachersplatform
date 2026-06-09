@@ -1,5 +1,6 @@
 export const MSB11thClassMenuSubjects = [
-    { label: "Economics", value: "Economics" }];
+    { label: "Economics", value: "Economics" },
+    { label: "Marathi", value: "Marathi" }];
 
 export const MSB11thClassMenuSubjectEconomicsChapter = [
     { label: "Chapter 1", value: "Chapter 1" },
@@ -8,7 +9,8 @@ export const MSB11thClassMenuSubjectEconomicsChapter = [
 ];
 
 export const MSB12thClassMenuSubjects = [
-    { label: "Economics", value: "Economics" }];
+    { label: "Economics", value: "Economics" },
+];
 
 export const MSB12thClassMenuSubjectEconomicsChapter = [
     { label: "Chapter 1", value: "Chapter 1" },

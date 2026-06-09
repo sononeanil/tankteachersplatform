@@ -1,11 +1,35 @@
-import { Badge, HStack, Icon, Menu, MenuButton, MenuList, MenuItem, Button, Link, VStack } from "@chakra-ui/react";
+import { Badge, HStack, Icon, Menu, MenuButton, MenuList, MenuItem, Button, VStack } from "@chakra-ui/react";
 import { StarIcon, InfoIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom"; // Imported for SPA navigation
 import {
     MSB11thClassMenuSubjects,
     MSB12thClassMenuSubjects,
 } from "../../types/MenuData";
 
 const MsbFilter = () => {
+    const navigate = useNavigate();
+
+    // Dynamically determine the route based on class level and subject details
+    const handleNavigation = (classLevel: "11" | "12", label: string, value: string) => {
+        const lowerLabel = label.toLowerCase();
+        const lowerValue = value.toLowerCase();
+
+        // Condition 1: Directing Marathi to its own explicit dashboard layout
+        if (lowerLabel === "marathi") {
+            navigate(`/notes/onehourBeforeexam/maharashtra-state-board/marathi/msb_Class_${classLevel}_${value}`);
+            return;
+        }
+
+        // Condition 2: Directing Economics to its own completely separate routing path
+        if (lowerLabel === "tempSubject") {
+            navigate(`/economics-special-hub/msb${classLevel}`);
+            return;
+        }
+
+        // Default Fallback Condition: Standard path structure for all other subjects
+        navigate(`/notes/onehourBeforeexam/maharashtra-state-board/msb${classLevel}${lowerValue}`);
+    };
+
     return (
         <VStack
             mb={5}
@@ -16,17 +40,14 @@ const MsbFilter = () => {
             p={5}
             borderRadius="3xl"
             bg="blue.500"
-            // border="2px solid" // Slightly thickened the component boundary frame
-            // borderColor="purple.500"
             width="100%"
         >
-            {/* ROW 1: Badges sit securely at the top with highly legible contrast values */}
+            {/* ROW 1: Badges */}
             <HStack wrap="wrap" spacing={3}>
                 <Badge
                     px={3.5}
                     py={2}
                     borderRadius="full"
-                    // FIXED: Replaced semi-transparent white with a strong, deep royal purple backdrop
                     bg="purple.800"
                     color="white"
                     fontSize="xs"
@@ -47,7 +68,6 @@ const MsbFilter = () => {
                     px={3.5}
                     py={2}
                     borderRadius="full"
-                    // FIXED: Boosted color depth slightly to maintain a high glow output contrast
                     bg="cyan.600"
                     color="white"
                     fontSize="xs"
@@ -63,7 +83,7 @@ const MsbFilter = () => {
                 </Badge>
             </HStack>
 
-            {/* ROW 2: Class standards cleanly underneath */}
+            {/* ROW 2: Dropdown Selectors */}
             <HStack wrap="wrap" spacing={3}>
                 {/* --- 11th Standard Subject Menu --- */}
                 <Menu isLazy>
@@ -97,8 +117,7 @@ const MsbFilter = () => {
                         {MSB11thClassMenuSubjects.map((subjectItem) => (
                             <MenuItem
                                 key={subjectItem.value}
-                                as={Link}
-                                href={`/notes/onehourBeforeexam/maharashtra-state-board/msb11${subjectItem.value.toLowerCase()}`}
+                                onClick={() => handleNavigation("11", subjectItem.label, subjectItem.value)}
                                 fontWeight="semibold"
                                 color="gray.700"
                                 borderRadius="lg"
@@ -148,8 +167,7 @@ const MsbFilter = () => {
                         {MSB12thClassMenuSubjects.map((subjectItem) => (
                             <MenuItem
                                 key={subjectItem.value}
-                                as={Link}
-                                href={`/notes/onehourBeforeexam/maharashtra-state-board/msb12${subjectItem.value.toLowerCase()}`}
+                                onClick={() => handleNavigation("12", subjectItem.label, subjectItem.value)}
                                 fontWeight="semibold"
                                 color="gray.700"
                                 borderRadius="lg"

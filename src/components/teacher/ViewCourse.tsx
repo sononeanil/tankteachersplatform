@@ -37,7 +37,7 @@ const ViewCourse = () => {
                 fontWeight="medium"
             >
 
-                Explore Courses - completly free to create and sell your courses onlines
+                Freely published courses for you to explore and learn!
             </Heading >
             <Link to="/listAllCourse"
                 style={{

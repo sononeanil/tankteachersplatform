@@ -265,7 +265,7 @@ const SanskritNotes = () => {
                                                         {vocab.length > 0 && (
                                                             <Stack spacing={2}>
                                                                 <Text fontWeight="bold" fontSize="xs" color="gray.600">कठिन शब्दार्थ (Vocabulary)</Text>
-                                                                <TableContainer border="1px" borderColor={useColorModeValue("gray.100", "gray.700")} borderRadius="lg">
+                                                                <TableContainer border="1px" borderColor={useColorModeValue("gray.100", "blue.700")} borderRadius="lg">
                                                                     <Table variant="simple" size="sm">
                                                                         <Thead bg={useColorModeValue("gray.50", "gray.900")}>
                                                                             <Tr>

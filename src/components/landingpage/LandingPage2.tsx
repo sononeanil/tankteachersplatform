@@ -68,6 +68,9 @@ const LandingPage2 = () => {
                 <Filter />
                 <DetailedNotesFilter />
                 <MsbFilter />
+                <SendMessageToAdmin />
+
+
             </VStack>
 
             {/* 3. GRID 1: Analytics Dashboard (The Boxes) */}
@@ -103,21 +106,13 @@ const LandingPage2 = () => {
                 })}
             </SimpleGrid>
 
-            {/* 3b. FULL WIDTH MESSAGE TO ADMIN (Placed perfectly below the boxes) */}
-            <Box width="100%" mb={6}>
-                <SendMessageToAdmin />
-            </Box>
 
-            {/* 4. COURSE VIEW / LISTINGS */}
-            <Box my={4} width="100%" overflow="hidden">
-                <ViewCourse />
-            </Box>
+
+
 
             {/* 5. GRID 2: Detailed Feature Cards */}
             <Box mt={6} mb={4} width="100%">
-                <Text fontSize="lg" fontWeight="bold" mb={3} textAlign="center">
-                    Our Features & Resources
-                </Text>
+
                 <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} gap={4} width="100%">
                     {landingPageData.map((item) => {
                         const textColor = getTextColor(item.color);
@@ -151,6 +146,10 @@ const LandingPage2 = () => {
                         );
                     })}
                 </SimpleGrid>
+            </Box>
+            {/* 4. COURSE VIEW / LISTINGS */}
+            <Box my={4} width="100%" overflow="hidden">
+                <ViewCourse />
             </Box>
         </Box>
     );

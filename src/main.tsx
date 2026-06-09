@@ -57,6 +57,7 @@ import EnglishNotesTextbookExcercise from './components/notes/EnglishNotesTextbo
 import SanskritNotes from './components/notes/SanskritNotes.tsx';
 import { HiTrendingDown } from 'react-icons/hi';
 import HindiNotes from './components/notes/HindiNotes.tsx';
+import MarathiNotes from './components/notes/MarathiNotes.tsx';
 
 posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
   api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
@@ -107,6 +108,9 @@ const router = createBrowserRouter([
     }, {
       path: "/notes/onehourBeforeexam/maharashtra-state-board/:type/*",
       element: <FilterDetails></FilterDetails>
+    }, {
+      path: "/notes/onehourBeforeexam/maharashtra-state-board/marathi/:type/*",
+      element: <MarathiNotes></MarathiNotes>
     }, {
       path: "/notes/board/cbsc/sanskrit/sanskritNotes/:type/*",
       element: <SanskritNotes></SanskritNotes>
