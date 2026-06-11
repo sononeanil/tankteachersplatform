@@ -87,24 +87,8 @@ const router = createBrowserRouter([
       path: "/notes/oneHourBeforeExam/:type/*",
       element: <FilterDetails></FilterDetails>
     }, {
-      path: "notes/board/cbsc/english/englishNotes/:type/*",
-      element: <EnglishNotes></EnglishNotes>,
-      children: [{
-        index: true,
-        element: <EnglishNotesNarrativeNote></EnglishNotesNarrativeNote>,
-
-      },
-
-
-      {
-        path: "narrativeNote/narrativeNote",
-        element: <EnglishNotesNarrativeNote></EnglishNotesNarrativeNote>
-      },
-      {
-        path: "textbookSolutions",
-        element: <EnglishNotesTextbookExcercise></EnglishNotesTextbookExcercise>
-      }
-      ]
+      path: "/notes/board/cbse/english/englishNotes/:type/*",
+      element: <EnglishNotes></EnglishNotes>
     }, {
       path: "/notes/onehourBeforeexam/maharashtra-state-board/:type/*",
       element: <FilterDetails></FilterDetails>
@@ -112,13 +96,13 @@ const router = createBrowserRouter([
       path: "/notes/onehourBeforeexam/maharashtra-state-board/marathi/:type/*",
       element: <MarathiNotes></MarathiNotes>
     }, {
-      path: "/notes/board/cbsc/sanskrit/sanskritNotes/:type/*",
+      path: "/notes/board/cbse/sanskrit/sanskritNotes/:type/*",
       element: <SanskritNotes></SanskritNotes>
     }, {
       path: "/notes/board/cbsc/sanskrit/sanskritNotes/:type/*",
       element: <SanskritNotes></SanskritNotes>
     }, {
-      path: "/notes/board/cbsc/hindi/hindiNotes/:type/*",
+      path: "/notes/board/cbse/hindi/hindiNotes/:type/*",
       element: <HindiNotes></HindiNotes>
     }, {
       path: "/tutor/createBio",
