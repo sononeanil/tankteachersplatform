@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState, useMemo, ChangeEvent } from "react";
+import { useEffect, useState, useMemo } from "react";
+import type { ChangeEvent } from "react";
 import { useParams } from "react-router-dom";
 import { getChapterList, getChapterNotes } from "../../service/ApiNotes";
 import {
@@ -20,7 +21,6 @@ import {
     Spinner,
     Alert,
     AlertIcon,
-    Divider,
     VStack,
     HStack,
     Icon,
@@ -335,7 +335,7 @@ const SanskritNotes = () => {
                                                             {ex.questions?.map((q: any, qIdx: number) => (
                                                                 <Stack key={qIdx} mt={3} spacing={1} fontSize="sm">
                                                                     <Text fontWeight="bold">Q: {q.questionText} <small style={{ color: '#718096' }}>({q.questionType})</small></Text>
-                                                                    <Text pl={3} color="emerald.700" _dark={{ color: "emerald.300" }} bg="emerald.50/30" _dark={{ bg: "emerald.950/10" }} p={2} borderRadius="md">
+                                                                    <Text pl={3} color="emerald.700" bg="emerald.50/30" _dark={{ color: "emerald.300", bg: "emerald.950/10" }} p={2} borderRadius="md">
                                                                         ✔ <strong>उत्तर:</strong> {q.modelAnswer}
                                                                     </Text>
                                                                 </Stack>
@@ -384,7 +384,7 @@ const SanskritNotes = () => {
                                     <Stack spacing={4} mt={2}>
                                         {notesList.filter(n => n.nodeType === "textbook_exercise_section").map((item, index) => (
                                             <Box key={index}>
-                                                <Heading size="xs" color="orange.800" _dark={{ color: "orange.200" }} mb={4} display="flex" align="center">
+                                                <Heading size="xs" color="orange.800" _dark={{ color: "orange.200" }} mb={4} display="flex" textAlign="center">
                                                     📝 पाठ्यपुस्तक अभ्यास समाधान (Exercise Solutions)
                                                 </Heading>
                                                 <Stack spacing={3}>

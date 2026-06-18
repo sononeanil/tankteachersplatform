@@ -25,7 +25,7 @@ import {
 
 interface NoteItem {
     note: string;
-    explanation: string;
+    explanation?: string; // 💡 Changed to optional to fix the type mismatch
     examKeywords?: string[];
     marksBoosterTip?: string;
     commonMisconception?: string;
@@ -56,8 +56,8 @@ export const NotesView: React.FC<NotesViewProps> = React.memo(({
             {notes.map((item, index) => {
                 const isRead = !!readCards[index];
 
-                // Isolate embedded text analogies out of explanations dynamically
-                const parts = item.explanation.split(/Analogy:/i);
+                // 💡 Added safe fallback string in case explanation is undefined
+                const parts = (item.explanation || "").split(/Analogy:/i);
                 const coreExplanation = parts[0].trim();
                 const analogyText = parts[1] ? parts[1].trim() : null;
 
@@ -145,15 +145,18 @@ export const NotesView: React.FC<NotesViewProps> = React.memo(({
                             </Flex>
 
                             {/* Core Explanation Block */}
-                            <Text
-                                color="gray.700"
-                                fontSize="15px"
-                                fontWeight="medium"
-                                lineHeight="relaxed"
-                                mb={5}
-                            >
-                                {coreExplanation}
-                            </Text>
+                            {coreExplanation && (
+                                <Text
+                                    color="gray.700"
+                                    fontSize="15px"
+                                    fontWeight="medium"
+                                    lineHeight="relaxed"
+                                    mb={5}
+                                // Adjusted margin conditionally if no analogy is next
+                                >
+                                    {coreExplanation}
+                                </Text>
+                            )}
 
                             {/* Analogy Bridge Block */}
                             {analogyText && (
@@ -185,10 +188,8 @@ export const NotesView: React.FC<NotesViewProps> = React.memo(({
                                     {item.examKeywords.map((kw) => (
                                         <WrapItem key={kw}>
                                             <Badge
-                                                // bg="gray.50"
                                                 color="gray.600"
                                                 border="1px solid"
-                                                // borderColor="gray.200"
                                                 px={3}
                                                 py={1}
                                                 borderRadius="md"
@@ -210,19 +211,18 @@ export const NotesView: React.FC<NotesViewProps> = React.memo(({
                                 {/* Exam Score Booster */}
                                 {item.marksBoosterTip && (
                                     <Box
-                                        bg="#de9ade"
+                                        bg="yellow.50" // 💡 Fixed contrast issues (swapped away from hardcoded purple #de9ade)
                                         p={4}
                                         borderRadius="xl"
+                                        border="1px solid"
+                                        borderColor="yellow.200"
                                         borderLeft="4px solid"
-                                        borderColor="amber.400"
-                                        // border="1px solid"
                                         borderLeftColor="yellow.400"
-                                        // borderColor="yellow.100"
-                                        boxShadow="2xl"
+                                        boxShadow="sm"
                                     >
                                         <Flex align="center" mb={1.5}>
-                                            <Icon as={FaLightbulb} color="yellow.500" w={4} h={4} mr={2} />
-                                            <Text fontSize="11px" fontWeight="black" textTransform="uppercase" letterSpacing="wider">
+                                            <Icon as={FaLightbulb} color="yellow.600" w={4} h={4} mr={2} />
+                                            <Text fontSize="11px" fontWeight="black" color="yellow.800" textTransform="uppercase" letterSpacing="wider">
                                                 Exam Score Booster
                                             </Text>
                                         </Flex>

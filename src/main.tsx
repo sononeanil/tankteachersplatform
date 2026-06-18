@@ -52,12 +52,10 @@ import NotesBatchDetails from './components/notes/NotesBatchDetails.tsx'
 import DetailNotesBatch from './components/notes/DetailNotesBatch.tsx';
 import DetailedNotes from './components/notes/DetailedNotes.tsx';
 import EnglishNotes from './components/notes/EnglishNotes.tsx';
-import EnglishNotesNarrativeNote from './components/notes/EnglishNotesNarrativeNote.tsx';
-import EnglishNotesTextbookExcercise from './components/notes/EnglishNotesTextbookExcercise.tsx';
 import SanskritNotes from './components/notes/SanskritNotes.tsx';
-import { HiTrendingDown } from 'react-icons/hi';
 import HindiNotes from './components/notes/HindiNotes.tsx';
 import MarathiNotes from './components/notes/MarathiNotes.tsx';
+import ChapterListFilter from './components/landingpage/ChapterListFilter.tsx';
 
 posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
   api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
@@ -104,7 +102,17 @@ const router = createBrowserRouter([
     }, {
       path: "/notes/board/cbse/hindi/hindiNotes/:type/*",
       element: <HindiNotes></HindiNotes>
-    }, {
+    },
+    {
+      path: "/notes/last-minute-revision/board/cbse/subject/:subjectId/:classId",
+      element: <ChapterListFilter />
+    },
+    // 2. Route for the specific type, chapter, and sub-topics
+    {
+      path: "/notes/last-minute-revision/board/cbse/subject/science",
+      element: <ChapterListFilter />
+    },
+    {
       path: "/tutor/createBio",
       element: <CreateBio></CreateBio>
     },

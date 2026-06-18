@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState, useMemo, ChangeEvent } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
+import type { ChangeEvent } from "react"; import { useParams } from "react-router-dom";
 import { getChapterList, getChapterNotes } from "../../service/ApiNotes";
 import {
     Box,

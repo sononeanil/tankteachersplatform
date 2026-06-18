@@ -58,7 +58,8 @@ export const Class10Boards = [
 export const CBSEClass10 = [
     { label: "Science", value: "Science", url: "notes/oneHourBeforeExam" },
     { label: "English", value: "English", url: "notes/board/cbse/english/englishNotes" },
-    { label: "Hindi", value: "Hindi", url: "notes/board/cbse/hindi/hindiNotes" }
+    { label: "Hindi", value: "Hindi", url: "notes/board/cbse/hindi/hindiNotes" },
+    { label: "Sanskrit", value: "Sanskrit", url: "notes/board/cbse/sanskrit/sanskritNotes" }
 ];
 
 

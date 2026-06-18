@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Box, Text, Heading, VStack, HStack, Icon, Circle, SimpleGrid, Badge, Flex } from "@chakra-ui/react";
-import { FaNetworkWired, FaGraduationCap, FaDotCircle, FaBookmark } from "react-icons/fa";
+import { FaGraduationCap, FaDotCircle, FaBookmark } from "react-icons/fa";
 
 interface MindMapViewProps {
     mindMapRawData?: string;

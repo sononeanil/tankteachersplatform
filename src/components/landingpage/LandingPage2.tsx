@@ -9,6 +9,9 @@ import DetailedNotesFilter from "../notes/DetailedNotesFilter";
 import MsbFilter from "./MsbFilter";
 import SendMessageToAdmin from "./SendMessageToAdmin";
 
+
+import { Link as RouterLink } from "react-router-dom";
+
 const LandingPage2 = () => {
     // Explicitly declaring the array here so Vite handles compilation perfectly
     const landingPageData = [
@@ -58,6 +61,7 @@ const LandingPage2 = () => {
         // Root component constraints to force mobile responsiveness
         <Box width="100%" maxW="100%" mx="auto" py={2} overflow="hidden">
 
+
             {/* 1. HERO CAROUSEL */}
             <Box width="100%" overflow="hidden" mb={2}>
                 <LandingPageCorousel />
@@ -69,7 +73,43 @@ const LandingPage2 = () => {
                 <DetailedNotesFilter />
                 <MsbFilter />
                 <SendMessageToAdmin />
+                {/* <ChapterListFilter /> */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px", maxWidth: "600px", margin: "20px 0", fontFamily: "system-ui, sans-serif" }}>
+                    <h3 style={{ margin: "0 0 4px 0", color: "#4A5568", fontSize: "16px", textTransform: "uppercase", letterSpacing: "1px" }}>
+                        📚 Class 9 Science Revision Chapters
+                    </h3>
 
+                    <Box
+                        as={RouterLink}
+                        to="/notes/last-minute-revision/board/cbse/subject/science?key=Class_9_Science&chapter=Chapter+1"
+                        display="block"
+                        padding="14px 16px"
+                        border="1px solid #E2E8F0"
+                        borderRadius="8px"
+                        backgroundColor="#FFF"
+                        color="#2B6CB0"
+                        fontWeight="500"
+                        _hover={{ backgroundColor: "gray.50", borderColor: "gray.300" }}
+                    >
+                        📁 Class 9 Science - Chapter 1: Matter in Our Surroundings
+                    </Box>
+
+                    <a
+                        href="/notes/last-minute-revision/board/cbse/subject/science?key=Class_9_Science&chapter=Chapter+2"
+                        style={{ display: "block", padding: "14px 16px", border: "1px solid #E2E8F0", borderRadius: "8px", backgroundColor: "#FFF", color: "#2B6CB0", textDecoration: "none", fontWeight: "500" }}
+                    >
+                        📁 Class 9 Science - Chapter 2: Cell Notes
+                    </a>
+
+                    <a
+                        href="/notes/last-minute-revision/board/cbse/subject/science?key=Class_9_Science&chapter=Chapter+3%3A+Tissues+in+Action"
+                        style={{ display: "block", padding: "14px 16px", border: "1px solid #E2E8F0", borderRadius: "8px", backgroundColor: "#FFF", color: "#2B6CB0", textDecoration: "none", fontWeight: "500" }}
+                    >
+                        📁 Class 9 Science - Chapter 3: Tissues in Action
+                    </a>
+
+
+                </div>
 
             </VStack>
 

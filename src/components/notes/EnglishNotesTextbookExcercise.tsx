@@ -16,7 +16,7 @@ import {
     AccordionPanel,
     AccordionIcon,
 } from "@chakra-ui/react";
-import { FaGraduationCap, FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
 import { MdMenuBook } from "react-icons/md";
 
 // --- Interfaces for Type Safety ---
@@ -26,17 +26,9 @@ interface TextbookSolutionItem {
     modelAnswer: string;
 }
 
-interface ChapterNode {
-    nodeType: string;
-    sectionOrTheme: string;
-    fullTextbookSolutions?: TextbookSolutionItem[];
-}
 
-interface OutletContextType {
-    // We fetch the dynamic array or pass the parent's parsed list directly
-    themesList?: ChapterNode[];
-    isLoading: boolean;
-}
+
+
 
 const EnglishNotesTextbookExcercise = () => {
     // 1. Grab context parameters from the parent container

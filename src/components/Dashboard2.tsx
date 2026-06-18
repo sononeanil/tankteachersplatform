@@ -84,7 +84,7 @@ const Dashboard2 = () => {
                     />
 
                     <Heading fontSize={{ base: "md", md: "lg" }}>
-                        TANK Teachers Platform
+                        Students Notes Platform
                     </Heading>
 
                     <Spacer />
