@@ -1,5 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
-
+import 'katex/dist/katex.min.css';
 const theme = extendTheme({
     config: {
         initialColorMode: "light",

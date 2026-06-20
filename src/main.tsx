@@ -56,6 +56,7 @@ import SanskritNotes from './components/notes/SanskritNotes.tsx';
 import HindiNotes from './components/notes/HindiNotes.tsx';
 import MarathiNotes from './components/notes/MarathiNotes.tsx';
 import ChapterListFilter from './components/landingpage/ChapterListFilter.tsx';
+import PhysicsNotes from './components/notes/PhysicsNotes.tsx';
 
 posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
   api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
@@ -94,8 +95,11 @@ const router = createBrowserRouter([
       path: "/notes/onehourBeforeexam/maharashtra-state-board/marathi/:type/*",
       element: <MarathiNotes></MarathiNotes>
     }, {
-      path: "/notes/board/cbse/sanskrit/sanskritNotes/:type/*",
-      element: <SanskritNotes></SanskritNotes>
+      path: "/notes/onehourBeforeexam/maharashtra-state-board/marathi/:type/*",
+      element: <MarathiNotes></MarathiNotes>
+    }, {
+      path: "/notes/onehourBeforeexam/maharashtra-state-board/physics/:type/*",
+      element: <PhysicsNotes></PhysicsNotes>
     }, {
       path: "/notes/board/cbsc/sanskrit/sanskritNotes/:type/*",
       element: <SanskritNotes></SanskritNotes>

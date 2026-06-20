@@ -19,6 +19,10 @@ const MsbFilter = () => {
             navigate(`/notes/onehourBeforeexam/maharashtra-state-board/marathi/msb_Class_${classLevel}_${value}`);
             return;
         }
+        if (lowerLabel === "physics") {
+            navigate(`/notes/onehourBeforeexam/maharashtra-state-board/physics/msb_Class_${classLevel}_${value}`);
+            return;
+        }
 
         // Condition 2: Directing Economics to its own completely separate routing path
         if (lowerLabel === "tempSubject") {

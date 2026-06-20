@@ -116,6 +116,7 @@ export const MSB11thClassMenuSubjectEconomicsChapter = [
 
 export const MSB12thClassMenuSubjects = [
     { label: "Economics", value: "Economics" },
+    { label: "Physics", value: "Physics" },
 ];
 
 export const MSB12thClassMenuSubjectEconomicsChapter = [
@@ -123,6 +124,12 @@ export const MSB12thClassMenuSubjectEconomicsChapter = [
     { label: "Chapter 2", value: "Chapter 2" }
 ];
 
+export const MSB12thClassMenuSubjectPhysicsChapter = [
+    { label: "Chapter 1", value: "Chapter 1" },
+    { label: "Chapter 2", value: "Chapter 2" },
+    { label: "Chapter 3", value: "Chapter 3" },
+    { label: "Chapter 4", value: "Chapter 4" }
+];
 
 
 
