@@ -103,7 +103,12 @@ const router = createBrowserRouter([
     }, {
       path: "/notes/board/cbsc/sanskrit/sanskritNotes/:type/*",
       element: <SanskritNotes></SanskritNotes>
-    }, {
+    },
+    {
+      path: "/notes/board/cbse/sanskrit/sanskritNotes/:type/*",
+      element: <SanskritNotes></SanskritNotes>
+    },
+    {
       path: "/notes/board/cbse/hindi/hindiNotes/:type/*",
       element: <HindiNotes></HindiNotes>
     },
