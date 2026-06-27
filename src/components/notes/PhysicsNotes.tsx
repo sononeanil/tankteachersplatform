@@ -22,8 +22,6 @@ import {
     Card,
     CardHeader,
     CardBody,
-    UnorderedList,
-    ListItem,
     Divider,
     Badge,
     Tabs,
@@ -66,14 +64,23 @@ const SafeMarkdown = ({ children, ...props }: { children?: React.ReactNode;[key:
     }, [children]);
 
     return (
-        <Box sx={{ "&": { whiteSpace: "pre-wrap" } }} w="100%">
+        <Box
+            w="100%"
+            sx={{
+                "&": { whiteSpace: "pre-wrap" },
+                "& ul, & ol": { paddingLeft: "20px", marginBottom: "8px" },
+                "& li": { marginBottom: "4px", lineHeight: "relaxed", color: "gray.700" }
+            }}
+        >
             <ReactMarkdown
                 remarkPlugins={[remarkMath]}
                 rehypePlugins={[rehypeKatex]}
                 components={{
                     p: ({ children }) => <Text mb={2} lineHeight="relaxed">{children}</Text>,
-                    ul: ({ children }) => <UnorderedList pl={4} mb={2}>{children}</UnorderedList>,
-                    li: ({ children }) => <ListItem mb={1}>{children}</ListItem>,
+                    // Using standard elements styled via CSS sx map above to prevent ContextError crashes
+                    ul: ({ children }) => <ul>{children}</ul>,
+                    ol: ({ children }) => <ol>{children}</ol>,
+                    li: ({ children }) => <li>{children}</li>,
                 }}
                 {...props}
             >
@@ -441,13 +448,15 @@ export const PhysicsNotes = () => {
                                                     <Heading size="sm" color={useColorModeValue("blue.800", "blue.200")}>Chapter Abstract</Heading>
                                                 </CardHeader>
                                                 <CardBody color="gray.700" lineHeight="relaxed">
-                                                    <UnorderedList spacing={3} pl={2}>
-                                                        {cleanedSummaryList.map((item: string, index: number) => (
-                                                            <ListItem key={index}>
-                                                                <SafeMarkdown>{item}</SafeMarkdown>
-                                                            </ListItem>
-                                                        ))}
-                                                    </UnorderedList>
+                                                    <Box sx={{ "& ul": { paddingLeft: "20px" }, "& li": { marginBottom: "8px" } }}>
+                                                        <ul>
+                                                            {cleanedSummaryList.map((item: string, index: number) => (
+                                                                <li key={index}>
+                                                                    <SafeMarkdown>{item}</SafeMarkdown>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </Box>
                                                 </CardBody>
                                             </Card>
                                         ) : (
@@ -512,64 +521,88 @@ export const PhysicsNotes = () => {
                                         {masterNotesArray.length === 0 ? (
                                             <Text color="gray.400" fontStyle="italic">No revision notes available for this chapter.</Text>
                                         ) : (
-                                            masterNotesArray.map((item: any, idx: number) => (
-                                                <Card key={idx} variant="outline" bg={contentCardBg} borderRadius="xl" boxShadow="sm" borderColor={borderColor} p={0} overflow="hidden">
-                                                    <CardHeader bg={useColorModeValue("gray.50", "gray.700")} py={3} borderBottomWidth="1px" borderColor={borderColor}>
-                                                        <Heading size="md" color="gray.800">
-                                                            {item.section_title}
-                                                        </Heading>
-                                                    </CardHeader>
-                                                    <CardBody>
-                                                        {item.section_breakdown?.map((breakdown: any, bIdx: number) => (
-                                                            <VStack key={bIdx} align="stretch" spacing={4} mt={bIdx > 0 ? 6 : 0}>
-                                                                <Heading size="sm" color="blue.600">
-                                                                    <SafeMarkdown>{breakdown.sectionOrTheme}</SafeMarkdown>
-                                                                </Heading>
+                                            masterNotesArray.map((item: any, idx: number) => {
+                                                const rawBreakdown = item.section_breakdown || item.sectionBreakdown || [];
+                                                let breakdowns: any[] = [];
 
-                                                                <Box color="gray.700">
-                                                                    <Text as="span" fontWeight="bold">Explanation: </Text>
-                                                                    <SafeMarkdown>{breakdown.explanation}</SafeMarkdown>
-                                                                </Box>
+                                                if (Array.isArray(rawBreakdown)) {
+                                                    breakdowns = rawBreakdown;
+                                                } else if (typeof rawBreakdown === "string") {
+                                                    try {
+                                                        const parsed = JSON.parse(rawBreakdown);
+                                                        if (Array.isArray(parsed)) breakdowns = parsed;
+                                                    } catch (e) {
+                                                        breakdowns = [];
+                                                    }
+                                                }
 
-                                                                {breakdown.analogy && (
-                                                                    <Box p={3} bg="orange.50" borderRadius="lg" borderLeft="4px solid" borderColor="orange.400">
-                                                                        <HStack align="start">
-                                                                            <Icon as={FiSmile} color="orange.500" mt={1} />
-                                                                            <Box fontSize="sm" color="orange.900">
-                                                                                <Text as="span" fontWeight="bold">Analogy: </Text>
-                                                                                <SafeMarkdown>{breakdown.analogy}</SafeMarkdown>
+                                                return (
+                                                    <Card key={idx} variant="outline" bg={contentCardBg} borderRadius="xl" boxShadow="sm" borderColor={borderColor} p={0} overflow="hidden">
+                                                        <CardHeader bg={useColorModeValue("gray.50", "gray.700")} py={3} borderBottomWidth="1px" borderColor={borderColor}>
+                                                            <Heading size="md" color="gray.800">
+                                                                {item.section_title}
+                                                            </Heading>
+                                                        </CardHeader>
+                                                        <CardBody>
+                                                            {breakdowns.length > 0 ? (
+                                                                breakdowns.map((breakdown: any, bIdx: number) => (
+                                                                    <VStack key={bIdx} align="stretch" spacing={4} mt={bIdx > 0 ? 6 : 0}>
+                                                                        <Heading size="sm" color="blue.600">
+                                                                            <SafeMarkdown>{breakdown.sectionOrTheme || breakdown.title || ""}</SafeMarkdown>
+                                                                        </Heading>
+
+                                                                        {breakdown.explanation && (
+                                                                            <Box color="gray.700">
+                                                                                <Text as="span" fontWeight="bold">Explanation: </Text>
+                                                                                <SafeMarkdown>{breakdown.explanation}</SafeMarkdown>
                                                                             </Box>
-                                                                        </HStack>
-                                                                    </Box>
-                                                                )}
+                                                                        )}
 
-                                                                {breakdown.memory_technique && (
-                                                                    <Box p={3} bg="purple.50" borderRadius="lg" borderLeft="4px solid" borderColor="purple.400">
-                                                                        <HStack align="start">
-                                                                            <Icon as={FiZap} color="purple.500" mt={1} />
-                                                                            <Box fontSize="sm" color="purple.900">
-                                                                                <Text as="span" fontWeight="bold">Memory Hack: </Text>
-                                                                                <SafeMarkdown>{breakdown.memory_technique}</SafeMarkdown>
+                                                                        {breakdown.analogy && (
+                                                                            <Box p={3} bg="orange.50" borderRadius="lg" borderLeft="4px solid" borderColor="orange.400">
+                                                                                <HStack align="start">
+                                                                                    <Icon as={FiSmile} color="orange.500" mt={1} />
+                                                                                    <Box fontSize="sm" color="orange.900">
+                                                                                        <Text as="span" fontWeight="bold">Analogy: </Text>
+                                                                                        <SafeMarkdown>{breakdown.analogy}</SafeMarkdown>
+                                                                                    </Box>
+                                                                                </HStack>
                                                                             </Box>
-                                                                        </HStack>
-                                                                    </Box>
-                                                                )}
+                                                                        )}
 
-                                                                {breakdown.bullet_points && breakdown.bullet_points.length > 0 && (
-                                                                    <UnorderedList spacing={2} pl={2}>
-                                                                        {breakdown.bullet_points.map((bullet: string, bulletIdx: number) => (
-                                                                            <ListItem key={bulletIdx} color="gray.700">
-                                                                                <SafeMarkdown>{bullet}</SafeMarkdown>
-                                                                            </ListItem>
-                                                                        ))}
-                                                                    </UnorderedList>
-                                                                )}
-                                                                {bIdx < item.section_breakdown.length - 1 && <Divider />}
-                                                            </VStack>
-                                                        ))}
-                                                    </CardBody>
-                                                </Card>
-                                            ))
+                                                                        {breakdown.memory_technique && (
+                                                                            <Box p={3} bg="purple.50" borderRadius="lg" borderLeft="4px solid" borderColor="purple.400">
+                                                                                <HStack align="start">
+                                                                                    <Icon as={FiZap} color="purple.500" mt={1} />
+                                                                                    <Box fontSize="sm" color="purple.900">
+                                                                                        <Text as="span" fontWeight="bold">Memory Hack: </Text>
+                                                                                        <SafeMarkdown>{breakdown.memory_technique}</SafeMarkdown>
+                                                                                    </Box>
+                                                                                </HStack>
+                                                                            </Box>
+                                                                        )}
+
+                                                                        {breakdown.bullet_points && Array.isArray(breakdown.bullet_points) && breakdown.bullet_points.length > 0 && (
+                                                                            <Box sx={{ "& ul": { paddingLeft: "20px" }, "& li": { marginBottom: "4px" } }}>
+                                                                                <ul>
+                                                                                    {breakdown.bullet_points.map((bullet: string, bulletIdx: number) => (
+                                                                                        <li key={bulletIdx}>
+                                                                                            <SafeMarkdown>{bullet}</SafeMarkdown>
+                                                                                        </li>
+                                                                                    ))}
+                                                                                </ul>
+                                                                            </Box>
+                                                                        )}
+                                                                        {bIdx < breakdowns.length - 1 && <Divider />}
+                                                                    </VStack>
+                                                                ))
+                                                            ) : (
+                                                                <Text size="sm" color="gray.400" fontStyle="italic">No granular topic subsections mapped inside this theme card block.</Text>
+                                                            )}
+                                                        </CardBody>
+                                                    </Card>
+                                                );
+                                            })
                                         )}
                                     </VStack>
                                 </TabPanel>
@@ -668,7 +701,6 @@ export const PhysicsNotes = () => {
                                     ) : (
                                         <VStack spacing={6} align="stretch">
                                             {practiceQuizArray.map((quiz: any, qIdx: number) => {
-                                                // Clean JavaScript inline logic processing (NO HOOKS)
                                                 const rawOptions = quiz.options || quiz.choices || [];
                                                 let options: string[] = [];
 
