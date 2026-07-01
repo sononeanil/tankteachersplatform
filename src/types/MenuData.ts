@@ -1,3 +1,10 @@
+export const Class4Boards = [
+    { label: "CBSE", value: "CBSE" },
+];
+
+export const CBSEClass4 = [
+    { label: "Science", value: "Science", url: "notes/oneHourBeforeExam/" },
+];
 
 export const Class6Boards = [
     { label: "CBSE", value: "CBSE" },

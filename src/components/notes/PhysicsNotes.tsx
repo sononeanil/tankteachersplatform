@@ -77,7 +77,6 @@ const SafeMarkdown = ({ children, ...props }: { children?: React.ReactNode;[key:
                 rehypePlugins={[rehypeKatex]}
                 components={{
                     p: ({ children }) => <Text mb={2} lineHeight="relaxed">{children}</Text>,
-                    // Using standard elements styled via CSS sx map above to prevent ContextError crashes
                     ul: ({ children }) => <ul>{children}</ul>,
                     ol: ({ children }) => <ol>{children}</ol>,
                     li: ({ children }) => <li>{children}</li>,
@@ -582,22 +581,30 @@ export const PhysicsNotes = () => {
                                                                             </Box>
                                                                         )}
 
-                                                                        {breakdown.bullet_points && Array.isArray(breakdown.bullet_points) && breakdown.bullet_points.length > 0 && (
-                                                                            <Box sx={{ "& ul": { paddingLeft: "20px" }, "& li": { marginBottom: "4px" } }}>
-                                                                                <ul>
-                                                                                    {breakdown.bullet_points.map((bullet: string, bulletIdx: number) => (
-                                                                                        <li key={bulletIdx}>
-                                                                                            <SafeMarkdown>{bullet}</SafeMarkdown>
-                                                                                        </li>
-                                                                                    ))}
-                                                                                </ul>
+                                                                        {breakdown.bullet_points && (
+                                                                            <Box pl={4} mt={2}>
+                                                                                <VStack align="stretch" spacing={1}>
+                                                                                    {Array.isArray(breakdown.bullet_points) ? (
+                                                                                        breakdown.bullet_points.map((point: string, pIdx: number) => (
+                                                                                            <HStack key={pIdx} align="start" spacing={2}>
+                                                                                                <Text color="blue.500" fontSize="sm">•</Text>
+                                                                                                <Box fontSize="sm" color="gray.700" w="100%">
+                                                                                                    <SafeMarkdown>{point}</SafeMarkdown>
+                                                                                                </Box>
+                                                                                            </HStack>
+                                                                                        ))
+                                                                                    ) : (
+                                                                                        <Box fontSize="sm" color="gray.700">
+                                                                                            <SafeMarkdown>{breakdown.bullet_points}</SafeMarkdown>
+                                                                                        </Box>
+                                                                                    )}
+                                                                                </VStack>
                                                                             </Box>
                                                                         )}
-                                                                        {bIdx < breakdowns.length - 1 && <Divider />}
                                                                     </VStack>
                                                                 ))
                                                             ) : (
-                                                                <Text size="sm" color="gray.400" fontStyle="italic">No granular topic subsections mapped inside this theme card block.</Text>
+                                                                <Text color="gray.400" fontStyle="italic">No thematic breakdown defined for this section.</Text>
                                                             )}
                                                         </CardBody>
                                                     </Card>
@@ -609,195 +616,146 @@ export const PhysicsNotes = () => {
 
                                 {/* TAB 4: BOARD QUESTIONS */}
                                 <TabPanel px={0}>
-                                    <Accordion allowToggle>
+                                    <VStack spacing={4} align="stretch">
                                         {boardQuestionsArray.length === 0 ? (
-                                            <Text color="gray.400" fontStyle="italic">No Past Board exam questions linked to this chapter.</Text>
+                                            <Text color="gray.400" fontStyle="italic">No previous board questions available for this chapter.</Text>
                                         ) : (
-                                            boardQuestionsArray.map((q: any, idx: number) => (
-                                                <AccordionItem
-                                                    key={idx}
-                                                    bg={contentCardBg}
-                                                    border="1px solid"
-                                                    borderColor={borderColor}
-                                                    borderRadius="xl"
-                                                    mb={4}
-                                                    overflow="hidden"
-                                                >
-                                                    <AccordionButton p={4} _hover={{ bg: useColorModeValue("gray.50", "gray.700") }}>
-                                                        <Box flex="1" textAlign="left">
-                                                            <HStack spacing={3} wrap="wrap">
-                                                                <Badge colorScheme="purple" variant="solid">Q. {idx + 1}</Badge>
-                                                                {q.year && <Badge colorScheme="blue" variant="outline">{q.year}</Badge>}
-                                                                {q.marks && <Badge colorScheme="green">{q.marks} Marks</Badge>}
-                                                            </HStack>
-                                                            <Box mt={2} fontWeight="semibold" fontSize="md" color="gray.800">
-                                                                <SafeMarkdown>{q.question || q.question_text}</SafeMarkdown>
+                                            <Accordion allowToggle>
+                                                {boardQuestionsArray.map((q: any, qIdx: number) => (
+                                                    <AccordionItem key={qIdx} border="1px solid" borderColor={borderColor} borderRadius="xl" mb={3} overflow="hidden">
+                                                        <AccordionButton bg={useColorModeValue("gray.50", "gray.700")} _hover={{ bg: useColorModeValue("gray.100", "gray.600") }}>
+                                                            <Box flex="1" textAlign="left" fontWeight="semibold" fontSize="sm" py={1}>
+                                                                <SafeMarkdown>{q.question || q.title || q}</SafeMarkdown>
                                                             </Box>
-                                                        </Box>
-                                                        <AccordionIcon />
-                                                    </AccordionButton>
-                                                    <AccordionPanel pb={4} pt={2} px={4} borderTop="1px solid" borderColor={borderColor}>
-                                                        <Box color="gray.700">
-                                                            <Text fontWeight="bold" mb={2} color="green.600">Model Answer:</Text>
-                                                            <SafeMarkdown>{q.answer || q.model_answer || q.solution}</SafeMarkdown>
-                                                        </Box>
-                                                    </AccordionPanel>
-                                                </AccordionItem>
-                                            ))
+                                                            <AccordionIcon />
+                                                        </AccordionButton>
+                                                        <AccordionPanel pb={4} pt={3} bg={contentCardBg}>
+                                                            <Box fontSize="sm" color="gray.700">
+                                                                <Text fontWeight="bold" color="blue.600" mb={2}>Solution / Marking Scheme Answer:</Text>
+                                                                <SafeMarkdown>{q.answer || q.solution || "No detailed solution recorded."}</SafeMarkdown>
+                                                            </Box>
+                                                        </AccordionPanel>
+                                                    </AccordionItem>
+                                                ))}
+                                            </Accordion>
                                         )}
-                                    </Accordion>
+                                    </VStack>
                                 </TabPanel>
 
                                 {/* TAB 5: TEXTBOOK SOLUTIONS */}
                                 <TabPanel px={0}>
-                                    <Accordion allowToggle>
+                                    <VStack spacing={4} align="stretch">
                                         {textbookSolutionsArray.length === 0 ? (
-                                            <Text color="gray.400" fontStyle="italic">No back-of-chapter textbook solutions logged yet.</Text>
+                                            <Text color="gray.400" fontStyle="italic">No textbook exercise solutions available for this chapter.</Text>
                                         ) : (
-                                            textbookSolutionsArray.map((sol: any, idx: number) => (
-                                                <AccordionItem
-                                                    key={idx}
-                                                    bg={contentCardBg}
-                                                    border="1px solid"
-                                                    borderColor={borderColor}
-                                                    borderRadius="xl"
-                                                    mb={4}
-                                                    overflow="hidden"
-                                                >
-                                                    <AccordionButton p={4} _hover={{ bg: useColorModeValue("gray.50", "gray.700") }}>
-                                                        <Box flex="1" textAlign="left">
-                                                            <HStack spacing={2} mb={1}>
-                                                                <Badge colorScheme="teal" variant="subtle">Exercise {sol.exercise_number || sol.id || idx + 1}</Badge>
-                                                            </HStack>
-                                                            <Box fontWeight="semibold" fontSize="md" color="gray.800">
-                                                                <SafeMarkdown>{sol.question || sol.question_text}</SafeMarkdown>
+                                            <Accordion allowToggle>
+                                                {textbookSolutionsArray.map((sol: any, sIdx: number) => (
+                                                    <AccordionItem key={sIdx} border="1px solid" borderColor={borderColor} borderRadius="xl" mb={3} overflow="hidden">
+                                                        <AccordionButton bg={useColorModeValue("gray.50", "gray.700")} _hover={{ bg: useColorModeValue("gray.100", "gray.600") }}>
+                                                            <Box flex="1" textAlign="left" fontWeight="semibold" fontSize="sm" py={1}>
+                                                                <SafeMarkdown>{sol.question || sol.exercise || ""}</SafeMarkdown>
                                                             </Box>
-                                                        </Box>
-                                                        <AccordionIcon />
-                                                    </AccordionButton>
-                                                    <AccordionPanel pb={4} pt={2} px={4} borderTop="1px solid" borderColor={borderColor}>
-                                                        <VStack align="stretch" spacing={3}>
-                                                            {sol.concept_used && (
-                                                                <Box p={2} bg="blue.50" borderRadius="md" borderLeft="3px solid" borderColor="blue.400" fontSize="xs" color="blue.900">
-                                                                    <Text as="span" fontWeight="bold">Concept Focus: </Text>{sol.concept_used}
-                                                                </Box>
-                                                            )}
-                                                            <Box color="gray.700">
-                                                                <Text fontWeight="bold" mb={1} color="teal.600">Step-by-Step Solution:</Text>
-                                                                <SafeMarkdown>{sol.solution || sol.answer}</SafeMarkdown>
+                                                            <AccordionIcon />
+                                                        </AccordionButton>
+                                                        <AccordionPanel pb={4} pt={3} bg={contentCardBg}>
+                                                            <Box fontSize="sm" color="gray.700">
+                                                                <Text fontWeight="bold" color="purple.600" mb={2}>Step-by-Step Solution:</Text>
+                                                                <SafeMarkdown>{sol.solution || sol.answer || "No response details generated."}</SafeMarkdown>
                                                             </Box>
-                                                        </VStack>
-                                                    </AccordionPanel>
-                                                </AccordionItem>
-                                            ))
+                                                        </AccordionPanel>
+                                                    </AccordionItem>
+                                                ))}
+                                            </Accordion>
                                         )}
-                                    </Accordion>
+                                    </VStack>
                                 </TabPanel>
 
                                 {/* TAB 6: ACTIVE RECALL QUIZ */}
+                                {/* TAB 6: ACTIVE RECALL QUIZ */}
                                 <TabPanel px={0}>
-                                    {practiceQuizArray.length === 0 ? (
-                                        <Text color="gray.400" fontStyle="italic">No evaluation quizzes matching this target profile.</Text>
-                                    ) : (
-                                        <VStack spacing={6} align="stretch">
-                                            {practiceQuizArray.map((quiz: any, qIdx: number) => {
-                                                const rawOptions = quiz.options || quiz.choices || [];
-                                                let options: string[] = [];
+                                    <VStack spacing={4} align="stretch">
+                                        {practiceQuizArray.length === 0 ? (
+                                            <Text color="gray.400" fontStyle="italic">No interactive practice quiz modules structured for this chapter.</Text>
+                                        ) : (
+                                            practiceQuizArray.map((quiz: any, qIdx: number) => {
+                                                // 1. Defensively resolve options format (Handles Array, Object, or Stringified JSON strings)
+                                                let choices: string[] = [];
+                                                const rawChoices = quiz.options || quiz.choices || [];
 
-                                                if (Array.isArray(rawOptions)) {
-                                                    options = rawOptions;
-                                                } else if (typeof rawOptions === "string") {
-                                                    try {
-                                                        const parsed = JSON.parse(rawOptions);
-                                                        if (Array.isArray(parsed)) options = parsed;
-                                                    } catch (e) {
-                                                        options = rawOptions.split(",").map((s: string) => s.trim());
+                                                try {
+                                                    if (Array.isArray(rawChoices)) {
+                                                        choices = rawChoices;
+                                                    } else if (typeof rawChoices === "object" && rawChoices !== null) {
+                                                        choices = Object.values(rawChoices);
+                                                    } else if (typeof rawChoices === "string") {
+                                                        const parsed = JSON.parse(rawChoices);
+                                                        choices = Array.isArray(parsed) ? parsed : Object.values(parsed);
                                                     }
+                                                } catch (e) {
+                                                    choices = [];
                                                 }
 
-                                                const selectedOption = selectedQuizAnswers[qIdx];
-                                                const showExplanation = showQuizExplanations[qIdx];
-                                                const isCorrect = selectedOption === quiz.correct_answer || selectedOption === quiz.correctAnswer;
-
                                                 return (
-                                                    <Card key={qIdx} variant="outline" bg={contentCardBg} borderRadius="xl" boxShadow="sm" borderColor={borderColor} p={5}>
-                                                        <VStack align="stretch" spacing={4}>
-                                                            <HStack justify="space-between">
-                                                                <Heading size="xs" textTransform="uppercase" color="gray.400" letterSpacing="wider">
-                                                                    Question {qIdx + 1}
-                                                                </Heading>
-                                                                {showExplanation && (
-                                                                    <Badge colorScheme={isCorrect ? "green" : "red"} variant="solid">
-                                                                        {isCorrect ? "Correct" : "Incorrect"}
-                                                                    </Badge>
-                                                                )}
-                                                            </HStack>
+                                                    <Card key={qIdx} variant="outline" borderColor={borderColor} bg={contentCardBg} borderRadius="xl" p={5} boxShadow="xs">
+                                                        <Heading size="xs" color="gray.500" mb={1} textTransform="uppercase" letterSpacing="wider">
+                                                            Question {qIdx + 1}
+                                                        </Heading>
+                                                        <Text fontWeight="bold" mb={4} color="gray.800" fontSize="sm">
+                                                            <SafeMarkdown>{quiz.question}</SafeMarkdown>
+                                                        </Text>
 
-                                                            <Box fontSize="md" fontWeight="medium" color="gray.800">
-                                                                <SafeMarkdown>{quiz.question || quiz.question_text}</SafeMarkdown>
-                                                            </Box>
+                                                        {choices.length > 0 ? (
+                                                            <RadioGroup
+                                                                onChange={(val) => handleQuizAnswer(qIdx, val)}
+                                                                value={selectedQuizAnswers[qIdx] || ""}
+                                                            >
+                                                                <Stack spacing={3} pl={1}>
+                                                                    {choices.map((opt: string, oIdx: number) => (
+                                                                        <Radio key={oIdx} value={opt} size="md" colorScheme="blue">
+                                                                            <Box fontSize="sm" color="gray.700">
+                                                                                <SafeMarkdown>{opt}</SafeMarkdown>
+                                                                            </Box>
+                                                                        </Radio>
+                                                                    ))}
+                                                                </Stack>
+                                                            </RadioGroup>
+                                                        ) : (
+                                                            <Text color="red.400" fontSize="xs" fontStyle="italic">Quiz options formatting could not be read.</Text>
+                                                        )}
 
-                                                            {options.length > 0 ? (
-                                                                <RadioGroup
-                                                                    value={selectedOption || ""}
-                                                                    onChange={(val) => handleQuizAnswer(qIdx, val)}
-                                                                    isDisabled={showExplanation}
-                                                                >
-                                                                    <Stack spacing={3}>
-                                                                        {options.map((opt: string, oIdx: number) => {
-                                                                            let optBg = "transparent";
-                                                                            if (showExplanation) {
-                                                                                const targetAnswer = quiz.correct_answer || quiz.correctAnswer;
-                                                                                if (opt === targetAnswer) {
-                                                                                    optBg = "green.50";
-                                                                                } else if (selectedOption === opt) {
-                                                                                    optBg = "red.50";
-                                                                                }
-                                                                            }
-                                                                            return (
-                                                                                <Box key={oIdx} p={3} borderRadius="md" bg={optBg} border="1px solid" borderColor={selectedOption === opt ? "blue.400" : borderColor} transition="all 0.2s">
-                                                                                    <Radio value={opt} colorScheme="blue" w="100%">
-                                                                                        <Text fontSize="sm" color="gray.700">
-                                                                                            <SafeMarkdown>{opt}</SafeMarkdown>
-                                                                                        </Text>
-                                                                                    </Radio>
-                                                                                </Box>
-                                                                            );
-                                                                        })}
-                                                                    </Stack>
-                                                                </RadioGroup>
-                                                            ) : (
-                                                                <Text size="xs" color="red.400" fontStyle="italic">Error: Options data corrupted or missing for this question context.</Text>
-                                                            )}
-
-                                                            {showExplanation && (
-                                                                <Box p={4} bg="gray.50" borderRadius="lg" borderLeft="4px solid" borderColor="blue.400" mt={2}>
-                                                                    <HStack mb={1}>
-                                                                        <Icon as={FiInfo} color="blue.500" />
-                                                                        <Text fontSize="sm" fontWeight="bold" color="gray.700">Explanation Matrix</Text>
-                                                                    </HStack>
-                                                                    <Box fontSize="sm" color="gray.600">
-                                                                        <SafeMarkdown>{quiz.explanation || quiz.rationale || "No additional criteria logged."}</SafeMarkdown>
+                                                        {showQuizExplanations[qIdx] && (
+                                                            <Box mt={4} p={4} bg={useColorModeValue("blue.50", "gray.700")} borderRadius="xl" borderLeft="4px solid" borderColor="blue.400">
+                                                                <HStack spacing={2} mb={1}>
+                                                                    <Icon as={FiCheckSquare} color="blue.500" />
+                                                                    <Text fontSize="sm" fontWeight="bold" color={useColorModeValue("blue.900", "blue.100")}>
+                                                                        Correct Option: {quiz.correct_answer || quiz.correctAnswer || quiz.answer}
+                                                                    </Text>
+                                                                </HStack>
+                                                                {quiz.explanation && (
+                                                                    <Box fontSize="xs" color={useColorModeValue("blue.800", "blue.200")} mt={1} pl={6}>
+                                                                        <SafeMarkdown>{quiz.explanation}</SafeMarkdown>
                                                                     </Box>
-                                                                </Box>
-                                                            )}
-                                                        </VStack>
+                                                                )}
+                                                            </Box>
+                                                        )}
                                                     </Card>
                                                 );
-                                            })}
-                                        </VStack>
-                                    )}
+                                            })
+                                        )}
+                                    </VStack>
                                 </TabPanel>
                             </TabPanels>
                         </Tabs>
                     </Box>
                 ) : (
-                    <Flex justify="center" align="center" minH="50vh">
-                        <Text color="gray.400">Please select a core chapter module context to review files.</Text>
+                    <Flex justify="center" align="center" minH="50vh" direction="column" p={6} bg={contentCardBg} borderRadius="xl" border="1px dashed" borderColor={borderColor}>
+                        <Icon as={FiBookOpen} boxSize={8} color="gray.300" mb={2} />
+                        <Text color="gray.500" fontSize="sm">Please choose a course textbook chapter profile from the index column to preview summaries.</Text>
                     </Flex>
                 )}
             </Box>
         </Flex>
     );
 };
+
 export default PhysicsNotes;

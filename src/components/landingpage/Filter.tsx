@@ -34,7 +34,9 @@ import {
     Class11Boards,
     CBSEClass11,
     Class12Boards,
-    CBSEClass12
+    CBSEClass12,
+    Class4Boards,
+    CBSEClass4
 } from "../../types/MenuData";
 
 const getSubjectIcon = (label: string) => {
@@ -50,11 +52,17 @@ const fixedMenuMap: Record<string, {
     boards: { label: string; value: string }[];
     subjects: Record<string, { label: string; value: string; url: string }[]>
 }> = {
+    "4": {
+        boards: Class4Boards,
+        subjects: {
+            "CBSE": CBSEClass4
+        }
+    },
     "6": {
         boards: Class6Boards,
         subjects: {
             "CBSE": CBSEClass6,
-            "ICSE": ICSEClass6
+
         }
     },
     "7": {
@@ -114,8 +122,8 @@ const Filter = () => {
         { bg: "blue.600", hover: "blue.500", active: "blue.700", outline: "blue.400" },
     ];
 
-    // Updated Array to display classes 6 through 12 in UI loop sequentially
-    const activeClasses = ["6", "7", "8", "9", "10", "11", "12"];
+    // Updated Array to display classes 4 through 12 in UI loop sequentially
+    const activeClasses = ["4", "6", "7", "8", "9", "10", "11", "12"];
 
     return (
         <Box
